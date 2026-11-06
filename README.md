@@ -23,8 +23,6 @@ Only one cut counts per day. Every player gets the same country, and a new one a
 - **Statistics**: days played, average gap, best gap, current streak.
 - **Mouse**: two clicks, or a drag from one side to the other. Esc or right-click cancels before the second click.
 - **Touch**: tap two points (or swipe across). The line then waits: drag a point to adjust it, drag elsewhere on the mat to move the whole line, or use two fingers to move both points at once. The cut only happens when you tap "Cut here".
-- **Sound**: a blade sound on every cut and a short tune that depends on your rating, generated in the browser. The speaker button or the M key mutes it.
-- **Accessibility**: menus work with the keyboard, and animations are reduced when the system asks for it.
 
 ## How areas are measured
 

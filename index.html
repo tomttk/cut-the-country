@@ -211,7 +211,7 @@
     <button class="btn cut" id="cutBtn" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 7.5 20 18M8.5 16.5 20 6"/></svg>Couper ici</button>
   </div>
 
-  <p class="hint" id="hint"><span class="for-mouse">Clique un point, puis un second de l'autre côté du pays : la ligne est prolongée d'un bord à l'autre. <kbd>Échap</kbd> ou clic droit annule avant le second clic.</span><span class="for-touch">Touche un point, puis un second de l'autre côté du pays. Fais glisser les deux points pour ajuster la ligne, puis appuie sur « Couper ici ». « Effacer la ligne » recommence.</span></p>
+  <p class="hint" id="hint"><span class="for-mouse">Clique un point, puis un second de l'autre côté du pays : la ligne est prolongée d'un bord à l'autre. <kbd>Échap</kbd> ou clic droit annule avant le second clic.</span><span class="for-touch">Touche un point, puis un second de l'autre côté du pays. Fais glisser un point pour l'ajuster, ou ailleurs sur le tapis pour déplacer toute la ligne ; à deux doigts, tu bouges les deux points en même temps. Appuie ensuite sur « Couper ici ».</span></p>
 
   <section class="result" id="result" aria-live="polite">
     <div class="swatches">
@@ -240,7 +240,7 @@
     <div class="rules">
       <p>Chaque jour, un pays découpé dans du papier. Trace une seule ligne droite pour le partager en deux pièces de même surface.</p>
       <p>À la souris : clique un premier point, oriente la ligne avec le pointeur, puis clique un second point pour couper. Échap ou clic droit annule avant le second clic ; en entraînement, ils effacent aussi la dernière coupe.</p>
-      <p>Au doigt : touche deux points de part et d'autre du pays. La ligne reste en attente : fais glisser chacun des deux points pour l'ajuster, puis appuie sur « Couper ici ». « Effacer la ligne » recommence.</p>
+      <p>Au doigt : touche deux points de part et d'autre du pays. La ligne reste en attente. Fais glisser un point pour l'ajuster, ou fais glisser ailleurs sur le tapis pour déplacer toute la ligne en gardant son angle. À deux doigts, chacun tient un point et tu les bouges en même temps. Appuie ensuite sur « Couper ici » ; « Effacer la ligne » recommence.</p>
       <p>Chaque coupe a son bruit de lame, suivi d'un petit air qui dépend de ta précision. Le bouton haut-parleur, ou la touche M, coupe ou rétablit le son.</p>
       <p>Les surfaces sont mesurées sur une projection à aires égales centrée sur le pays : ce que tu vois respecte les vraies proportions.</p>
       <div class="scale">
@@ -458,7 +458,7 @@ function pieceCentroid(c, A, B, sign){
 
 
 /* ---------- state ---------- */
-const S = {world: null, source: null, mode: "daily", country: null, cut: null, pending: null, press: null, practiceA2: null,
+const S = {world: null, source: null, mode: "daily", country: null, cut: null, pending: null, press: null, grabs: new Map(), practiceA2: null,
   fx: {drop: 1, blade: 1, split: 1, label: 1}, raf: 0};
 const RM = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const cv = $("cv"), ctx = cv.getContext("2d");
@@ -703,8 +703,8 @@ function draw(){
         ctx.lineWidth = 2.4 / z; ctx.strokeStyle = "#fffdf2"; ctx.beginPath(); ctx.moveTo(pd.A[0], pd.A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
       } }
       if(pd.adjust){
-        const active = S.press && S.press.kind === "handle" ? S.press.h : null;
-        handle(pd.A, z, active === "A"); handle(pd.B, z, active === "B");
+        const held = new Set([...S.grabs.values()].map(g => g.h)), line = held.has("line");
+        handle(pd.A, z, line || held.has("A")); handle(pd.B, z, line || held.has("B"));
       } else { marker(pd.A, z); if(B) marker(B, z); }
     }
     return;
@@ -756,19 +756,19 @@ function tryCommit(A, B, keepOnMiss = false){
   const r = splitCountry(S.country, A, B);
   if(!(Math.min(r.pos, r.neg) > 0.02)){
     if(keepOnMiss){ toast("La ligne ne traverse pas le pays. Déplace un point."); draw(); return false; }
-    S.pending = null; S.press = null; draw(); toast("La ligne ne traverse pas le pays. Recommence."); return true;
+    S.pending = null; S.press = null; S.grabs.clear(); draw(); toast("La ligne ne traverse pas le pays. Recommence."); return true;
   }
-  S.pending = null; S.press = null;
+  S.pending = null; S.press = null; S.grabs.clear();
   commitCut(A, B, r); return true;
 }
 function cancelCut(){
-  if(S.pending){ S.pending = null; S.press = null; draw(); toast("Ligne effacée."); return true; }
+  if(S.pending){ S.pending = null; S.press = null; S.grabs.clear(); draw(); toast("Ligne effacée."); return true; }
   if(S.cut && S.mode === "practice"){ S.cut = null; hideResult(); draw(); return true; }
   return false;
 }
 // Mouse: click a first point, then a second one; the cut happens on the second click (or at the end of a drag).
-// Touch: tap two points (or drag across in one gesture). The line then waits: both points can be dragged to
-// adjust it, and the cut only happens with the "Couper ici" button.
+// Touch: tap two points (or drag across in one gesture). The line then waits: drag a point, slide the whole line,
+// or move both points with two fingers; the cut only happens with the "Couper ici" button.
 // Sounds: on press with a mouse, on release with a finger (mobile browsers only allow audio from a release).
 const HANDLE_REACH = 34; // css px around a point that still grabs it
 const clampV = P => [Math.max(0, Math.min(V, P[0])), Math.max(0, Math.min(V, P[1]))];
@@ -776,21 +776,52 @@ const dist = (P, Q) => Math.hypot(P[0] - Q[0], P[1] - Q[1]);
 // the adjust-then-confirm flow is for phones and tablets only: a finger on a device whose main pointer is coarse.
 // On a computer (mouse, trackpad, pen, or a touchscreen laptop) the second point cuts directly, with no button.
 const adjustFlow = e => e.pointerType === "touch" && matchMedia("(pointer: coarse)").matches;
+// Adjusting a waiting line on a phone. One finger on a point moves that point; one finger anywhere else slides
+// the whole line (both points together, same angle); two fingers move both points at once, each on its own.
+function grab(e){
+  const pd = S.pending, P = toVirtual(e);
+  if(S.grabs.size >= 2) return;
+  try{ cv.setPointerCapture(e.pointerId); }catch(err){}
+  if(S.grabs.size === 0){
+    const dA = dist(P, pd.A), dB = dist(P, pd.B), h = dA <= dB ? "A" : "B";
+    if(Math.min(dA, dB) * cssSize / V <= HANDLE_REACH) S.grabs.set(e.pointerId, {h, off: [pd[h][0] - P[0], pd[h][1] - P[1]], pos: P});
+    else S.grabs.set(e.pointerId, {h: "line", pos: P});
+  } else {
+    // second finger: each finger takes the point closest to it
+    const [id1, g1] = [...S.grabs.entries()][0], Q = g1.pos;
+    const [h1, h2] = dist(Q, pd.A) + dist(P, pd.B) <= dist(Q, pd.B) + dist(P, pd.A) ? ["A", "B"] : ["B", "A"];
+    S.grabs.set(id1, {h: h1, off: [pd[h1][0] - Q[0], pd[h1][1] - Q[1]], pos: Q});
+    S.grabs.set(e.pointerId, {h: h2, off: [pd[h2][0] - P[0], pd[h2][1] - P[1]], pos: P});
+  }
+  draw();
+}
+function moveGrab(e){
+  const g = S.grabs.get(e.pointerId), pd = S.pending; if(!g || !pd) return false;
+  const P = toVirtual(e);
+  if(g.h === "line"){
+    // slide both points by the finger's movement, without letting either leave the mat
+    let dx = P[0] - g.pos[0], dy = P[1] - g.pos[1];
+    dx = Math.max(-Math.min(pd.A[0], pd.B[0]), Math.min(V - Math.max(pd.A[0], pd.B[0]), dx));
+    dy = Math.max(-Math.min(pd.A[1], pd.B[1]), Math.min(V - Math.max(pd.A[1], pd.B[1]), dy));
+    pd.A = [pd.A[0] + dx, pd.A[1] + dy]; pd.B = [pd.B[0] + dx, pd.B[1] + dy];
+  } else pd[g.h] = clampV([P[0] + g.off[0], P[1] + g.off[1]]);
+  g.pos = P; draw(); return true;
+}
+function releaseGrab(e){
+  if(!S.grabs.delete(e.pointerId)) return false;
+  if(S.grabs.size === 0) SFX.tick(false);
+  draw(); return true;
+}
 cv.addEventListener("pointerdown", e => {
   S.lastType = e.pointerType;
   const touch = e.pointerType !== "mouse";
-  if((e.pointerType === "mouse" && e.button !== 0) || !S.country || S.cut || S.press) return;
+  if((e.pointerType === "mouse" && e.button !== 0) || !S.country || S.cut) return;
+  const pd = S.pending;
+  if(pd && pd.adjust){ e.preventDefault(); grab(e); return; }
+  if(S.press) return;
   e.preventDefault();
   const P = toVirtual(e);
   try{ cv.setPointerCapture(e.pointerId); }catch(err){}
-  const pd = S.pending;
-  if(pd && pd.adjust){
-    // grab the nearest point; touching farther away moves that point straight to the finger
-    const h = dist(P, pd.A) <= dist(P, pd.B) ? "A" : "B";
-    if(dist(P, pd[h]) * cssSize / V > HANDLE_REACH) pd[h] = P;
-    S.press = {x: e.clientX, y: e.clientY, id: e.pointerId, kind: "handle", h, off: [pd[h][0] - P[0], pd[h][1] - P[1]]};
-    draw(); return;
-  }
   const second = !!pd;
   if(second) pd.B = P; else S.pending = {A: P, B: null, adjust: false};
   S.press = {x: e.clientX, y: e.clientY, id: e.pointerId, kind: second ? "second" : "first"};
@@ -799,21 +830,19 @@ cv.addEventListener("pointerdown", e => {
 });
 cv.addEventListener("pointermove", e => {
   const pd = S.pending; if(!pd) return;
+  if(moveGrab(e)) return;
   if(S.press){
     if(e.pointerId !== S.press.id) return;
-    const P = toVirtual(e);
-    if(S.press.kind === "handle") pd[S.press.h] = clampV([P[0] + S.press.off[0], P[1] + S.press.off[1]]);
-    else pd.B = P;
-    draw(); return;
+    pd.B = toVirtual(e); draw(); return;
   }
   if(e.pointerType === "mouse" && !pd.adjust){ pd.B = toVirtual(e); draw(); }
 });
 cv.addEventListener("pointerup", e => {
+  if(releaseGrab(e)) return;
   const pr = S.press; if(!pr || e.pointerId !== pr.id) return; S.press = null;
   const pd = S.pending; if(!pd) return;
   const P = toVirtual(e), touch = e.pointerType !== "mouse", dragged = Math.hypot(e.clientX - pr.x, e.clientY - pr.y) > 14;
   const confirmFirst = adjustFlow(e);
-  if(pr.kind === "handle"){ SFX.tick(pr.h === "B"); draw(); return; }
   if(pr.kind === "second" || dragged){
     pd.B = P;
     if(dist(pd.A, P) < 20){ pd.B = null; draw(); return; } // second point too close to the first: keep waiting
@@ -824,10 +853,10 @@ cv.addEventListener("pointerup", e => {
   if(touch){ SFX.tick(false); pd.B = null; }
   draw();
 });
-cv.addEventListener("pointercancel", () => { S.press = null; draw(); });
+cv.addEventListener("pointercancel", e => { S.grabs.delete(e.pointerId); if(S.press && S.press.id === e.pointerId) S.press = null; draw(); });
 cv.addEventListener("contextmenu", e => {
   e.preventDefault();
-  if(S.press || S.lastType !== "mouse") return; // a long press on a phone must not erase the line
+  if(S.press || S.grabs.size || S.lastType !== "mouse") return; // a long press on a phone must not erase the line
   cancelCut();
 });
 $("eraseBtn").onclick = () => cancelCut();
@@ -853,7 +882,7 @@ function commitCut(A, B, r){
 
 /* ---------- UI ---------- */
 function setCountry(c, animate = true){
-  S.country = c; S.cut = null; S.pending = null; S.press = null;
+  S.country = c; S.cut = null; S.pending = null; S.press = null; S.grabs.clear();
   $("cname").textContent = c.name; $("flag").textContent = flagOf(c.a2);
   const el = $("country"); el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap");
   S.fx = {drop: 1, blade: 1, split: 1, label: 1};

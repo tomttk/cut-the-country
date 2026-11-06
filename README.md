@@ -1,30 +1,33 @@
-# Coupe le Pays
-Un jeu quotidien dans le navigateur : chaque jour, un pays à couper en deux parts de même surface, d'un seul trait droit.
- 
-## Principe
- 
-Le pays du jour apparaît, découpé dans du papier, sur un tapis de découpe. Tu poses un premier point, puis un second de l'autre côté : la ligne est prolongée d'un bord à l'autre et coupe le pays en deux. Le but est de s'approcher le plus possible du 50 / 50.
- 
-Une seule coupe compte par jour. Le même pays est proposé à tous les joueurs, et un nouveau pays arrive chaque jour à minuit.
- 
-| Note | Écart avec le 50 / 50 |
-|------|----------------------|
-| 🎯 Parfait | moins de 0,25 point |
-| 🟩 Excellent | moins de 1 point |
-| 🟨 Bien joué | moins de 2,5 points |
-| 🟧 Pas mal | moins de 5 points |
-| 🟥 Raté | 5 points ou plus |
- 
-## Fonctionnalités
- 
-- **Pays du jour** : une coupe par jour, résultat à partager sans dévoiler le pays.
-- **Entraînement** : des pays au hasard, sans limite.
-- **Statistiques** : jours joués, écart moyen, meilleur écart, série en cours.
-- **Souris et toucher** : deux clics, ou deux touchers avec ajustement du second point avant de lever le doigt, ou un glissé d'un côté à l'autre. Échap, clic droit ou le bouton « Effacer la ligne » annule.
-- **Sons** : son de lame à la coupe et petit air différent selon la note, générés dans le navigateur. Le bouton haut-parleur ou la touche M coupe le son.
-- **Accessibilité** : jouable au clavier pour les menus, animations réduites si le système le demande.
-## Comment les surfaces sont mesurées
- 
-Chaque pays est affiché avec une projection azimutale équivalente de Lambert, centrée sur le pays. Cette projection conserve les aires : les proportions affichées correspondent aux vraies surfaces, même pour les grands pays comme la Russie ou le Canada.
- 
-Les territoires éloignés et de petite taille (îles d'outre-mer, archipels lointains) sont retirés pour garder une forme jouable.
+# Cut the Country
+
+A daily browser game: every day, one country to cut into two pieces of equal area, with a single straight line.
+
+## How it works
+
+Today's country appears as a paper cut-out on a cutting mat. You place a first point, then a second one on the other side: the line runs from edge to edge and cuts the country in two. The goal is to get as close as possible to a 50 / 50 split.
+
+Only one cut counts per day. Every player gets the same country, and a new one arrives every day at midnight.
+
+| Rating | Gap from 50 / 50 |
+|--------|------------------|
+| 🎯 Perfect | less than 0.25 points |
+| 🟩 Excellent | less than 1 point |
+| 🟨 Well done | less than 2.5 points |
+| 🟧 Not bad | less than 5 points |
+| 🟥 Missed | 5 points or more |
+
+## Features
+
+- **Today's country**: one cut per day, with a result you can share without revealing the country.
+- **Practice**: random countries, as many as you like.
+- **Statistics**: days played, average gap, best gap, current streak.
+- **Mouse**: two clicks, or a drag from one side to the other. Esc or right-click cancels before the second click.
+- **Touch**: tap two points (or swipe across). The line then waits: drag a point to adjust it, drag elsewhere on the mat to move the whole line, or use two fingers to move both points at once. The cut only happens when you tap "Cut here".
+- **Sound**: a blade sound on every cut and a short tune that depends on your rating, generated in the browser. The speaker button or the M key mutes it.
+- **Accessibility**: menus work with the keyboard, and animations are reduced when the system asks for it.
+
+## How areas are measured
+
+Each country is drawn with a Lambert azimuthal equal-area projection centred on the country. This projection preserves areas: the proportions on screen match the real surfaces, even for large countries such as Russia or Canada.
+
+Small, remote territories (overseas islands, distant archipelagos) are left out to keep the shape playable.

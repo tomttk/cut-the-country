@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Coupe le pays</title>
+<title>Cut the Country</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
   html{background:var(--mat-deep)}
   body{
     margin:0;min-height:100vh;color:var(--print);
-    font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-variation-settings:"wdth" 100;
+    font-family:Archivo,"Helvetica Neue",Arial,"Noto Sans","Hiragino Sans","Yu Gothic UI","Malgun Gothic","Microsoft YaHei","PingFang SC",sans-serif;font-variation-settings:"wdth" 100;
     background-color:var(--mat-deep);
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
     background-size:38px 38px;background-position:-1px -1px;
@@ -42,6 +42,18 @@
   @media (max-width:400px){.short{display:inline}.long{display:none}}
   .round{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--print-dim);background:transparent;color:var(--print);display:grid;place-items:center;cursor:pointer;transition:background .15s,border-color .15s}
   .round:hover{background:rgba(236,228,186,.1);border-color:var(--print)}
+  .langwrap{position:relative}
+  .lflag{display:block;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.28)}
+  #langBtn .lflag{width:20px;height:auto}
+  .langmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:30;width:212px;max-height:min(78vh,572px);overflow-y:auto;overscroll-behavior:contain;
+    background:var(--paper);color:var(--ink);border-radius:4px;padding:6px;box-shadow:0 24px 50px -18px rgba(0,0,0,.85);animation:menu .2s cubic-bezier(.2,.9,.3,1)}
+  .langmenu[hidden]{display:none}
+  @keyframes menu{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .langmenu button{display:flex;align-items:center;gap:11px;width:100%;min-height:42px;border:0;background:none;padding:8px 10px;border-radius:3px;
+    font-size:15px;font-weight:600;color:var(--ink);text-align:left;cursor:pointer}
+  .langmenu button:hover,.langmenu button:focus-visible{background:#ebe4d3;outline:none}
+  .langmenu button[aria-checked="true"]{font-weight:800}
+  .langmenu button[aria-checked="true"]::after{content:"";margin-left:auto;width:8px;height:14px;border:solid var(--mat);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-2px,-2px)}
   #soundBtn .off{display:none}
   #soundBtn[aria-pressed="true"] .on{display:none}
   #soundBtn[aria-pressed="true"] .off{display:block}
@@ -150,6 +162,8 @@
   /* small phones: keep tabs and buttons on one row */
   @media (max-width:480px){.tools{gap:6px}.round{width:36px;height:36px}.modes{gap:18px}.mode{font-size:15px}}
   @media (max-width:400px){.tools{gap:4px}.round{width:34px;height:34px}.modes{gap:14px}.mode{font-size:14.5px}}
+  /* very small phones: the four buttons get their own row above the tabs, whatever the language */
+  @media (max-width:374px){.tools{order:-1;flex-basis:100%;justify-content:flex-end;margin:0 0 2px;padding:0;gap:8px}.modes{margin-top:18px}}
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
   }
@@ -159,26 +173,30 @@
 <div class="wrap">
   <header>
     <div>
-      <h1 class="title" aria-label="Coupe le pays"><span class="t t1" aria-hidden="true">Coupe le pays</span><span class="t t2" aria-hidden="true">Coupe le pays</span></h1>
-      <p class="lede">Un trait droit, deux moitiés de même surface.</p>
+      <h1 class="title" id="title"><span class="t t1" aria-hidden="true"></span><span class="t t2" aria-hidden="true"></span></h1>
+      <p class="lede" data-i18n="lede"></p>
     </div>
   </header>
 
   <nav class="modes">
-    <div role="tablist" aria-label="Mode de jeu" style="display:contents">
-      <button class="mode" role="tab" id="tabDaily" aria-selected="true"><span class="long">Pays du jour</span><span class="short">Du jour</span></button>
-      <button class="mode" role="tab" id="tabPractice" aria-selected="false">Entraînement</button>
+    <div role="tablist" data-i18n-aria="modes" style="display:contents">
+      <button class="mode" role="tab" id="tabDaily" aria-selected="true"><span class="long" data-i18n="tabDaily"></span><span class="short" data-i18n="tabDailyShort"></span></button>
+      <button class="mode" role="tab" id="tabPractice" aria-selected="false"><span data-i18n="tabPractice"></span></button>
     </div>
     <span class="mode-bar" id="modeBar"></span>
     <div class="tools">
-      <button class="round" id="soundBtn" aria-pressed="false" aria-label="Couper le son" title="Couper le son (M)">
+      <div class="langwrap">
+        <button class="round" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu" data-i18n-aria="lang" data-i18n-title="lang"><span id="langFlag"></span></button>
+        <div class="langmenu" id="langMenu" role="menu" hidden></div>
+      </div>
+      <button class="round" id="soundBtn" aria-pressed="false">
         <svg class="on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18.2 6.5a7.5 7.5 0 0 1 0 11"/></svg>
         <svg class="off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
       </button>
-      <button class="round" id="helpBtn" aria-label="Règles du jeu">
+      <button class="round" id="helpBtn" data-i18n-aria="help" data-i18n-title="help">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.3 9a2.7 2.7 0 1 1 3.8 2.5c-.7.3-1.1 1-1.1 1.7v.6"/><circle cx="12" cy="17.6" r=".7" fill="currentColor"/></svg>
       </button>
-      <button class="round" id="statsBtn" aria-label="Statistiques">
+      <button class="round" id="statsBtn" data-i18n-aria="stats" data-i18n-title="stats">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V12M12 20V5M19 20v-5"/></svg>
       </button>
     </div>
@@ -197,26 +215,26 @@
       </g>
     </svg>
     <div id="rulers"></div>
-    <canvas id="cv" aria-label="Zone de découpe"></canvas>
+    <canvas id="cv" data-i18n-aria="canvas"></canvas>
     <div class="overlay" id="overlay">
       <div>
         <svg class="blade" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18" fill="none" stroke="var(--print)" stroke-width="2" stroke-dasharray="3 5"/><circle cx="22" cy="22" r="4" fill="var(--print)"/></svg>
-        Chargement des contours des pays
+        <span id="overlayText" data-i18n="loading"></span>
       </div>
     </div>
   </div>
 
   <div class="cutbar" id="cutBar" hidden>
-    <button class="btn line" id="eraseBtn">Effacer la ligne</button>
-    <button class="btn cut" id="cutBtn" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 7.5 20 18M8.5 16.5 20 6"/></svg>Couper ici</button>
+    <button class="btn line" id="eraseBtn" data-i18n="erase"></button>
+    <button class="btn cut" id="cutBtn" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 7.5 20 18M8.5 16.5 20 6"/></svg><span data-i18n="cutHere"></span></button>
   </div>
 
-  <p class="hint" id="hint"><span class="for-mouse">Clique un point, puis un second de l'autre côté du pays : la ligne est prolongée d'un bord à l'autre. <kbd>Échap</kbd> ou clic droit annule avant le second clic.</span><span class="for-touch">Touche un point, puis un second de l'autre côté du pays. Fais glisser un point pour l'ajuster, ou ailleurs sur le tapis pour déplacer toute la ligne ; à deux doigts, tu bouges les deux points en même temps. Appuie ensuite sur « Couper ici ».</span></p>
+  <p class="hint" id="hint"><span class="for-mouse" data-i18n-html="hintMouse"></span><span class="for-touch" data-i18n="hintTouch"></span></p>
 
   <section class="result" id="result" aria-live="polite">
     <div class="swatches">
-      <div class="swatch white"><span>Pièce blanche</span><b id="pa">–</b></div>
-      <div class="swatch kraft"><span>Pièce kraft</span><b id="pb">–</b></div>
+      <div class="swatch white"><span data-i18n="pieceWhite"></span><b id="pa">–</b></div>
+      <div class="swatch kraft"><span data-i18n="pieceKraft"></span><b id="pb">–</b></div>
     </div>
     <div class="verdict"><strong id="verdict"></strong><span id="gap"></span></div>
     <div class="actions" id="actions"></div>
@@ -224,32 +242,27 @@
     <div class="countdown" id="countdown"></div>
   </section>
 
-  <footer id="footer">Un nouveau pays chaque jour à minuit. Les territoires éloignés sont ignorés.</footer>
+  <footer id="footer"></footer>
 </div>
 
 <div class="modal" id="statsModal" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
   <div class="sheet">
-    <h2 id="statsTitle">Tes coupes <button class="x" data-close aria-label="Fermer">✕</button></h2>
+    <h2><span id="statsTitle" data-i18n="statsTitle"></span> <button class="x" data-close data-i18n-aria="close">✕</button></h2>
     <div class="stats" id="statsGrid"></div>
     <div class="bars" id="bars"></div>
   </div>
 </div>
 <div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
   <div class="sheet">
-    <h2 id="helpTitle">Comment jouer <button class="x" data-close aria-label="Fermer">✕</button></h2>
+    <h2><span id="helpTitle" data-i18n="helpTitle"></span> <button class="x" data-close data-i18n-aria="close">✕</button></h2>
     <div class="rules">
-      <p>Chaque jour, un pays découpé dans du papier. Trace une seule ligne droite pour le partager en deux pièces de même surface.</p>
-      <p>À la souris : clique un premier point, oriente la ligne avec le pointeur, puis clique un second point pour couper. Échap ou clic droit annule avant le second clic ; en entraînement, ils effacent aussi la dernière coupe.</p>
-      <p>Au doigt : touche deux points de part et d'autre du pays. La ligne reste en attente. Fais glisser un point pour l'ajuster, ou fais glisser ailleurs sur le tapis pour déplacer toute la ligne en gardant son angle. À deux doigts, chacun tient un point et tu les bouges en même temps. Appuie ensuite sur « Couper ici » ; « Effacer la ligne » recommence.</p>
-      <p>Chaque coupe a son bruit de lame, suivi d'un petit air qui dépend de ta précision. Le bouton haut-parleur, ou la touche M, coupe ou rétablit le son.</p>
-      <p>Les surfaces sont mesurées sur une projection à aires égales centrée sur le pays : ce que tu vois respecte les vraies proportions.</p>
-      <div class="scale">
-        <span>🎯</span><span>moins de 0,25 point d'écart avec le 50 / 50</span>
-        <span>🟩</span><span>moins de 1 point</span>
-        <span>🟨</span><span>moins de 2,5 points</span>
-        <span>🟧</span><span>moins de 5 points</span>
-        <span>🟥</span><span>au-delà</span>
-      </div>
+      <p data-i18n="help1"></p>
+      <p data-i18n="help2"></p>
+      <p data-i18n="help3"></p>
+      <p data-i18n="help4"></p>
+      <p data-i18n="help5"></p>
+      <p data-i18n="help6"></p>
+      <div class="scale" id="scale"></div>
     </div>
   </div>
 </div>
@@ -272,21 +285,30 @@ const store = {
   get(k, d){ try{ const v = localStorage.getItem("coupe:" + k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
   set(k, v){ try{ localStorage.setItem("coupe:" + k, JSON.stringify(v)); }catch(e){} }
 };
-let regionFR = null; try{ regionFR = new Intl.DisplayNames(["fr"], {type:"region"}); }catch(e){}
-function frName(a2, fallback){ try{ const n = regionFR && regionFR.of(a2); if(n && n !== a2) return n; }catch(e){} return fallback || a2; }
+// country names in the current language (the language list itself lives in i18n.js)
+const REGION_NAMES = {};
+function regionName(a2, fallback){
+  try{
+    const loc = locale(); REGION_NAMES[loc] = REGION_NAMES[loc] || new Intl.DisplayNames([loc], {type: "region"});
+    const n = REGION_NAMES[loc].of(a2); if(n && n !== a2) return n;
+  }catch(e){}
+  return fallback || a2;
+}
 function flagOf(a2){ return /^[A-Z]{2}$/.test(a2) ? String.fromCodePoint(...[...a2].map(c => 127397 + c.charCodeAt(0))) : ""; }
-const fmt = x => x.toLocaleString("fr-FR", {minimumFractionDigits:1, maximumFractionDigits:1});
+const fmt = (x, d = 1) => x.toLocaleString(locale(), {minimumFractionDigits: d, maximumFractionDigits: d});
+const fmtMax = x => x.toLocaleString(locale(), {maximumFractionDigits: 2});
+const pct = x => { try{ return new Intl.NumberFormat(locale(), {style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 1}).format(x / 100); }catch(e){ return fmt(x) + " %"; } };
 function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2200); }
 function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function shuffled(arr, seed){ const r = mulberry32(seed), a = arr.slice(); for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 const ORDER = shuffled(POOL, 20261106);
 function todayIndex(){ const d = new Date(); return Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - START) / 86400000); }
 function tier(gap){
-  if(gap <= 0.25) return {e:"🎯", t:"Parfait", k:"perfect"};
-  if(gap <= 1) return {e:"🟩", t:"Excellent", k:"excellent"};
-  if(gap <= 2.5) return {e:"🟨", t:"Bien joué", k:"good"};
-  if(gap <= 5) return {e:"🟧", t:"Pas mal", k:"ok"};
-  return {e:"🟥", t:"Raté", k:"miss"};
+  if(gap <= 0.25) return {e:"🎯", k:"perfect"};
+  if(gap <= 1) return {e:"🟩", k:"excellent"};
+  if(gap <= 2.5) return {e:"🟨", k:"good"};
+  if(gap <= 5) return {e:"🟧", k:"ok"};
+  return {e:"🟥", k:"missed"};
 }
 
 /* ---------- country name → ISO code ---------- */
@@ -332,11 +354,11 @@ function collect(features, getA2, getName){
 }
 
 const SOURCES = [
-  {label:"amCharts 5 (haute définition)", credit:"Contours : amCharts geodata", load: () => importGeo("https://cdn.jsdelivr.net/npm/@amcharts/amcharts5-geodata@5/worldHigh.js")},
-  {label:"amCharts 4 (haute définition)", credit:"Contours : amCharts geodata", load: () => importGeo("https://cdn.jsdelivr.net/npm/@amcharts/amcharts4-geodata@4/worldHigh.js")},
-  {label:"Natural Earth 1:50m", credit:"Contours : Natural Earth via world-atlas", load: loadAtlas},
-  {label:"amCharts 5", credit:"Contours : amCharts geodata", load: () => importGeo("https://cdn.jsdelivr.net/npm/@amcharts/amcharts5-geodata@5/worldLow.js")},
-  {label:"ECharts", credit:"Contours : Apache ECharts", load: loadEcharts}
+  {label:"amCharts 5 (haute définition)", credit:"amCharts geodata", load: () => importGeo("https://cdn.jsdelivr.net/npm/@amcharts/amcharts5-geodata@5/worldHigh.js")},
+  {label:"amCharts 4 (haute définition)", credit:"amCharts geodata", load: () => importGeo("https://cdn.jsdelivr.net/npm/@amcharts/amcharts4-geodata@4/worldHigh.js")},
+  {label:"Natural Earth 1:50m", credit:"Natural Earth (world-atlas)", load: loadAtlas},
+  {label:"amCharts 5", credit:"amCharts geodata", load: () => importGeo("https://cdn.jsdelivr.net/npm/@amcharts/amcharts5-geodata@5/worldLow.js")},
+  {label:"ECharts", credit:"Apache ECharts", load: loadEcharts}
 ];
 async function importGeo(url){
   const m = await withTimeout(import(url), 25000);
@@ -425,7 +447,7 @@ function prepare(entry){
   const s = (V * 0.84) / Math.max(bb[2] - bb[0], bb[3] - bb[1]);
   const ox = (V - (bb[2] - bb[0]) * s) / 2, oy = (V - (bb[3] - bb[1]) * s) / 2;
   polys = polys.map(p => p.map(r => r.map(([x, y]) => [(x - bb[0]) * s + ox, (y - bb[1]) * s + oy])));
-  const res = {a2: entry.a2, name: frName(entry.a2, entry.name), polys, area: polys.reduce((t, p) => t + polyArea(p), 0)};
+  const res = {a2: entry.a2, name: entry.name, polys, area: polys.reduce((t, p) => t + polyArea(p), 0)};
   prepCache.set(entry.a2, res);
   return res;
 }
@@ -456,6 +478,416 @@ function pieceCentroid(c, A, B, sign){
   return sw ? [sx / sw, sy / sw] : null;
 }
 
+
+/* ---------- languages ---------- */
+// [code, flag, native name, locale used for numbers and country names]
+const LANGS = [
+  ["en", "gb", "English", "en"],
+  ["fr", "fr", "Français", "fr"],
+  ["es", "es", "Español", "es"],
+  ["de", "de", "Deutsch", "de"],
+  ["it", "it", "Italiano", "it"],
+  ["pt", "br", "Português", "pt-BR"],
+  ["nl", "nl", "Nederlands", "nl"],
+  ["pl", "pl", "Polski", "pl"],
+  ["tr", "tr", "Türkçe", "tr"],
+  ["ru", "ru", "Русский", "ru"],
+  ["ja", "jp", "日本語", "ja"],
+  ["ko", "kr", "한국어", "ko"],
+  ["zh", "cn", "简体中文", "zh-Hans"]
+];
+const FLAGS = {"gb": "<rect width=\"30\" height=\"20\" fill=\"#012169\"/><path d=\"M0 0 30 20M30 0 0 20\" stroke=\"#fff\" stroke-width=\"4\"/><path d=\"M0 0 30 20M30 0 0 20\" stroke=\"#C8102E\" stroke-width=\"1.5\"/><path d=\"M15 0v20M0 10h30\" stroke=\"#fff\" stroke-width=\"6\"/><path d=\"M15 0v20M0 10h30\" stroke=\"#C8102E\" stroke-width=\"3.4\"/>", "fr": "<rect x=\"0\" width=\"10\" height=\"20\" fill=\"#0055A4\"/><rect x=\"10\" width=\"10\" height=\"20\" fill=\"#fff\"/><rect x=\"20\" width=\"10\" height=\"20\" fill=\"#EF4135\"/>", "it": "<rect x=\"0\" width=\"10\" height=\"20\" fill=\"#009246\"/><rect x=\"10\" width=\"10\" height=\"20\" fill=\"#fff\"/><rect x=\"20\" width=\"10\" height=\"20\" fill=\"#CE2B37\"/>", "de": "<rect y=\"0.000\" width=\"30\" height=\"6.667\" fill=\"#000\"/><rect y=\"6.667\" width=\"30\" height=\"6.667\" fill=\"#DD0000\"/><rect y=\"13.333\" width=\"30\" height=\"6.667\" fill=\"#FFCE00\"/>", "nl": "<rect y=\"0.000\" width=\"30\" height=\"6.667\" fill=\"#AE1C28\"/><rect y=\"6.667\" width=\"30\" height=\"6.667\" fill=\"#fff\"/><rect y=\"13.333\" width=\"30\" height=\"6.667\" fill=\"#21468B\"/>", "ru": "<rect y=\"0.000\" width=\"30\" height=\"6.667\" fill=\"#fff\"/><rect y=\"6.667\" width=\"30\" height=\"6.667\" fill=\"#0039A6\"/><rect y=\"13.333\" width=\"30\" height=\"6.667\" fill=\"#D52B1E\"/>", "pl": "<rect y=\"0.000\" width=\"30\" height=\"10.000\" fill=\"#fff\"/><rect y=\"10.000\" width=\"30\" height=\"10.000\" fill=\"#DC143C\"/>", "es": "<rect width=\"30\" height=\"20\" fill=\"#AA151B\"/><rect y=\"5\" width=\"30\" height=\"10\" fill=\"#F1BF00\"/>", "br": "<rect width=\"30\" height=\"20\" fill=\"#009C3B\"/><path d=\"M15 2.4 27.6 10 15 17.6 2.4 10z\" fill=\"#FFDF00\"/><circle cx=\"15\" cy=\"10\" r=\"4.3\" fill=\"#002776\"/><path d=\"M10.9 9.2c2.8-.6 6-.2 8.1 1.4\" stroke=\"#fff\" stroke-width=\".8\" fill=\"none\"/>", "tr": "<rect width=\"30\" height=\"20\" fill=\"#E30A17\"/><circle cx=\"11\" cy=\"10\" r=\"5\" fill=\"#fff\"/><circle cx=\"12.25\" cy=\"10\" r=\"4\" fill=\"#E30A17\"/><polygon points=\"15.20,10.00 16.72,9.51 16.72,7.91 17.66,9.20 19.18,8.71 18.24,10.00 19.18,11.29 17.66,10.80 16.72,12.09 16.72,10.49\" fill=\"#fff\"/>", "jp": "<rect width=\"30\" height=\"20\" fill=\"#fff\"/><circle cx=\"15\" cy=\"10\" r=\"6\" fill=\"#BC002D\"/>", "kr": "<rect width=\"30\" height=\"20\" fill=\"#fff\"/><g transform=\"rotate(33.7 15 10)\"><path d=\"M10 10a5 5 0 0 1 10 0z\" fill=\"#CD2E3A\"/><path d=\"M10 10a5 5 0 0 0 10 0z\" fill=\"#0047A0\"/><circle cx=\"12.5\" cy=\"10\" r=\"2.5\" fill=\"#CD2E3A\"/><circle cx=\"17.5\" cy=\"10\" r=\"2.5\" fill=\"#0047A0\"/></g><g fill=\"#000\"><rect x=\"3.80\" y=\"2.25\" width=\"4.4\" height=\"0.9\" transform=\"rotate(-56.3 6 4)\"/><rect x=\"3.80\" y=\"3.55\" width=\"4.4\" height=\"0.9\" transform=\"rotate(-56.3 6 4)\"/><rect x=\"3.80\" y=\"4.85\" width=\"4.4\" height=\"0.9\" transform=\"rotate(-56.3 6 4)\"/><rect x=\"21.80\" y=\"14.25\" width=\"4.4\" height=\"0.9\" transform=\"rotate(-56.3 24 16)\"/><rect x=\"21.80\" y=\"15.55\" width=\"4.4\" height=\"0.9\" transform=\"rotate(-56.3 24 16)\"/><rect x=\"21.80\" y=\"16.85\" width=\"4.4\" height=\"0.9\" transform=\"rotate(-56.3 24 16)\"/><rect x=\"21.80\" y=\"2.25\" width=\"4.4\" height=\"0.9\" transform=\"rotate(56.3 24 4)\"/><rect x=\"21.80\" y=\"3.55\" width=\"4.4\" height=\"0.9\" transform=\"rotate(56.3 24 4)\"/><rect x=\"21.80\" y=\"4.85\" width=\"4.4\" height=\"0.9\" transform=\"rotate(56.3 24 4)\"/><rect x=\"3.80\" y=\"14.25\" width=\"4.4\" height=\"0.9\" transform=\"rotate(56.3 6 16)\"/><rect x=\"3.80\" y=\"15.55\" width=\"4.4\" height=\"0.9\" transform=\"rotate(56.3 6 16)\"/><rect x=\"3.80\" y=\"16.85\" width=\"4.4\" height=\"0.9\" transform=\"rotate(56.3 6 16)\"/></g>", "cn": "<rect width=\"30\" height=\"20\" fill=\"#DE2910\"/><g fill=\"#FFDE00\"><polygon points=\"5.00,2.00 5.67,4.07 7.85,4.07 6.09,5.35 6.76,7.43 5.00,6.15 3.24,7.43 3.91,5.35 2.15,4.07 4.33,4.07\"/><polygon points=\"10.00,1.00 10.22,1.69 10.95,1.69 10.36,2.12 10.59,2.81 10.00,2.38 9.41,2.81 9.64,2.12 9.05,1.69 9.78,1.69\"/><polygon points=\"12.00,3.00 12.22,3.69 12.95,3.69 12.36,4.12 12.59,4.81 12.00,4.38 11.41,4.81 11.64,4.12 11.05,3.69 11.78,3.69\"/><polygon points=\"12.00,6.00 12.22,6.69 12.95,6.69 12.36,7.12 12.59,7.81 12.00,7.38 11.41,7.81 11.64,7.12 11.05,6.69 11.78,6.69\"/><polygon points=\"10.00,8.00 10.22,8.69 10.95,8.69 10.36,9.12 10.59,9.81 10.00,9.38 9.41,9.81 9.64,9.12 9.05,8.69 9.78,8.69\"/></g>"};
+const flagSvg = (code, w = 22) => `<svg class="lflag" width="${w}" height="${Math.round(w * 2 / 3)}" viewBox="0 0 30 20" aria-hidden="true">${FLAGS[code]}</svg>`;
+
+// Plural forms are objects keyed by Intl.PluralRules categories (one, few, many, other).
+const I18N = {
+en: {
+  name: "Cut the Country", lede: "One straight line, two halves of equal area.",
+  tabDaily: "Today's country", tabDailyShort: "Today", tabPractice: "Practice", modes: "Game mode", lang: "Language",
+  soundOff: "Mute sound", soundOn: "Turn sound on", help: "How to play", stats: "Statistics",
+  loading: "Loading country outlines", canvas: "Cutting area", erase: "Clear line", cutHere: "Cut here",
+  hintMouse: "Click a point, then a second one on the other side of the country: the line runs from edge to edge. <kbd>Esc</kbd> or right-click cancels before the second click.",
+  hintTouch: "Tap a point, then a second one on the other side of the country. Drag a point to adjust it, or drag elsewhere on the mat to move the whole line; with two fingers you move both points at once. Then tap “Cut here”.",
+  pieceWhite: "White piece", pieceKraft: "Kraft piece",
+  footer: "A new country every day at midnight. Remote territories are left out.", credit: "Outlines: {src}.",
+  statsTitle: "Your cuts", helpTitle: "How to play", close: "Close",
+  help1: "Every day, a country cut out of paper. Draw a single straight line to split it into two pieces of equal area.",
+  help2: "With a mouse: click a first point, aim the line with the pointer, then click a second point to cut. Before the second click, Esc or right-click cancels the line; in Practice they also clear the last cut.",
+  help3: "With a finger: tap two points on either side of the country. The line waits. Drag a point to adjust it, or drag elsewhere on the mat to move the whole line at the same angle. With two fingers, each one holds a point and you move both at once. Then tap “Cut here”; “Clear line” starts over.",
+  help4: "Every cut has a blade sound, followed by a short tune that depends on your accuracy. The speaker button, or the M key, turns sound off or on.",
+  help5: "Areas are measured on an equal-area projection centred on the country: what you see matches the real proportions.",
+  help6: "The Practice tab gives you random countries, as many as you like.",
+  scaleFirst: {one: "less than {n} point from a 50 / 50 split", other: "less than {n} points from a 50 / 50 split"},
+  scaleLess: {one: "less than {n} point", other: "less than {n} points"}, scaleMore: "more",
+  miss: "The line doesn't cross the country. Try again.", missKeep: "The line doesn't cross the country. Move a point.",
+  tooClose: "Move the two points further apart.", erased: "Line cleared.", muted: "Sound off.", unmuted: "Sound on.",
+  copied: "Result copied.", copyBelow: "Copy the text below.",
+  perfect: "Perfect", excellent: "Excellent", good: "Well done", ok: "Not bad", missed: "Missed",
+  exact: "Right down the middle.", gap: {one: "{n} point from 50 / 50", other: "{n} points from 50 / 50"},
+  copy: "Copy result", practice: "Practice", recut: "Cut this country again", next: "Next country",
+  countdown: "Next country in <b>{t}</b>", badgeDaily: "No. {n}", badgeRandom: "random",
+  shareTitle: "{name} #{n}", shareGap: "Gap: {n} pt",
+  played: "days played", avg: "average gap", best: "best gap", streak: "days in a row", streakRec: "streak (best {n})",
+  loadError: "The country outlines could not be loaded.<br>Check your connection, then reload the page."
+},
+fr: {
+  name: "Coupe le pays", lede: "Un trait droit, deux moitiés de même surface.",
+  tabDaily: "Pays du jour", tabDailyShort: "Du jour", tabPractice: "Entraînement", modes: "Mode de jeu", lang: "Langue",
+  soundOff: "Couper le son", soundOn: "Rétablir le son", help: "Règles du jeu", stats: "Statistiques",
+  loading: "Chargement des contours des pays", canvas: "Zone de découpe", erase: "Effacer la ligne", cutHere: "Couper ici",
+  hintMouse: "Clique un point, puis un second de l'autre côté du pays : la ligne est prolongée d'un bord à l'autre. <kbd>Échap</kbd> ou clic droit annule avant le second clic.",
+  hintTouch: "Touche un point, puis un second de l'autre côté du pays. Fais glisser un point pour l'ajuster, ou ailleurs sur le tapis pour déplacer toute la ligne ; à deux doigts, tu bouges les deux points en même temps. Appuie ensuite sur « Couper ici ».",
+  pieceWhite: "Pièce blanche", pieceKraft: "Pièce kraft",
+  footer: "Un nouveau pays chaque jour à minuit. Les territoires éloignés sont ignorés.", credit: "Contours : {src}.",
+  statsTitle: "Tes coupes", helpTitle: "Comment jouer", close: "Fermer",
+  help1: "Chaque jour, un pays découpé dans du papier. Trace une seule ligne droite pour le partager en deux pièces de même surface.",
+  help2: "À la souris : clique un premier point, oriente la ligne avec le pointeur, puis clique un second point pour couper. Échap ou clic droit annule avant le second clic ; en entraînement, ils effacent aussi la dernière coupe.",
+  help3: "Au doigt : touche deux points de part et d'autre du pays. La ligne reste en attente. Fais glisser un point pour l'ajuster, ou fais glisser ailleurs sur le tapis pour déplacer toute la ligne en gardant son angle. À deux doigts, chacun tient un point et tu les bouges en même temps. Appuie ensuite sur « Couper ici » ; « Effacer la ligne » recommence.",
+  help4: "Chaque coupe a son bruit de lame, suivi d'un petit air qui dépend de ta précision. Le bouton haut-parleur, ou la touche M, coupe ou rétablit le son.",
+  help5: "Les surfaces sont mesurées sur une projection à aires égales centrée sur le pays : ce que tu vois respecte les vraies proportions.",
+  help6: "L'onglet Entraînement propose des pays au hasard, sans limite.",
+  scaleFirst: {one: "moins de {n} point d'écart avec le 50 / 50", other: "moins de {n} points d'écart avec le 50 / 50"},
+  scaleLess: {one: "moins de {n} point", other: "moins de {n} points"}, scaleMore: "au-delà",
+  miss: "La ligne ne traverse pas le pays. Recommence.", missKeep: "La ligne ne traverse pas le pays. Déplace un point.",
+  tooClose: "Écarte un peu plus les deux points.", erased: "Ligne effacée.", muted: "Son coupé.", unmuted: "Son rétabli.",
+  copied: "Résultat copié.", copyBelow: "Copie le texte ci-dessous.",
+  perfect: "Parfait", excellent: "Excellent", good: "Bien joué", ok: "Pas mal", missed: "Raté",
+  exact: "Pile au milieu.", gap: {one: "À {n} point du 50 / 50", other: "À {n} points du 50 / 50"},
+  copy: "Copier le résultat", practice: "S'entraîner", recut: "Recouper ce pays", next: "Pays suivant",
+  countdown: "Prochain pays dans <b>{t}</b>", badgeDaily: "n° {n}", badgeRandom: "au hasard",
+  shareTitle: "{name} n°{n}", shareGap: "Écart : {n} pt",
+  played: "jours joués", avg: "écart moyen", best: "meilleur écart", streak: "jours de suite", streakRec: "série (record {n})",
+  loadError: "Les contours des pays n'ont pas pu être chargés.<br>Vérifie ta connexion, puis recharge la page."
+},
+es: {
+  name: "Corta el país", lede: "Una línea recta, dos mitades de igual superficie.",
+  tabDaily: "País del día", tabDailyShort: "Hoy", tabPractice: "Práctica", modes: "Modo de juego", lang: "Idioma",
+  soundOff: "Silenciar", soundOn: "Activar el sonido", help: "Cómo se juega", stats: "Estadísticas",
+  loading: "Cargando los contornos de los países", canvas: "Zona de corte", erase: "Borrar la línea", cutHere: "Cortar aquí",
+  hintMouse: "Haz clic en un punto y luego en otro al otro lado del país: la línea se prolonga de borde a borde. <kbd>Esc</kbd> o el clic derecho cancelan antes del segundo clic.",
+  hintTouch: "Toca un punto y luego otro al otro lado del país. Arrastra un punto para ajustarlo, o arrastra en otra parte del tapete para mover toda la línea; con dos dedos mueves los dos puntos a la vez. Después pulsa «Cortar aquí».",
+  pieceWhite: "Pieza blanca", pieceKraft: "Pieza kraft",
+  footer: "Un país nuevo cada día a medianoche. Los territorios lejanos se omiten.", credit: "Contornos: {src}.",
+  statsTitle: "Tus cortes", helpTitle: "Cómo se juega", close: "Cerrar",
+  help1: "Cada día, un país recortado en papel. Traza una sola línea recta para dividirlo en dos piezas de igual superficie.",
+  help2: "Con ratón: haz clic en un primer punto, orienta la línea con el puntero y haz clic en un segundo punto para cortar. Antes del segundo clic, Esc o el clic derecho cancelan la línea; en Práctica también borran el último corte.",
+  help3: "Con el dedo: toca dos puntos a ambos lados del país. La línea queda en espera. Arrastra un punto para ajustarlo, o arrastra en otra parte del tapete para mover toda la línea con el mismo ángulo. Con dos dedos, cada uno sujeta un punto y los mueves a la vez. Después pulsa «Cortar aquí»; «Borrar la línea» vuelve a empezar.",
+  help4: "Cada corte tiene su sonido de cuchilla, seguido de una melodía que depende de tu precisión. El botón del altavoz, o la tecla M, quita o activa el sonido.",
+  help5: "Las superficies se miden en una proyección equivalente centrada en el país: lo que ves respeta las proporciones reales.",
+  help6: "La pestaña Práctica te propone países al azar, sin límite.",
+  scaleFirst: {one: "menos de {n} punto de diferencia con el 50 / 50", other: "menos de {n} puntos de diferencia con el 50 / 50"},
+  scaleLess: {one: "menos de {n} punto", other: "menos de {n} puntos"}, scaleMore: "más",
+  miss: "La línea no atraviesa el país. Inténtalo de nuevo.", missKeep: "La línea no atraviesa el país. Mueve un punto.",
+  tooClose: "Separa un poco más los dos puntos.", erased: "Línea borrada.", muted: "Sonido desactivado.", unmuted: "Sonido activado.",
+  copied: "Resultado copiado.", copyBelow: "Copia el texto de abajo.",
+  perfect: "Perfecto", excellent: "Excelente", good: "Bien hecho", ok: "No está mal", missed: "Fallado",
+  exact: "Justo en el medio.", gap: {one: "A {n} punto del 50 / 50", other: "A {n} puntos del 50 / 50"},
+  copy: "Copiar el resultado", practice: "Practicar", recut: "Volver a cortar este país", next: "Siguiente país",
+  countdown: "Próximo país en <b>{t}</b>", badgeDaily: "n.º {n}", badgeRandom: "al azar",
+  shareTitle: "{name} n.º {n}", shareGap: "Diferencia: {n} pt",
+  played: "días jugados", avg: "diferencia media", best: "mejor diferencia", streak: "días seguidos", streakRec: "racha (récord {n})",
+  loadError: "No se pudieron cargar los contornos de los países.<br>Comprueba tu conexión y recarga la página."
+},
+de: {
+  name: "Halbier das Land", lede: "Ein gerader Schnitt, zwei gleich große Hälften.",
+  tabDaily: "Land des Tages", tabDailyShort: "Heute", tabPractice: "Training", modes: "Spielmodus", lang: "Sprache",
+  soundOff: "Ton aus", soundOn: "Ton an", help: "Spielregeln", stats: "Statistik",
+  loading: "Ländergrenzen werden geladen", canvas: "Schneidefläche", erase: "Linie löschen", cutHere: "Hier schneiden",
+  hintMouse: "Klicke einen Punkt an und dann einen zweiten auf der anderen Seite des Landes: Die Linie wird von Rand zu Rand verlängert. <kbd>Esc</kbd> oder Rechtsklick bricht vor dem zweiten Klick ab.",
+  hintTouch: "Tippe einen Punkt an und dann einen zweiten auf der anderen Seite des Landes. Zieh einen Punkt, um ihn anzupassen, oder zieh woanders auf der Matte, um die ganze Linie zu verschieben; mit zwei Fingern bewegst du beide Punkte gleichzeitig. Tippe dann auf „Hier schneiden“.",
+  pieceWhite: "Weißes Stück", pieceKraft: "Kraftpapier-Stück",
+  footer: "Jeden Tag um Mitternacht ein neues Land. Entlegene Gebiete werden weggelassen.", credit: "Umrisse: {src}.",
+  statsTitle: "Deine Schnitte", helpTitle: "So wird gespielt", close: "Schließen",
+  help1: "Jeden Tag ein Land, aus Papier ausgeschnitten. Zieh eine einzige gerade Linie, um es in zwei gleich große Stücke zu teilen.",
+  help2: "Mit der Maus: Klicke einen ersten Punkt an, richte die Linie mit dem Zeiger aus und klicke dann einen zweiten Punkt, um zu schneiden. Vor dem zweiten Klick brechen Esc oder Rechtsklick die Linie ab; im Training löschen sie auch den letzten Schnitt.",
+  help3: "Mit dem Finger: Tippe zwei Punkte auf beiden Seiten des Landes an. Die Linie wartet. Zieh einen Punkt, um ihn anzupassen, oder zieh woanders auf der Matte, um die ganze Linie im gleichen Winkel zu verschieben. Mit zwei Fingern hältst du je einen Punkt und bewegst beide gleichzeitig. Tippe dann auf „Hier schneiden“; „Linie löschen“ fängt neu an.",
+  help4: "Jeder Schnitt hat sein Klingengeräusch, gefolgt von einer kurzen Melodie, die von deiner Genauigkeit abhängt. Der Lautsprecher-Knopf oder die Taste M schaltet den Ton aus oder an.",
+  help5: "Die Flächen werden auf einer flächentreuen Projektion gemessen, die auf das Land zentriert ist: Was du siehst, entspricht den echten Proportionen.",
+  help6: "Im Tab Training bekommst du zufällige Länder, so viele du willst.",
+  scaleFirst: {one: "weniger als {n} Punkt Abstand zu 50 / 50", other: "weniger als {n} Punkte Abstand zu 50 / 50"},
+  scaleLess: {one: "weniger als {n} Punkt", other: "weniger als {n} Punkte"}, scaleMore: "mehr",
+  miss: "Die Linie schneidet das Land nicht. Versuch es noch einmal.", missKeep: "Die Linie schneidet das Land nicht. Verschieb einen Punkt.",
+  tooClose: "Zieh die beiden Punkte weiter auseinander.", erased: "Linie gelöscht.", muted: "Ton aus.", unmuted: "Ton an.",
+  copied: "Ergebnis kopiert.", copyBelow: "Kopiere den Text unten.",
+  perfect: "Perfekt", excellent: "Exzellent", good: "Gut gemacht", ok: "Nicht schlecht", missed: "Daneben",
+  exact: "Genau in der Mitte.", gap: {one: "{n} Punkt von 50 / 50 entfernt", other: "{n} Punkte von 50 / 50 entfernt"},
+  copy: "Ergebnis kopieren", practice: "Trainieren", recut: "Dieses Land neu schneiden", next: "Nächstes Land",
+  countdown: "Nächstes Land in <b>{t}</b>", badgeDaily: "Nr. {n}", badgeRandom: "zufällig",
+  shareTitle: "{name} Nr. {n}", shareGap: "Abstand: {n} Pkt.",
+  played: "gespielte Tage", avg: "mittlerer Abstand", best: "bester Abstand", streak: "Tage in Folge", streakRec: "Serie (Rekord {n})",
+  loadError: "Die Ländergrenzen konnten nicht geladen werden.<br>Prüfe deine Verbindung und lade die Seite neu."
+},
+it: {
+  name: "Taglia il paese", lede: "Un tratto dritto, due metà della stessa superficie.",
+  tabDaily: "Paese del giorno", tabDailyShort: "Oggi", tabPractice: "Allenamento", modes: "Modalità di gioco", lang: "Lingua",
+  soundOff: "Disattiva l'audio", soundOn: "Attiva l'audio", help: "Come si gioca", stats: "Statistiche",
+  loading: "Caricamento dei confini dei paesi", canvas: "Area di taglio", erase: "Cancella la linea", cutHere: "Taglia qui",
+  hintMouse: "Clicca un punto, poi un secondo dall'altra parte del paese: la linea si estende da un bordo all'altro. <kbd>Esc</kbd> o il clic destro annullano prima del secondo clic.",
+  hintTouch: "Tocca un punto, poi un secondo dall'altra parte del paese. Trascina un punto per regolarlo, o trascina altrove sul tappetino per spostare tutta la linea; con due dita muovi entrambi i punti insieme. Poi premi «Taglia qui».",
+  pieceWhite: "Pezzo bianco", pieceKraft: "Pezzo kraft",
+  footer: "Un nuovo paese ogni giorno a mezzanotte. I territori lontani sono esclusi.", credit: "Confini: {src}.",
+  statsTitle: "I tuoi tagli", helpTitle: "Come si gioca", close: "Chiudi",
+  help1: "Ogni giorno, un paese ritagliato nella carta. Traccia una sola linea retta per dividerlo in due pezzi della stessa superficie.",
+  help2: "Con il mouse: clicca un primo punto, orienta la linea con il puntatore, poi clicca un secondo punto per tagliare. Prima del secondo clic, Esc o il clic destro annullano la linea; in Allenamento cancellano anche l'ultimo taglio.",
+  help3: "Con il dito: tocca due punti ai lati del paese. La linea resta in attesa. Trascina un punto per regolarlo, o trascina altrove sul tappetino per spostare tutta la linea con lo stesso angolo. Con due dita, ognuna tiene un punto e li muovi insieme. Poi premi «Taglia qui»; «Cancella la linea» ricomincia.",
+  help4: "Ogni taglio ha il suo suono di lama, seguito da una breve melodia che dipende dalla tua precisione. Il pulsante dell'altoparlante, o il tasto M, disattiva o riattiva l'audio.",
+  help5: "Le superfici sono misurate su una proiezione equivalente centrata sul paese: ciò che vedi rispetta le proporzioni reali.",
+  help6: "La scheda Allenamento propone paesi a caso, senza limiti.",
+  scaleFirst: {one: "meno di {n} punto di scarto dal 50 / 50", other: "meno di {n} punti di scarto dal 50 / 50"},
+  scaleLess: {one: "meno di {n} punto", other: "meno di {n} punti"}, scaleMore: "oltre",
+  miss: "La linea non attraversa il paese. Riprova.", missKeep: "La linea non attraversa il paese. Sposta un punto.",
+  tooClose: "Allontana un po' di più i due punti.", erased: "Linea cancellata.", muted: "Audio disattivato.", unmuted: "Audio attivato.",
+  copied: "Risultato copiato.", copyBelow: "Copia il testo qui sotto.",
+  perfect: "Perfetto", excellent: "Eccellente", good: "Ben fatto", ok: "Niente male", missed: "Mancato",
+  exact: "Esattamente a metà.", gap: {one: "A {n} punto dal 50 / 50", other: "A {n} punti dal 50 / 50"},
+  copy: "Copia il risultato", practice: "Allenati", recut: "Ritaglia questo paese", next: "Paese successivo",
+  countdown: "Prossimo paese tra <b>{t}</b>", badgeDaily: "n. {n}", badgeRandom: "a caso",
+  shareTitle: "{name} n. {n}", shareGap: "Scarto: {n} pt",
+  played: "giorni giocati", avg: "scarto medio", best: "miglior scarto", streak: "giorni di fila", streakRec: "serie (record {n})",
+  loadError: "Non è stato possibile caricare i confini dei paesi.<br>Controlla la connessione, poi ricarica la pagina."
+},
+pt: {
+  name: "Corte o país", lede: "Uma linha reta, duas metades de mesma área.",
+  tabDaily: "País do dia", tabDailyShort: "Hoje", tabPractice: "Treino", modes: "Modo de jogo", lang: "Idioma",
+  soundOff: "Desativar o som", soundOn: "Ativar o som", help: "Como jogar", stats: "Estatísticas",
+  loading: "Carregando os contornos dos países", canvas: "Área de corte", erase: "Apagar a linha", cutHere: "Cortar aqui",
+  hintMouse: "Clique em um ponto e depois em outro do outro lado do país: a linha se estende de borda a borda. <kbd>Esc</kbd> ou o clique direito cancelam antes do segundo clique.",
+  hintTouch: "Toque em um ponto e depois em outro do outro lado do país. Arraste um ponto para ajustá-lo, ou arraste em outro lugar do tapete para mover a linha inteira; com dois dedos, você move os dois pontos ao mesmo tempo. Depois toque em “Cortar aqui”.",
+  pieceWhite: "Peça branca", pieceKraft: "Peça kraft",
+  footer: "Um novo país todo dia à meia-noite. Territórios distantes são ignorados.", credit: "Contornos: {src}.",
+  statsTitle: "Seus cortes", helpTitle: "Como jogar", close: "Fechar",
+  help1: "Todo dia, um país recortado em papel. Trace uma única linha reta para dividi-lo em duas peças de mesma área.",
+  help2: "Com o mouse: clique em um primeiro ponto, oriente a linha com o ponteiro e clique em um segundo ponto para cortar. Antes do segundo clique, Esc ou o clique direito cancelam a linha; no Treino, também apagam o último corte.",
+  help3: "Com o dedo: toque em dois pontos dos dois lados do país. A linha fica esperando. Arraste um ponto para ajustá-lo, ou arraste em outro lugar do tapete para mover a linha inteira no mesmo ângulo. Com dois dedos, cada um segura um ponto e você move os dois ao mesmo tempo. Depois toque em “Cortar aqui”; “Apagar a linha” recomeça.",
+  help4: "Cada corte tem seu som de lâmina, seguido de uma melodia curta que depende da sua precisão. O botão do alto-falante, ou a tecla M, desativa ou ativa o som.",
+  help5: "As áreas são medidas em uma projeção equivalente centrada no país: o que você vê respeita as proporções reais.",
+  help6: "A aba Treino oferece países aleatórios, sem limite.",
+  scaleFirst: {one: "menos de {n} ponto de diferença do 50 / 50", other: "menos de {n} pontos de diferença do 50 / 50"},
+  scaleLess: {one: "menos de {n} ponto", other: "menos de {n} pontos"}, scaleMore: "mais",
+  miss: "A linha não atravessa o país. Tente de novo.", missKeep: "A linha não atravessa o país. Mova um ponto.",
+  tooClose: "Afaste um pouco mais os dois pontos.", erased: "Linha apagada.", muted: "Som desativado.", unmuted: "Som ativado.",
+  copied: "Resultado copiado.", copyBelow: "Copie o texto abaixo.",
+  perfect: "Perfeito", excellent: "Excelente", good: "Muito bem", ok: "Nada mal", missed: "Errou",
+  exact: "Bem no meio.", gap: {one: "A {n} ponto do 50 / 50", other: "A {n} pontos do 50 / 50"},
+  copy: "Copiar o resultado", practice: "Treinar", recut: "Cortar este país de novo", next: "Próximo país",
+  countdown: "Próximo país em <b>{t}</b>", badgeDaily: "nº {n}", badgeRandom: "aleatório",
+  shareTitle: "{name} nº {n}", shareGap: "Diferença: {n} pt",
+  played: "dias jogados", avg: "diferença média", best: "melhor diferença", streak: "dias seguidos", streakRec: "sequência (recorde {n})",
+  loadError: "Não foi possível carregar os contornos dos países.<br>Verifique sua conexão e recarregue a página."
+},
+nl: {
+  name: "Halveer het land", lede: "Eén rechte lijn, twee helften met dezelfde oppervlakte.",
+  tabDaily: "Land van de dag", tabDailyShort: "Vandaag", tabPractice: "Oefenen", modes: "Spelmodus", lang: "Taal",
+  soundOff: "Geluid uit", soundOn: "Geluid aan", help: "Spelregels", stats: "Statistieken",
+  loading: "Landgrenzen worden geladen", canvas: "Snijvlak", erase: "Lijn wissen", cutHere: "Hier snijden",
+  hintMouse: "Klik op een punt en dan op een tweede aan de andere kant van het land: de lijn loopt door van rand tot rand. <kbd>Esc</kbd> of rechtsklikken annuleert vóór de tweede klik.",
+  hintTouch: "Tik op een punt en dan op een tweede aan de andere kant van het land. Sleep een punt om het bij te stellen, of sleep ergens anders op de mat om de hele lijn te verplaatsen; met twee vingers beweeg je beide punten tegelijk. Tik daarna op ‘Hier snijden’.",
+  pieceWhite: "Wit stuk", pieceKraft: "Kraftpapieren stuk",
+  footer: "Elke dag om middernacht een nieuw land. Afgelegen gebieden worden weggelaten.", credit: "Grenzen: {src}.",
+  statsTitle: "Jouw sneden", helpTitle: "Zo speel je", close: "Sluiten",
+  help1: "Elke dag een land, uitgeknipt uit papier. Trek één rechte lijn om het in twee stukken met dezelfde oppervlakte te verdelen.",
+  help2: "Met de muis: klik op een eerste punt, richt de lijn met de aanwijzer en klik op een tweede punt om te snijden. Vóór de tweede klik annuleren Esc of rechtsklikken de lijn; bij Oefenen wissen ze ook de laatste snede.",
+  help3: "Met je vinger: tik op twee punten aan weerszijden van het land. De lijn wacht. Sleep een punt om het bij te stellen, of sleep ergens anders op de mat om de hele lijn onder dezelfde hoek te verplaatsen. Met twee vingers houdt elke vinger een punt vast en beweeg je ze tegelijk. Tik daarna op ‘Hier snijden’; ‘Lijn wissen’ begint opnieuw.",
+  help4: "Elke snede heeft een mesgeluid, gevolgd door een kort deuntje dat afhangt van je nauwkeurigheid. De luidsprekerknop of de toets M zet het geluid uit of aan.",
+  help5: "De oppervlakten worden gemeten op een oppervlaktegetrouwe projectie die op het land is gecentreerd: wat je ziet klopt met de echte verhoudingen.",
+  help6: "Het tabblad Oefenen geeft je willekeurige landen, zoveel je wilt.",
+  scaleFirst: {one: "minder dan {n} punt van 50 / 50", other: "minder dan {n} punten van 50 / 50"},
+  scaleLess: {one: "minder dan {n} punt", other: "minder dan {n} punten"}, scaleMore: "meer",
+  miss: "De lijn gaat niet door het land. Probeer het opnieuw.", missKeep: "De lijn gaat niet door het land. Verplaats een punt.",
+  tooClose: "Zet de twee punten verder uit elkaar.", erased: "Lijn gewist.", muted: "Geluid uit.", unmuted: "Geluid aan.",
+  copied: "Resultaat gekopieerd.", copyBelow: "Kopieer de tekst hieronder.",
+  perfect: "Perfect", excellent: "Uitstekend", good: "Goed gedaan", ok: "Niet slecht", missed: "Mis",
+  exact: "Precies in het midden.", gap: {one: "{n} punt van 50 / 50", other: "{n} punten van 50 / 50"},
+  copy: "Resultaat kopiëren", practice: "Oefenen", recut: "Dit land opnieuw snijden", next: "Volgend land",
+  countdown: "Volgend land over <b>{t}</b>", badgeDaily: "nr. {n}", badgeRandom: "willekeurig",
+  shareTitle: "{name} nr. {n}", shareGap: "Verschil: {n} pt",
+  played: "dagen gespeeld", avg: "gemiddeld verschil", best: "beste verschil", streak: "dagen op rij", streakRec: "reeks (record {n})",
+  loadError: "De landgrenzen konden niet worden geladen.<br>Controleer je verbinding en laad de pagina opnieuw."
+},
+pl: {
+  name: "Przetnij kraj", lede: "Jedna prosta linia, dwie połowy o tej samej powierzchni.",
+  tabDaily: "Kraj dnia", tabDailyShort: "Dziś", tabPractice: "Trening", modes: "Tryb gry", lang: "Język",
+  soundOff: "Wycisz dźwięk", soundOn: "Włącz dźwięk", help: "Zasady gry", stats: "Statystyki",
+  loading: "Wczytywanie konturów krajów", canvas: "Pole cięcia", erase: "Usuń linię", cutHere: "Tnij tutaj",
+  hintMouse: "Kliknij punkt, a potem drugi po drugiej stronie kraju: linia biegnie od krawędzi do krawędzi. <kbd>Esc</kbd> lub prawy przycisk myszy anuluje przed drugim kliknięciem.",
+  hintTouch: "Dotknij punktu, a potem drugiego po drugiej stronie kraju. Przeciągnij punkt, aby go poprawić, albo przeciągnij w innym miejscu maty, aby przesunąć całą linię; dwoma palcami przesuwasz oba punkty naraz. Potem naciśnij „Tnij tutaj”.",
+  pieceWhite: "Biały kawałek", pieceKraft: "Kawałek kraftowy",
+  footer: "Nowy kraj codziennie o północy. Odległe terytoria są pomijane.", credit: "Kontury: {src}.",
+  statsTitle: "Twoje cięcia", helpTitle: "Jak grać", close: "Zamknij",
+  help1: "Codziennie jeden kraj wycięty z papieru. Narysuj jedną prostą linię, aby podzielić go na dwa kawałki o tej samej powierzchni.",
+  help2: "Myszą: kliknij pierwszy punkt, ustaw linię wskaźnikiem, a potem kliknij drugi punkt, aby przeciąć. Przed drugim kliknięciem Esc lub prawy przycisk anuluje linię; w Treningu usuwają też ostatnie cięcie.",
+  help3: "Palcem: dotknij dwóch punktów po obu stronach kraju. Linia czeka. Przeciągnij punkt, aby go poprawić, albo przeciągnij w innym miejscu maty, aby przesunąć całą linię pod tym samym kątem. Dwoma palcami trzymasz po jednym punkcie i przesuwasz je naraz. Potem naciśnij „Tnij tutaj”; „Usuń linię” zaczyna od nowa.",
+  help4: "Każde cięcie ma swój dźwięk ostrza, a po nim krótką melodię zależną od twojej dokładności. Przycisk głośnika lub klawisz M wyłącza albo włącza dźwięk.",
+  help5: "Powierzchnie mierzone są w odwzorowaniu równopolowym wyśrodkowanym na kraju: to, co widzisz, zachowuje prawdziwe proporcje.",
+  help6: "Zakładka Trening daje losowe kraje, bez limitu.",
+  scaleFirst: {one: "mniej niż {n} punkt różnicy od 50 / 50", few: "mniej niż {n} punkty różnicy od 50 / 50", many: "mniej niż {n} punktów różnicy od 50 / 50", other: "mniej niż {n} punktu różnicy od 50 / 50"},
+  scaleLess: {one: "mniej niż {n} punkt", few: "mniej niż {n} punkty", many: "mniej niż {n} punktów", other: "mniej niż {n} punktu"}, scaleMore: "więcej",
+  miss: "Linia nie przecina kraju. Spróbuj jeszcze raz.", missKeep: "Linia nie przecina kraju. Przesuń punkt.",
+  tooClose: "Odsuń punkty dalej od siebie.", erased: "Linia usunięta.", muted: "Dźwięk wyłączony.", unmuted: "Dźwięk włączony.",
+  copied: "Wynik skopiowany.", copyBelow: "Skopiuj tekst poniżej.",
+  perfect: "Idealnie", excellent: "Doskonale", good: "Dobra robota", ok: "Nieźle", missed: "Pudło",
+  exact: "Dokładnie na środku.", gap: {one: "{n} punkt od 50 / 50", few: "{n} punkty od 50 / 50", many: "{n} punktów od 50 / 50", other: "{n} punktu od 50 / 50"},
+  copy: "Kopiuj wynik", practice: "Trenuj", recut: "Przetnij ten kraj ponownie", next: "Następny kraj",
+  countdown: "Następny kraj za <b>{t}</b>", badgeDaily: "nr {n}", badgeRandom: "losowy",
+  shareTitle: "{name} nr {n}", shareGap: "Różnica: {n} pkt",
+  played: "rozegrane dni", avg: "średnia różnica", best: "najlepsza różnica", streak: "dni z rzędu", streakRec: "seria (rekord {n})",
+  loadError: "Nie udało się wczytać konturów krajów.<br>Sprawdź połączenie i odśwież stronę."
+},
+tr: {
+  name: "Ülkeyi Kes", lede: "Tek bir düz çizgi, eşit alanlı iki yarım.",
+  tabDaily: "Günün ülkesi", tabDailyShort: "Bugün", tabPractice: "Antrenman", modes: "Oyun modu", lang: "Dil",
+  soundOff: "Sesi kapat", soundOn: "Sesi aç", help: "Nasıl oynanır", stats: "İstatistikler",
+  loading: "Ülke sınırları yükleniyor", canvas: "Kesim alanı", erase: "Çizgiyi sil", cutHere: "Buradan kes",
+  hintMouse: "Bir noktaya, sonra ülkenin diğer tarafında ikinci bir noktaya tıkla: çizgi kenardan kenara uzar. İkinci tıklamadan önce <kbd>Esc</kbd> veya sağ tık iptal eder.",
+  hintTouch: "Bir noktaya, sonra ülkenin diğer tarafında ikinci bir noktaya dokun. Ayarlamak için bir noktayı sürükle ya da tüm çizgiyi taşımak için matın başka bir yerinde sürükle; iki parmakla iki noktayı aynı anda hareket ettirirsin. Sonra “Buradan kes” düğmesine dokun.",
+  pieceWhite: "Beyaz parça", pieceKraft: "Kraft parça",
+  footer: "Her gün gece yarısı yeni bir ülke. Uzak topraklar dahil edilmez.", credit: "Sınırlar: {src}.",
+  statsTitle: "Kesimlerin", helpTitle: "Nasıl oynanır", close: "Kapat",
+  help1: "Her gün kâğıttan kesilmiş bir ülke. Onu eşit alanlı iki parçaya bölmek için tek bir düz çizgi çiz.",
+  help2: "Fareyle: ilk noktaya tıkla, çizgiyi imleçle yönlendir, sonra kesmek için ikinci noktaya tıkla. İkinci tıklamadan önce Esc veya sağ tık çizgiyi iptal eder; Antrenmanda son kesimi de siler.",
+  help3: "Parmakla: ülkenin iki yanında iki noktaya dokun. Çizgi bekler. Ayarlamak için bir noktayı sürükle ya da tüm çizgiyi aynı açıyla taşımak için matın başka bir yerinde sürükle. İki parmakla her biri bir noktayı tutar ve ikisini aynı anda hareket ettirirsin. Sonra “Buradan kes” düğmesine dokun; “Çizgiyi sil” baştan başlatır.",
+  help4: "Her kesimin bir bıçak sesi vardır, ardından isabetine göre değişen kısa bir melodi gelir. Hoparlör düğmesi ya da M tuşu sesi kapatır veya açar.",
+  help5: "Alanlar, ülkeye ortalanmış eşit alanlı bir projeksiyonda ölçülür: gördüğün oranlar gerçek oranlardır.",
+  help6: "Antrenman sekmesi istediğin kadar rastgele ülke sunar.",
+  scaleFirst: "50 / 50'den farkı {n} puandan az", scaleLess: "{n} puandan az", scaleMore: "daha fazla",
+  miss: "Çizgi ülkeden geçmiyor. Tekrar dene.", missKeep: "Çizgi ülkeden geçmiyor. Bir noktayı kaydır.",
+  tooClose: "İki noktayı biraz daha uzaklaştır.", erased: "Çizgi silindi.", muted: "Ses kapalı.", unmuted: "Ses açık.",
+  copied: "Sonuç kopyalandı.", copyBelow: "Aşağıdaki metni kopyala.",
+  perfect: "Mükemmel", excellent: "Harika", good: "Aferin", ok: "Fena değil", missed: "Iska",
+  exact: "Tam ortadan.", gap: "50 / 50'den {n} puan uzakta",
+  copy: "Sonucu kopyala", practice: "Antrenman yap", recut: "Bu ülkeyi yeniden kes", next: "Sonraki ülke",
+  countdown: "Sonraki ülkeye <b>{t}</b>", badgeDaily: "No. {n}", badgeRandom: "rastgele",
+  shareTitle: "{name} #{n}", shareGap: "Fark: {n} puan",
+  played: "oynanan gün", avg: "ortalama fark", best: "en iyi fark", streak: "art arda gün", streakRec: "seri (rekor {n})",
+  loadError: "Ülke sınırları yüklenemedi.<br>Bağlantını kontrol et, sonra sayfayı yenile."
+},
+ru: {
+  name: "Разрежь страну", lede: "Одна прямая линия, две половины равной площади.",
+  tabDaily: "Страна дня", tabDailyShort: "Сегодня", tabPractice: "Тренировка", modes: "Режим игры", lang: "Язык",
+  soundOff: "Выключить звук", soundOn: "Включить звук", help: "Как играть", stats: "Статистика",
+  loading: "Загрузка контуров стран", canvas: "Поле для разреза", erase: "Стереть линию", cutHere: "Резать здесь",
+  hintMouse: "Нажми на точку, затем на вторую с другой стороны страны: линия продлевается от края до края. <kbd>Esc</kbd> или правая кнопка мыши отменяют до второго нажатия.",
+  hintTouch: "Коснись точки, затем второй с другой стороны страны. Перетащи точку, чтобы её поправить, или проведи в другом месте коврика, чтобы сдвинуть всю линию; двумя пальцами двигаешь обе точки сразу. Затем нажми «Резать здесь».",
+  pieceWhite: "Белый кусок", pieceKraft: "Крафтовый кусок",
+  footer: "Новая страна каждый день в полночь. Удалённые территории не учитываются.", credit: "Контуры: {src}.",
+  statsTitle: "Твои разрезы", helpTitle: "Как играть", close: "Закрыть",
+  help1: "Каждый день — страна, вырезанная из бумаги. Проведи одну прямую линию, чтобы разделить её на два куска равной площади.",
+  help2: "Мышью: нажми на первую точку, направь линию указателем, затем нажми на вторую точку, чтобы разрезать. До второго нажатия Esc или правая кнопка отменяют линию; в Тренировке они также стирают последний разрез.",
+  help3: "Пальцем: коснись двух точек по обе стороны страны. Линия ждёт. Перетащи точку, чтобы её поправить, или проведи в другом месте коврика, чтобы сдвинуть всю линию под тем же углом. Двумя пальцами каждый держит свою точку, и ты двигаешь обе сразу. Затем нажми «Резать здесь»; «Стереть линию» начинает заново.",
+  help4: "У каждого разреза свой звук лезвия, а затем короткая мелодия, которая зависит от твоей точности. Кнопка динамика или клавиша M выключает или включает звук.",
+  help5: "Площади измеряются в равновеликой проекции с центром на стране: всё, что ты видишь, соответствует реальным пропорциям.",
+  help6: "Во вкладке «Тренировка» — случайные страны, сколько захочешь.",
+  scaleFirst: "отклонение от 50 / 50 меньше {n} п. п.", scaleLess: "меньше {n} п. п.", scaleMore: "больше",
+  miss: "Линия не пересекает страну. Попробуй ещё раз.", missKeep: "Линия не пересекает страну. Сдвинь точку.",
+  tooClose: "Раздвинь точки подальше.", erased: "Линия стёрта.", muted: "Звук выключен.", unmuted: "Звук включён.",
+  copied: "Результат скопирован.", copyBelow: "Скопируй текст ниже.",
+  perfect: "Идеально", excellent: "Отлично", good: "Хорошо", ok: "Неплохо", missed: "Мимо",
+  exact: "Ровно посередине.", gap: "{n} п. п. от 50 / 50",
+  copy: "Скопировать результат", practice: "Тренироваться", recut: "Разрезать заново", next: "Следующая страна",
+  countdown: "Следующая страна через <b>{t}</b>", badgeDaily: "№ {n}", badgeRandom: "случайная",
+  shareTitle: "{name} № {n}", shareGap: "Отклонение: {n} п. п.",
+  played: "дней сыграно", avg: "среднее отклонение", best: "лучшее отклонение", streak: "дней подряд", streakRec: "серия (рекорд {n})",
+  loadError: "Не удалось загрузить контуры стран.<br>Проверь подключение и обнови страницу."
+},
+ja: {
+  name: "国をまっぷたつ", lede: "まっすぐな線一本で、同じ面積のふたつに。",
+  tabDaily: "今日の国", tabDailyShort: "今日", tabPractice: "練習", modes: "ゲームモード", lang: "言語",
+  soundOff: "サウンドをオフ", soundOn: "サウンドをオン", help: "遊び方", stats: "統計",
+  loading: "国の輪郭を読み込み中", canvas: "カットエリア", erase: "線を消す", cutHere: "ここで切る",
+  hintMouse: "点をクリックし、国の反対側でもう一点クリックします。線は端から端まで延びます。2回目のクリックの前なら<kbd>Esc</kbd>か右クリックで取り消せます。",
+  hintTouch: "点をタップし、国の反対側でもう一点タップします。点をドラッグして調整するか、マットの別の場所をドラッグして線全体を動かします。2本指なら両方の点を同時に動かせます。最後に「ここで切る」をタップ。",
+  pieceWhite: "白いピース", pieceKraft: "クラフト紙のピース",
+  footer: "毎日午前0時に新しい国。遠く離れた領土は除外されます。", credit: "輪郭データ：{src}",
+  statsTitle: "あなたのカット", helpTitle: "遊び方", close: "閉じる",
+  help1: "毎日、紙で切り抜いた国がひとつ。まっすぐな線を一本だけ引いて、同じ面積のふたつのピースに分けましょう。",
+  help2: "マウスの場合：1つ目の点をクリックし、ポインターで線の向きを決め、2つ目の点をクリックして切ります。2回目のクリックの前なら、Escか右クリックで線を取り消せます。練習では直前のカットも消せます。",
+  help3: "指の場合：国の両側に2つの点をタップします。線は待機状態になります。点をドラッグして調整するか、マットの別の場所をドラッグして角度を保ったまま線全体を動かします。2本指なら、それぞれの指で点を持って同時に動かせます。最後に「ここで切る」をタップ。「線を消す」でやり直せます。",
+  help4: "カットのたびに刃の音が鳴り、精度に応じた短いメロディーが続きます。スピーカーボタンかMキーでサウンドのオン／オフを切り替えられます。",
+  help5: "面積は国を中心とした正積図法で測ります。見たままの比率が実際の比率です。",
+  help6: "練習タブでは、ランダムな国を好きなだけ遊べます。",
+  scaleFirst: "50 / 50との差が{n}ポイント未満", scaleLess: "{n}ポイント未満", scaleMore: "それ以上",
+  miss: "線が国を横切っていません。もう一度どうぞ。", missKeep: "線が国を横切っていません。点を動かしてください。",
+  tooClose: "2つの点をもう少し離してください。", erased: "線を消しました。", muted: "サウンドをオフにしました。", unmuted: "サウンドをオンにしました。",
+  copied: "結果をコピーしました。", copyBelow: "下のテキストをコピーしてください。",
+  perfect: "パーフェクト", excellent: "エクセレント", good: "お見事", ok: "まあまあ", missed: "ミス",
+  exact: "ど真ん中。", gap: "50 / 50との差 {n}ポイント",
+  copy: "結果をコピー", practice: "練習する", recut: "この国をもう一度切る", next: "次の国",
+  countdown: "次の国まで <b>{t}</b>", badgeDaily: "No.{n}", badgeRandom: "ランダム",
+  shareTitle: "{name} No.{n}", shareGap: "差：{n}pt",
+  played: "プレイ日数", avg: "平均の差", best: "最小の差", streak: "連続日数", streakRec: "連続（最高 {n}）",
+  loadError: "国の輪郭を読み込めませんでした。<br>接続を確認して、ページを再読み込みしてください。"
+},
+ko: {
+  name: "나라를 반으로", lede: "직선 하나로, 넓이가 같은 두 조각.",
+  tabDaily: "오늘의 나라", tabDailyShort: "오늘", tabPractice: "연습", modes: "게임 모드", lang: "언어",
+  soundOff: "소리 끄기", soundOn: "소리 켜기", help: "게임 방법", stats: "통계",
+  loading: "나라 윤곽을 불러오는 중", canvas: "자르기 영역", erase: "선 지우기", cutHere: "여기서 자르기",
+  hintMouse: "점 하나를 클릭한 다음, 나라 반대편에 두 번째 점을 클릭하세요. 선은 가장자리에서 가장자리까지 이어집니다. 두 번째 클릭 전에는 <kbd>Esc</kbd> 또는 오른쪽 클릭으로 취소할 수 있어요.",
+  hintTouch: "점 하나를 탭한 다음, 나라 반대편에 두 번째 점을 탭하세요. 점을 끌어서 조정하거나, 매트의 다른 곳을 끌어 선 전체를 옮기세요. 두 손가락으로 두 점을 동시에 움직일 수 있어요. 그다음 ‘여기서 자르기’를 누르세요.",
+  pieceWhite: "흰 조각", pieceKraft: "크라프트지 조각",
+  footer: "매일 자정에 새로운 나라. 멀리 떨어진 영토는 제외됩니다.", credit: "윤곽 데이터: {src}",
+  statsTitle: "나의 자르기", helpTitle: "게임 방법", close: "닫기",
+  help1: "매일 종이로 오린 나라가 하나 나와요. 직선 하나만 그어서 넓이가 같은 두 조각으로 나누세요.",
+  help2: "마우스: 첫 번째 점을 클릭하고, 포인터로 선의 방향을 정한 뒤, 두 번째 점을 클릭해 자르세요. 두 번째 클릭 전에는 Esc나 오른쪽 클릭으로 선을 취소할 수 있어요. 연습 모드에서는 마지막 자르기도 지워집니다.",
+  help3: "손가락: 나라 양쪽에 두 점을 탭하세요. 선이 대기 상태가 됩니다. 점을 끌어서 조정하거나, 매트의 다른 곳을 끌어 같은 각도로 선 전체를 옮기세요. 두 손가락으로 각각 점을 잡고 동시에 움직일 수 있어요. 그다음 ‘여기서 자르기’를 누르세요. ‘선 지우기’로 다시 시작합니다.",
+  help4: "자를 때마다 칼날 소리가 나고, 정확도에 따라 달라지는 짧은 멜로디가 이어져요. 스피커 버튼이나 M 키로 소리를 끄거나 켤 수 있어요.",
+  help5: "넓이는 나라를 중심으로 한 정적 도법으로 측정합니다. 보이는 비율이 실제 비율이에요.",
+  help6: "연습 탭에서는 무작위 나라를 원하는 만큼 할 수 있어요.",
+  scaleFirst: "50 / 50과의 차이 {n}점 미만", scaleLess: "{n}점 미만", scaleMore: "그 이상",
+  miss: "선이 나라를 지나가지 않아요. 다시 해 보세요.", missKeep: "선이 나라를 지나가지 않아요. 점을 옮겨 보세요.",
+  tooClose: "두 점을 조금 더 떨어뜨리세요.", erased: "선을 지웠어요.", muted: "소리를 껐어요.", unmuted: "소리를 켰어요.",
+  copied: "결과를 복사했어요.", copyBelow: "아래 텍스트를 복사하세요.",
+  perfect: "완벽해요", excellent: "훌륭해요", good: "잘했어요", ok: "나쁘지 않아요", missed: "빗나갔어요",
+  exact: "정확히 한가운데.", gap: "50 / 50과 {n}점 차이",
+  copy: "결과 복사", practice: "연습하기", recut: "이 나라 다시 자르기", next: "다음 나라",
+  countdown: "다음 나라까지 <b>{t}</b>", badgeDaily: "제{n}회", badgeRandom: "무작위",
+  shareTitle: "{name} 제{n}회", shareGap: "차이: {n}점",
+  played: "플레이한 날", avg: "평균 차이", best: "최소 차이", streak: "연속 일수", streakRec: "연속 (최고 {n})",
+  loadError: "나라 윤곽을 불러오지 못했어요.<br>연결을 확인한 뒤 페이지를 새로고침하세요."
+},
+zh: {
+  name: "对半切国家", lede: "一条直线，切出面积相等的两半。",
+  tabDaily: "今日国家", tabDailyShort: "今日", tabPractice: "练习", modes: "游戏模式", lang: "语言",
+  soundOff: "关闭声音", soundOn: "打开声音", help: "玩法", stats: "统计",
+  loading: "正在加载国家轮廓", canvas: "切割区域", erase: "清除线条", cutHere: "在此切开",
+  hintMouse: "点击一个点，再在国家另一侧点击第二个点：线条会从一边延伸到另一边。第二次点击前，按 <kbd>Esc</kbd> 或右键可取消。",
+  hintTouch: "轻点一个点，再在国家另一侧轻点第二个点。拖动某个点进行微调，或在垫子其他位置拖动来移动整条线；用两根手指可同时移动两个点。然后点击“在此切开”。",
+  pieceWhite: "白色纸片", pieceKraft: "牛皮纸片",
+  footer: "每天午夜更新一个国家。偏远领土不计入。", credit: "轮廓数据：{src}",
+  statsTitle: "你的切割", helpTitle: "玩法", close: "关闭",
+  help1: "每天一个用纸剪出的国家。只画一条直线，把它分成面积相等的两块。",
+  help2: "使用鼠标：点击第一个点，用指针调整线条方向，再点击第二个点完成切割。第二次点击前，按 Esc 或右键可取消线条；在练习模式中还会清除上一次切割。",
+  help3: "使用手指：在国家两侧各轻点一个点，线条会保持待定。拖动某个点进行微调，或在垫子其他位置拖动，以相同角度移动整条线。用两根手指各按住一个点，可同时移动。然后点击“在此切开”；“清除线条”可重新开始。",
+  help4: "每次切割都有刀刃声，随后会根据你的准确度播放一段短旋律。扬声器按钮或 M 键可关闭或打开声音。",
+  help5: "面积在以该国为中心的等积投影上测量：你看到的比例就是真实比例。",
+  help6: "练习标签页提供随机国家，不限次数。",
+  scaleFirst: "与 50 / 50 相差不到 {n} 个百分点", scaleLess: "不到 {n} 个百分点", scaleMore: "更多",
+  miss: "线条没有穿过国家。再试一次。", missKeep: "线条没有穿过国家。请移动一个点。",
+  tooClose: "请把两个点拉开一些。", erased: "已清除线条。", muted: "声音已关闭。", unmuted: "声音已打开。",
+  copied: "结果已复制。", copyBelow: "请复制下面的文字。",
+  perfect: "完美", excellent: "优秀", good: "干得好", ok: "还不错", missed: "失手了",
+  exact: "正好在中间。", gap: "距 50 / 50 相差 {n} 个百分点",
+  copy: "复制结果", practice: "去练习", recut: "重新切这个国家", next: "下一个国家",
+  countdown: "距下一个国家还有 <b>{t}</b>", badgeDaily: "第 {n} 期", badgeRandom: "随机",
+  shareTitle: "{name} 第 {n} 期", shareGap: "差距：{n} 个百分点",
+  played: "已玩天数", avg: "平均差距", best: "最小差距", streak: "连续天数", streakRec: "连续（最高 {n}）",
+  loadError: "无法加载国家轮廓。<br>请检查网络连接，然后刷新页面。"
+}
+};
+
+let LANG = "en";
+const langInfo = code => LANGS.find(l => l[0] === code) || LANGS[0];
+const locale = () => langInfo(LANG)[3];
+// L("key", {n: 3}, count): picks the plural form for count when the entry has several
+function L(key, vars = {}, count, fractionDigits = 0){
+  let s = (I18N[LANG] && I18N[LANG][key]) ?? I18N.en[key] ?? key;
+  if(typeof s === "object"){
+    let cat = "other";
+    try{ cat = new Intl.PluralRules(locale(), {minimumFractionDigits: fractionDigits}).select(count ?? 0); }catch(e){}
+    s = s[cat] ?? s.other;
+  }
+  return s.replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m);
+}
 
 /* ---------- state ---------- */
 const S = {world: null, source: null, mode: "daily", country: null, cut: null, pending: null, press: null, grabs: new Map(), practiceA2: null,
@@ -595,11 +1027,14 @@ const SFX = {
   },
   setMuted(m){
     this.muted = m; store.set("muted", m);
-    const b = $("soundBtn"); b.setAttribute("aria-pressed", m); b.setAttribute("aria-label", m ? "Rétablir le son" : "Couper le son");
-    b.title = (m ? "Rétablir le son" : "Couper le son") + " (M)";
+    labelSound();
   }
 };
-$("soundBtn").onclick = () => { SFX.setMuted(!SFX.muted); toast(SFX.muted ? "Son coupé." : "Son rétabli."); if(!SFX.muted) SFX.cut(); };
+function labelSound(){
+  const b = $("soundBtn"), m = SFX.muted, label = L(m ? "soundOn" : "soundOff");
+  b.setAttribute("aria-pressed", m); b.setAttribute("aria-label", label); b.title = label + " (M)";
+}
+$("soundBtn").onclick = () => { SFX.setMuted(!SFX.muted); toast(L(SFX.muted ? "muted" : "unmuted")); if(!SFX.muted) SFX.cut(); };
 SFX.setMuted(SFX.muted);
 
 /* ---------- drawing ---------- */
@@ -734,10 +1169,10 @@ function draw(){
   // measurements, stamped on each piece
   const lt = fx.label; if(lt <= 0) return;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  for(const [sign, pct, ce] of [[1, cut.pos, cut.cA], [-1, cut.neg, cut.cB]]){
+  for(const [sign, share, ce] of [[1, cut.pos, cut.cA], [-1, cut.neg, cut.cB]]){
     if(!ce) continue;
     let x = (ce[0] + nx * gap * sign) * z, y = (ce[1] + ny * gap * sign) * z;
-    const txt = fmt(pct) + " %"; ctx.font = "800 17px Archivo, 'Helvetica Neue', sans-serif";
+    const txt = pct(share); ctx.font = "800 17px Archivo, 'Helvetica Neue', sans-serif";
     const w = ctx.measureText(txt).width + 20, h = 28;
     x = Math.min(Math.max(x, w / 2 + 8), cssSize - w / 2 - 8); y = Math.min(Math.max(y, h / 2 + 8), cssSize - h / 2 - 8);
     const sc = easeBack(lt) * .25 + .75;
@@ -752,23 +1187,23 @@ function roundRect(x, y, w, h, r){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.ar
 /* ---------- interaction ---------- */
 function toVirtual(e){ const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * V, (e.clientY - r.top) / r.height * V]; }
 function tryCommit(A, B, keepOnMiss = false){
-  if(Math.hypot(B[0] - A[0], B[1] - A[1]) < 20){ if(keepOnMiss) toast("Écarte un peu plus les deux points."); return false; }
+  if(Math.hypot(B[0] - A[0], B[1] - A[1]) < 20){ if(keepOnMiss) toast(L("tooClose")); return false; }
   const r = splitCountry(S.country, A, B);
   if(!(Math.min(r.pos, r.neg) > 0.02)){
-    if(keepOnMiss){ toast("La ligne ne traverse pas le pays. Déplace un point."); draw(); return false; }
-    S.pending = null; S.press = null; S.grabs.clear(); draw(); toast("La ligne ne traverse pas le pays. Recommence."); return true;
+    if(keepOnMiss){ toast(L("missKeep")); draw(); return false; }
+    S.pending = null; S.press = null; S.grabs.clear(); draw(); toast(L("miss")); return true;
   }
   S.pending = null; S.press = null; S.grabs.clear();
   commitCut(A, B, r); return true;
 }
 function cancelCut(){
-  if(S.pending){ S.pending = null; S.press = null; S.grabs.clear(); draw(); toast("Ligne effacée."); return true; }
+  if(S.pending){ S.pending = null; S.press = null; S.grabs.clear(); draw(); toast(L("erased")); return true; }
   if(S.cut && S.mode === "practice"){ S.cut = null; hideResult(); draw(); return true; }
   return false;
 }
 // Mouse: click a first point, then a second one; the cut happens on the second click (or at the end of a drag).
 // Touch: tap two points (or drag across in one gesture). The line then waits: drag a point, slide the whole line,
-// or move both points with two fingers; the cut only happens with the "Couper ici" button.
+// or move both points with two fingers; the cut only happens with the "Cut here" button.
 // Sounds: on press with a mouse, on release with a finger (mobile browsers only allow audio from a release).
 const HANDLE_REACH = 34; // css px around a point that still grabs it
 const clampV = P => [Math.max(0, Math.min(V, P[0])), Math.max(0, Math.min(V, P[1]))];
@@ -846,7 +1281,7 @@ cv.addEventListener("pointerup", e => {
   if(pr.kind === "second" || dragged){
     pd.B = P;
     if(dist(pd.A, P) < 20){ pd.B = null; draw(); return; } // second point too close to the first: keep waiting
-    if(confirmFirst){ SFX.tick(true); pd.adjust = true; draw(); return; } // phone: wait for "Couper ici"
+    if(confirmFirst){ SFX.tick(true); pd.adjust = true; draw(); return; } // phone: wait for the "Cut here" button
     if(touch || (dragged && pr.kind === "first")) SFX.tick(true);
     tryCommit(pd.A, P); return;
   }
@@ -883,25 +1318,31 @@ function commitCut(A, B, r){
 /* ---------- UI ---------- */
 function setCountry(c, animate = true){
   S.country = c; S.cut = null; S.pending = null; S.press = null; S.grabs.clear();
-  $("cname").textContent = c.name; $("flag").textContent = flagOf(c.a2);
+  $("cname").textContent = regionName(c.a2, c.name); $("flag").textContent = flagOf(c.a2);
   const el = $("country"); el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap");
   S.fx = {drop: 1, blade: 1, split: 1, label: 1};
   if(animate) play([{key: "drop", delay: 0, dur: 520}]); else draw();
 }
-function showResult(){
-  const c = S.cut, a = Math.round(c.pos * 10) / 10, b = Math.round((100 - a) * 10) / 10, t = tier(c.gap);
-  $("pa").textContent = fmt(a) + " %"; $("pb").textContent = fmt(b) + " %";
-  $("verdict").textContent = t.e + " " + t.t;
-  $("gap").textContent = c.gap < 0.05 ? "Pile au milieu." : "À " + fmt(c.gap) + " point" + (c.gap >= 2 ? "s" : "") + " du 50 / 50";
-  const act = $("actions"); act.innerHTML = ""; $("copybox").style.display = "none";
+// fill the result panel in the current language; called again when the language changes
+function fillResult(){
+  const c = S.cut; if(!c) return;
+  const a = Math.round(c.pos * 10) / 10, b = Math.round((100 - a) * 10) / 10, tr = tier(c.gap);
+  $("pa").textContent = pct(a); $("pb").textContent = pct(b);
+  $("verdict").textContent = tr.e + " " + L(tr.k);
+  $("gap").textContent = c.gap < 0.05 ? L("exact") : L("gap", {n: fmt(c.gap)}, c.gap, 1);
+  const act = $("actions"); act.innerHTML = "";
   if(S.mode === "daily"){
-    act.append(button("Copier le résultat", "", shareDaily), button("S'entraîner", "line", () => switchMode("practice")));
+    act.append(button(L("copy"), "", shareDaily), button(L("practice"), "line", () => switchMode("practice")));
     $("countdown").style.display = "block"; tickCountdown();
   } else {
-    act.append(button("Recouper ce pays", "", () => { S.cut = null; hideResult(); setCountry(S.country); }),
-               button("Pays suivant", "line", nextPractice));
+    act.append(button(L("recut"), "", () => { S.cut = null; hideResult(); setCountry(S.country); }),
+               button(L("next"), "line", nextPractice));
     $("countdown").style.display = "none";
   }
+}
+function showResult(){
+  $("copybox").style.display = "none";
+  fillResult();
   // show the result before hiding the hint, so the page never shrinks and the phone does not jump to the top
   const res = $("result"); res.classList.remove("show"); void res.offsetWidth; res.classList.add("show");
   $("hint").style.display = "none";
@@ -911,15 +1352,15 @@ function hideResult(){ $("result").classList.remove("show"); $("hint").style.dis
 function button(label, cls, fn){ const b = document.createElement("button"); b.className = "btn " + cls; b.textContent = label; b.onclick = fn; return b; }
 
 function shareDaily(){
-  const c = S.cut, a = Math.round(c.pos * 10) / 10, b = Math.round((100 - a) * 10) / 10, t = tier(c.gap);
-  const text = "Coupe le pays n°" + (todayIndex() + 1) + "\n" + t.e + " " + fmt(Math.min(a, b)) + " / " + fmt(Math.max(a, b)) + "\nÉcart : " + fmt(c.gap) + " pt";
-  const fallback = () => { const box = $("copybox"); box.value = text; box.style.display = "block"; box.focus(); box.select(); toast("Copie le texte ci-dessous."); };
-  try{ navigator.clipboard.writeText(text).then(() => toast("Résultat copié."), fallback); }catch(e){ fallback(); }
+  const c = S.cut, a = Math.round(c.pos * 10) / 10, b = Math.round((100 - a) * 10) / 10, tr = tier(c.gap);
+  const text = L("shareTitle", {name: L("name"), n: todayIndex() + 1}) + "\n" + tr.e + " " + fmt(Math.min(a, b)) + " / " + fmt(Math.max(a, b)) + "\n" + L("shareGap", {n: fmt(c.gap)});
+  const fallback = () => { const box = $("copybox"); box.value = text; box.style.display = "block"; box.focus(); box.select(); toast(L("copyBelow")); };
+  try{ navigator.clipboard.writeText(text).then(() => toast(L("copied")), fallback); }catch(e){ fallback(); }
 }
 function tickCountdown(){
   const now = new Date(), next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
   const s = Math.max(0, Math.floor((next - now) / 1000)), p = n => String(n).padStart(2, "0");
-  $("countdown").innerHTML = "Prochain pays dans <b>" + p(Math.floor(s / 3600)) + ":" + p(Math.floor(s / 60) % 60) + ":" + p(s % 60) + "</b>";
+  $("countdown").innerHTML = L("countdown", {t: p(Math.floor(s / 3600)) + ":" + p(Math.floor(s / 60) % 60) + ":" + p(s % 60)});
 }
 setInterval(() => {
   if(S.mode === "daily" && S.cut) tickCountdown();
@@ -930,19 +1371,19 @@ function loadDaily(){
   const idx = todayIndex(), rec = dailyRecords()[idx];
   const c = prepare(S.world.get(rec && S.world.has(rec.a2) ? rec.a2 : dailyA2(idx)));
   c.dayIdx = idx;
-  $("badge").textContent = "n° " + (idx + 1);
+  setBadge();
   hideResult(); setCountry(c, !rec);
   if(rec){ S.cut = withCentroids({A: rec.line[0], B: rec.line[1], pos: rec.pos, neg: 100 - rec.pos, gap: rec.gap}); draw(); showResult(); }
 }
 function nextPractice(){
   const keys = POOL.filter(a => S.world.has(a) && a !== S.practiceA2);
   S.practiceA2 = keys[Math.floor(Math.random() * keys.length)];
-  $("badge").textContent = "au hasard";
+  setBadge();
   hideResult(); setCountry(prepare(S.world.get(S.practiceA2)));
 }
 function moveBar(){
-  const t = S.mode === "daily" ? $("tabDaily") : $("tabPractice"), bar = $("modeBar");
-  bar.style.left = t.offsetLeft + "px"; bar.style.width = t.offsetWidth + "px"; bar.style.top = (t.offsetTop + t.offsetHeight - 1) + "px";
+  const tab = S.mode === "daily" ? $("tabDaily") : $("tabPractice"), bar = $("modeBar");
+  bar.style.left = tab.offsetLeft + "px"; bar.style.width = tab.offsetWidth + "px"; bar.style.top = (tab.offsetTop + tab.offsetHeight - 1) + "px";
 }
 function switchMode(m){
   S.mode = m; $("tabDaily").setAttribute("aria-selected", m === "daily"); $("tabPractice").setAttribute("aria-selected", m === "practice");
@@ -958,6 +1399,7 @@ document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e =
 document.addEventListener("keydown", e => {
   if((e.key === "m" || e.key === "M") && !e.ctrlKey && !e.metaKey && !e.altKey && !/input|textarea/i.test(e.target.tagName)){ $("soundBtn").click(); return; }
   if(e.key !== "Escape") return;
+  if(!$("langMenu").hidden){ toggleLangMenu(false); $("langBtn").focus(); return; }
   const open = document.querySelectorAll(".modal.show");
   if(open.length) open.forEach(m => m.classList.remove("show")); else cancelCut(); });
 $("helpBtn").onclick = () => openModal("helpModal");
@@ -967,14 +1409,64 @@ function renderStats(){
   let streak = 0; for(let d = todayIndex() - (rec[todayIndex()] ? 0 : 1); rec[d]; d--) streak++;
   let bestRun = 0, run = 0, prev = null; for(const d of days){ run = prev !== null && d === prev + 1 ? run + 1 : 1; bestRun = Math.max(bestRun, run); prev = d; }
   const avg = gaps.length ? gaps.reduce((a, b) => a + b, 0) / gaps.length : null, best = gaps.length ? Math.min(...gaps) : null;
-  $("statsGrid").innerHTML = [[days.length, "jours joués"], [avg == null ? "–" : fmt(avg), "écart moyen"], [best == null ? "–" : fmt(best), "meilleur écart"], [streak, bestRun > streak ? "série (record " + bestRun + ")" : "jours de suite"]]
+  $("statsGrid").innerHTML = [[days.length, L("played")], [avg == null ? "–" : fmt(avg), L("avg")], [best == null ? "–" : fmt(best), L("best")], [streak, bestRun > streak ? L("streakRec", {n: bestRun}) : L("streak")]]
     .map(([v, l]) => "<div class='stat'><b>" + v + "</b><span>" + l + "</span></div>").join("");
-  const tiers = [["🎯 Parfait", g => g <= .25], ["🟩 Excellent", g => g > .25 && g <= 1], ["🟨 Bien joué", g => g > 1 && g <= 2.5], ["🟧 Pas mal", g => g > 2.5 && g <= 5], ["🟥 Raté", g => g > 5]];
-  const counts = tiers.map(([, f]) => gaps.filter(f).length), max = Math.max(1, ...counts);
-  $("bars").innerHTML = tiers.map(([l], i) => "<div class='bar'><span>" + l + "</span><i style='width:" + (counts[i] / max * 100) + "%'></i><em>" + counts[i] + "</em></div>").join("");
+  const tiers = [["🎯", "perfect", g => g <= .25], ["🟩", "excellent", g => g > .25 && g <= 1], ["🟨", "good", g => g > 1 && g <= 2.5], ["🟧", "ok", g => g > 2.5 && g <= 5], ["🟥", "missed", g => g > 5]];
+  const counts = tiers.map(([, , f]) => gaps.filter(f).length), max = Math.max(1, ...counts);
+  $("bars").innerHTML = tiers.map(([e, k], i) => "<div class='bar'><span>" + e + " " + L(k) + "</span><i style='width:" + (counts[i] / max * 100) + "%'></i><em>" + counts[i] + "</em></div>").join("");
 }
 
+/* ---------- language ---------- */
+function setBadge(){ $("badge").textContent = S.mode === "daily" ? L("badgeDaily", {n: todayIndex() + 1}) : L("badgeRandom"); }
+function setFooter(){ $("footer").textContent = L("footer") + (S.source ? " " + L("credit", {src: S.source.credit}) : ""); }
+function applyLanguage(code, user = false){
+  LANG = I18N[code] ? code : "en";
+  if(user) store.set("lang", LANG);
+  const info = langInfo(LANG);
+  document.documentElement.lang = info[3];
+  document.title = L("name");
+  const title = $("title"); title.setAttribute("aria-label", L("name"));
+  title.querySelectorAll(".t").forEach(s => s.textContent = L("name"));
+  document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = L(el.dataset.i18n));
+  document.querySelectorAll("[data-i18n-html]").forEach(el => el.innerHTML = L(el.dataset.i18nHtml));
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", L(el.dataset.i18nAria)));
+  document.querySelectorAll("[data-i18n-title]").forEach(el => el.title = L(el.dataset.i18nTitle));
+  if(S.loadFailed){ const o = $("overlayText"); if(o) o.innerHTML = L("loadError"); }
+  // grading scale, with numbers written the local way
+  const steps = [["🎯", "scaleFirst", .25, 2], ["🟩", "scaleLess", 1, 0], ["🟨", "scaleLess", 2.5, 1], ["🟧", "scaleLess", 5, 0]];
+  $("scale").innerHTML = steps.map(([e, k, n, d]) => "<span>" + e + "</span><span>" + L(k, {n: fmt(n, d)}, n, d) + "</span>").join("") + "<span>🟥</span><span>" + L("scaleMore") + "</span>";
+  $("langFlag").innerHTML = flagSvg(info[1], 20);
+  labelSound();
+  if(S.country) $("cname").textContent = regionName(S.country.a2, S.country.name);
+  if(S.world) setBadge();
+  setFooter();
+  if(S.cut && $("result").classList.contains("show")) fillResult();
+  if($("statsModal").classList.contains("show")) renderStats();
+  buildLangMenu();
+  draw(); moveBar();
+}
+function buildLangMenu(){
+  $("langMenu").innerHTML = LANGS.map(([code, flag, name, loc]) =>
+    `<button role="menuitemradio" aria-checked="${code === LANG}" data-lang="${code}" lang="${loc}">${flagSvg(flag)}<span>${name}</span></button>`).join("");
+}
+function toggleLangMenu(open){
+  const menu = $("langMenu"), btn = $("langBtn"), show = open ?? menu.hidden;
+  menu.hidden = !show; btn.setAttribute("aria-expanded", show);
+  if(show){ const cur = menu.querySelector('[aria-checked="true"]'); if(cur){ cur.scrollIntoView({block: "nearest"}); cur.focus(); } }
+}
+$("langBtn").onclick = e => { e.stopPropagation(); toggleLangMenu(); };
+$("langMenu").onclick = e => {
+  const b = e.target.closest("[data-lang]"); if(!b) return;
+  applyLanguage(b.dataset.lang, true); toggleLangMenu(false); $("langBtn").focus();
+};
+$("langMenu").addEventListener("keydown", e => {
+  const items = [...$("langMenu").querySelectorAll("button")], i = items.indexOf(document.activeElement);
+  if(e.key === "ArrowDown" || e.key === "ArrowUp"){ e.preventDefault(); items[(i + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length].focus(); }
+});
+document.addEventListener("click", e => { if(!$("langMenu").hidden && !e.target.closest(".langwrap")) toggleLangMenu(false); });
+
 /* ---------- boot ---------- */
+applyLanguage(store.get("lang", "en"));
 buildRulers();
 new ResizeObserver(() => { resize(); moveBar(); }).observe($("stage"));
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(moveBar);
@@ -982,10 +1474,10 @@ if(!store.get("seenHelp", false)){ store.set("seenHelp", true); setTimeout(() =>
 loadWorld().then(({data, source}) => {
   S.world = data; S.source = source;
   $("overlay").classList.add("hidden");
-  $("footer").textContent = "Un nouveau pays chaque jour à minuit. Les territoires éloignés sont ignorés. " + source.credit + ".";
+  setFooter();
   switchMode(S.mode);
 }).catch(() => {
-  $("overlay").innerHTML = "<div>Les contours des pays n'ont pas pu être chargés.<br>Vérifie ta connexion, puis recharge la page.</div>";
+  S.loadFailed = true; $("overlay").innerHTML = "<div id='overlayText'>" + L("loadError") + "</div>";
 });
 
 </script>

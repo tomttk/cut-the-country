@@ -137,6 +137,9 @@
   .btn.line{background:transparent;color:var(--print);box-shadow:inset 0 0 0 1.5px var(--print-dim)}
   .btn.line:hover{box-shadow:inset 0 0 0 1.5px var(--print)}
   .countdown{margin-top:16px;font-size:14px;color:var(--print-dim)}
+  .tapnext{margin:10px 0 0;font-size:14px;color:var(--print-dim)}
+  .result.show .tapnext{animation:fade .4s 1.1s both}
+  canvas.locked.next{cursor:pointer}
   .countdown b{color:var(--print);font-variant-numeric:tabular-nums;font-weight:700}
   .copybox{width:100%;margin-top:12px;font:14px Archivo,sans-serif;border-radius:3px;border:0;background:var(--paper);color:var(--ink);padding:10px;display:none}
 
@@ -298,6 +301,7 @@
     <div class="actions" id="actions"></div>
     <textarea class="copybox" id="copybox" rows="3" readonly></textarea>
     <div class="countdown" id="countdown"></div>
+    <p class="tapnext" data-i18n="tapNext"></p>
   </section>
 
   <footer id="footer"></footer>
@@ -582,7 +586,7 @@ en: {
   copied: "Result copied.", copyBelow: "Copy the text below.",
   perfect: "Perfect", excellent: "Excellent", good: "Well done", ok: "Not bad", missed: "Missed",
   exact: "Right down the middle.", gap: {one: "{n} point from 50 / 50", other: "{n} points from 50 / 50"},
-  copy: "Copy result", practice: "Practice", recut: "Cut this country again", next: "Next country",
+  copy: "Copy result", practice: "Practice", recut: "Cut this country again", next: "Next country", tapNext: "Tap or click the map for another country.",
   countdown: "Next country in <b>{t}</b>", badgeDaily: "No. {n}", badgeRandom: "random",
   shareTitle: "{name} #{n}", shareGap: "Gap: {n} pt",
   played: "days played", avg: "average gap", best: "best gap", streak: "days in a row", streakRec: "streak (best {n})",
@@ -611,7 +615,7 @@ fr: {
   copied: "Résultat copié.", copyBelow: "Copie le texte ci-dessous.",
   perfect: "Parfait", excellent: "Excellent", good: "Bien joué", ok: "Pas mal", missed: "Raté",
   exact: "Pile au milieu.", gap: {one: "À {n} point du 50 / 50", other: "À {n} points du 50 / 50"},
-  copy: "Copier le résultat", practice: "S'entraîner", recut: "Recouper ce pays", next: "Pays suivant",
+  copy: "Copier le résultat", practice: "S'entraîner", recut: "Recouper ce pays", next: "Pays suivant", tapNext: "Touche ou clique la carte pour un autre pays.",
   countdown: "Prochain pays dans <b>{t}</b>", badgeDaily: "n° {n}", badgeRandom: "au hasard",
   shareTitle: "{name} n°{n}", shareGap: "Écart : {n} pt",
   played: "jours joués", avg: "écart moyen", best: "meilleur écart", streak: "jours de suite", streakRec: "série (record {n})",
@@ -640,7 +644,7 @@ es: {
   copied: "Resultado copiado.", copyBelow: "Copia el texto de abajo.",
   perfect: "Perfecto", excellent: "Excelente", good: "Bien hecho", ok: "No está mal", missed: "Fallado",
   exact: "Justo en el medio.", gap: {one: "A {n} punto del 50 / 50", other: "A {n} puntos del 50 / 50"},
-  copy: "Copiar el resultado", practice: "Practicar", recut: "Volver a cortar este país", next: "Siguiente país",
+  copy: "Copiar el resultado", practice: "Practicar", recut: "Volver a cortar este país", next: "Siguiente país", tapNext: "Toca o haz clic en el mapa para otro país.",
   countdown: "Próximo país en <b>{t}</b>", badgeDaily: "n.º {n}", badgeRandom: "al azar",
   shareTitle: "{name} n.º {n}", shareGap: "Diferencia: {n} pt",
   played: "días jugados", avg: "diferencia media", best: "mejor diferencia", streak: "días seguidos", streakRec: "racha (récord {n})",
@@ -669,7 +673,7 @@ de: {
   copied: "Ergebnis kopiert.", copyBelow: "Kopiere den Text unten.",
   perfect: "Perfekt", excellent: "Exzellent", good: "Gut gemacht", ok: "Nicht schlecht", missed: "Daneben",
   exact: "Genau in der Mitte.", gap: {one: "{n} Punkt von 50 / 50 entfernt", other: "{n} Punkte von 50 / 50 entfernt"},
-  copy: "Ergebnis kopieren", practice: "Trainieren", recut: "Dieses Land neu schneiden", next: "Nächstes Land",
+  copy: "Ergebnis kopieren", practice: "Trainieren", recut: "Dieses Land neu schneiden", next: "Nächstes Land", tapNext: "Tippe oder klicke auf die Karte für ein anderes Land.",
   countdown: "Nächstes Land in <b>{t}</b>", badgeDaily: "Nr. {n}", badgeRandom: "zufällig",
   shareTitle: "{name} Nr. {n}", shareGap: "Abstand: {n} Pkt.",
   played: "gespielte Tage", avg: "mittlerer Abstand", best: "bester Abstand", streak: "Tage in Folge", streakRec: "Serie (Rekord {n})",
@@ -698,7 +702,7 @@ it: {
   copied: "Risultato copiato.", copyBelow: "Copia il testo qui sotto.",
   perfect: "Perfetto", excellent: "Eccellente", good: "Ben fatto", ok: "Niente male", missed: "Mancato",
   exact: "Esattamente a metà.", gap: {one: "A {n} punto dal 50 / 50", other: "A {n} punti dal 50 / 50"},
-  copy: "Copia il risultato", practice: "Allenati", recut: "Ritaglia questo paese", next: "Paese successivo",
+  copy: "Copia il risultato", practice: "Allenati", recut: "Ritaglia questo paese", next: "Paese successivo", tapNext: "Tocca o clicca la mappa per un altro paese.",
   countdown: "Prossimo paese tra <b>{t}</b>", badgeDaily: "n. {n}", badgeRandom: "a caso",
   shareTitle: "{name} n. {n}", shareGap: "Scarto: {n} pt",
   played: "giorni giocati", avg: "scarto medio", best: "miglior scarto", streak: "giorni di fila", streakRec: "serie (record {n})",
@@ -727,7 +731,7 @@ pt: {
   copied: "Resultado copiado.", copyBelow: "Copie o texto abaixo.",
   perfect: "Perfeito", excellent: "Excelente", good: "Muito bem", ok: "Nada mal", missed: "Errou",
   exact: "Bem no meio.", gap: {one: "A {n} ponto do 50 / 50", other: "A {n} pontos do 50 / 50"},
-  copy: "Copiar o resultado", practice: "Treinar", recut: "Cortar este país de novo", next: "Próximo país",
+  copy: "Copiar o resultado", practice: "Treinar", recut: "Cortar este país de novo", next: "Próximo país", tapNext: "Toque ou clique no mapa para outro país.",
   countdown: "Próximo país em <b>{t}</b>", badgeDaily: "nº {n}", badgeRandom: "aleatório",
   shareTitle: "{name} nº {n}", shareGap: "Diferença: {n} pt",
   played: "dias jogados", avg: "diferença média", best: "melhor diferença", streak: "dias seguidos", streakRec: "sequência (recorde {n})",
@@ -756,7 +760,7 @@ nl: {
   copied: "Resultaat gekopieerd.", copyBelow: "Kopieer de tekst hieronder.",
   perfect: "Perfect", excellent: "Uitstekend", good: "Goed gedaan", ok: "Niet slecht", missed: "Mis",
   exact: "Precies in het midden.", gap: {one: "{n} punt van 50 / 50", other: "{n} punten van 50 / 50"},
-  copy: "Resultaat kopiëren", practice: "Oefenen", recut: "Dit land opnieuw snijden", next: "Volgend land",
+  copy: "Resultaat kopiëren", practice: "Oefenen", recut: "Dit land opnieuw snijden", next: "Volgend land", tapNext: "Tik of klik op de kaart voor een ander land.",
   countdown: "Volgend land over <b>{t}</b>", badgeDaily: "nr. {n}", badgeRandom: "willekeurig",
   shareTitle: "{name} nr. {n}", shareGap: "Verschil: {n} pt",
   played: "dagen gespeeld", avg: "gemiddeld verschil", best: "beste verschil", streak: "dagen op rij", streakRec: "reeks (record {n})",
@@ -785,7 +789,7 @@ pl: {
   copied: "Wynik skopiowany.", copyBelow: "Skopiuj tekst poniżej.",
   perfect: "Idealnie", excellent: "Doskonale", good: "Dobra robota", ok: "Nieźle", missed: "Pudło",
   exact: "Dokładnie na środku.", gap: {one: "{n} punkt od 50 / 50", few: "{n} punkty od 50 / 50", many: "{n} punktów od 50 / 50", other: "{n} punktu od 50 / 50"},
-  copy: "Kopiuj wynik", practice: "Trenuj", recut: "Przetnij ten kraj ponownie", next: "Następny kraj",
+  copy: "Kopiuj wynik", practice: "Trenuj", recut: "Przetnij ten kraj ponownie", next: "Następny kraj", tapNext: "Dotknij lub kliknij mapę, aby zagrać innym krajem.",
   countdown: "Następny kraj za <b>{t}</b>", badgeDaily: "nr {n}", badgeRandom: "losowy",
   shareTitle: "{name} nr {n}", shareGap: "Różnica: {n} pkt",
   played: "rozegrane dni", avg: "średnia różnica", best: "najlepsza różnica", streak: "dni z rzędu", streakRec: "seria (rekord {n})",
@@ -813,7 +817,7 @@ tr: {
   copied: "Sonuç kopyalandı.", copyBelow: "Aşağıdaki metni kopyala.",
   perfect: "Mükemmel", excellent: "Harika", good: "Aferin", ok: "Fena değil", missed: "Iska",
   exact: "Tam ortadan.", gap: "50 / 50'den {n} puan uzakta",
-  copy: "Sonucu kopyala", practice: "Antrenman yap", recut: "Bu ülkeyi yeniden kes", next: "Sonraki ülke",
+  copy: "Sonucu kopyala", practice: "Antrenman yap", recut: "Bu ülkeyi yeniden kes", next: "Sonraki ülke", tapNext: "Başka bir ülke için haritaya dokun ya da tıkla.",
   countdown: "Sonraki ülkeye <b>{t}</b>", badgeDaily: "No. {n}", badgeRandom: "rastgele",
   shareTitle: "{name} #{n}", shareGap: "Fark: {n} puan",
   played: "oynanan gün", avg: "ortalama fark", best: "en iyi fark", streak: "art arda gün", streakRec: "seri (rekor {n})",
@@ -841,7 +845,7 @@ ru: {
   copied: "Результат скопирован.", copyBelow: "Скопируй текст ниже.",
   perfect: "Идеально", excellent: "Отлично", good: "Хорошо", ok: "Неплохо", missed: "Мимо",
   exact: "Ровно посередине.", gap: "{n} п. п. от 50 / 50",
-  copy: "Скопировать результат", practice: "Тренироваться", recut: "Разрезать заново", next: "Следующая страна",
+  copy: "Скопировать результат", practice: "Тренироваться", recut: "Разрезать заново", next: "Следующая страна", tapNext: "Коснись карты или нажми на неё, чтобы сыграть другой страной.",
   countdown: "Следующая страна через <b>{t}</b>", badgeDaily: "№ {n}", badgeRandom: "случайная",
   shareTitle: "{name} № {n}", shareGap: "Отклонение: {n} п. п.",
   played: "дней сыграно", avg: "среднее отклонение", best: "лучшее отклонение", streak: "дней подряд", streakRec: "серия (рекорд {n})",
@@ -869,7 +873,7 @@ ja: {
   copied: "結果をコピーしました。", copyBelow: "下のテキストをコピーしてください。",
   perfect: "パーフェクト", excellent: "エクセレント", good: "お見事", ok: "まあまあ", missed: "ミス",
   exact: "ど真ん中。", gap: "50 / 50との差 {n}ポイント",
-  copy: "結果をコピー", practice: "練習する", recut: "この国をもう一度切る", next: "次の国",
+  copy: "結果をコピー", practice: "練習する", recut: "この国をもう一度切る", next: "次の国", tapNext: "地図をタップまたはクリックすると、別の国で遊べます。",
   countdown: "次の国まで <b>{t}</b>", badgeDaily: "No.{n}", badgeRandom: "ランダム",
   shareTitle: "{name} No.{n}", shareGap: "差：{n}pt",
   played: "プレイ日数", avg: "平均の差", best: "最小の差", streak: "連続日数", streakRec: "連続（最高 {n}）",
@@ -897,7 +901,7 @@ ko: {
   copied: "결과를 복사했어요.", copyBelow: "아래 텍스트를 복사하세요.",
   perfect: "완벽해요", excellent: "훌륭해요", good: "잘했어요", ok: "나쁘지 않아요", missed: "빗나갔어요",
   exact: "정확히 한가운데.", gap: "50 / 50과 {n}점 차이",
-  copy: "결과 복사", practice: "연습하기", recut: "이 나라 다시 자르기", next: "다음 나라",
+  copy: "결과 복사", practice: "연습하기", recut: "이 나라 다시 자르기", next: "다음 나라", tapNext: "지도를 탭하거나 클릭하면 다른 나라로 넘어가요.",
   countdown: "다음 나라까지 <b>{t}</b>", badgeDaily: "제{n}회", badgeRandom: "무작위",
   shareTitle: "{name} 제{n}회", shareGap: "차이: {n}점",
   played: "플레이한 날", avg: "평균 차이", best: "최소 차이", streak: "연속 일수", streakRec: "연속 (최고 {n})",
@@ -925,7 +929,7 @@ zh: {
   copied: "结果已复制。", copyBelow: "请复制下面的文字。",
   perfect: "完美", excellent: "优秀", good: "干得好", ok: "还不错", missed: "失手了",
   exact: "正好在中间。", gap: "距 50 / 50 相差 {n} 个百分点",
-  copy: "复制结果", practice: "去练习", recut: "重新切这个国家", next: "下一个国家",
+  copy: "复制结果", practice: "去练习", recut: "重新切这个国家", next: "下一个国家", tapNext: "点击地图，换一个国家。",
   countdown: "距下一个国家还有 <b>{t}</b>", badgeDaily: "第 {n} 期", badgeRandom: "随机",
   shareTitle: "{name} 第 {n} 期", shareGap: "差距：{n} 个百分点",
   played: "已玩天数", avg: "平均差距", best: "最小差距", streak: "连续天数", streakRec: "连续（最高 {n}）",
@@ -1685,7 +1689,12 @@ function releaseGrab(e){
 cv.addEventListener("pointerdown", e => {
   S.lastType = e.pointerType;
   const touch = e.pointerType !== "mouse";
-  if((e.pointerType === "mouse" && e.button !== 0) || !S.country || S.cut) return;
+  if((e.pointerType === "mouse" && e.button !== 0) || !S.country) return;
+  if(S.cut){
+    // after a cut, a plain click or tap on the map moves on to another country in Practice
+    if(!S.press && performance.now() - (S.cutAt || 0) > 1000) S.press = {x: e.clientX, y: e.clientY, id: e.pointerId, kind: "next"};
+    return;
+  }
   const pd = S.pending;
   if(pd && pd.adjust){ e.preventDefault(); grab(e); return; }
   if(S.press) return;
@@ -1710,6 +1719,10 @@ cv.addEventListener("pointermove", e => {
 cv.addEventListener("pointerup", e => {
   if(releaseGrab(e)) return;
   const pr = S.press; if(!pr || e.pointerId !== pr.id) return; S.press = null;
+  if(pr.kind === "next"){
+    if(S.cut && Math.hypot(e.clientX - pr.x, e.clientY - pr.y) <= 14){ SFX.tick(false); if(S.mode === "daily") switchMode("practice"); else nextPractice(); }
+    return;
+  }
   const pd = S.pending; if(!pd) return;
   const P = toVirtual(e), touch = e.pointerType !== "mouse", dragged = Math.hypot(e.clientX - pr.x, e.clientY - pr.y) > 14;
   const confirmFirst = adjustFlow(e);
@@ -1741,7 +1754,7 @@ function withCentroids(cut){
 }
 function commitCut(A, B, r){
   const gap = Math.abs(50 - r.pos);
-  S.cut = withCentroids({A, B, pos: r.pos, neg: r.neg, gap});
+  S.cut = withCentroids({A, B, pos: r.pos, neg: r.neg, gap}); S.cutAt = performance.now();
   if(S.mode === "daily"){
     const rec = dailyRecords(); rec[todayIndex()] = {a2: S.country.a2, pos: r.pos, gap, line: [A, B]}; store.set("daily", rec);
   }
@@ -1782,9 +1795,9 @@ function showResult(){
   // show the result before hiding the hint, so the page never shrinks and the phone does not jump to the top
   const res = $("result"); res.classList.remove("show"); void res.offsetWidth; res.classList.add("show");
   $("hint").style.display = "none";
-  cv.classList.add("locked");
+  cv.classList.add("locked", "next");
 }
-function hideResult(){ $("result").classList.remove("show"); $("hint").style.display = ""; cv.classList.remove("locked"); }
+function hideResult(){ $("result").classList.remove("show"); $("hint").style.display = ""; cv.classList.remove("locked", "next"); }
 function button(label, cls, fn){ const b = document.createElement("button"); b.className = "btn " + cls; b.textContent = label; b.onclick = fn; return b; }
 
 function shareDaily(){

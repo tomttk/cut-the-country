@@ -123,7 +123,15 @@
   .result.show .swatch.white{animation-delay:.55s;--r:-1.2deg}
   .result.show .swatch.kraft{animation-delay:.65s;--r:1deg}
   @keyframes lay{from{opacity:0;transform:translateY(-14px) rotate(var(--r)) scale(1.03)}to{opacity:1;transform:none}}
-  .verdict{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px;margin:18px 0 16px}
+  .verdict{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;margin:18px 0 16px}
+  .medal{display:block;width:46px;flex:none;margin:-6px -2px -6px 0;filter:drop-shadow(0 3px 3px rgba(0,0,0,.45))}
+  .medal[hidden]{display:none}
+  .medal svg,.mini svg{display:block;width:100%;height:auto}
+  .result.show .medal{animation:medal .9s .8s cubic-bezier(.2,.9,.3,1) both;transform-origin:50% 0}
+  @keyframes medal{0%{opacity:0;transform:translateY(-26px) rotate(-14deg)}35%{opacity:1;transform:translateY(2px) rotate(9deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(2deg)}100%{transform:none}}
+  .mini{display:inline-block;width:20px;height:24px;flex:none;vertical-align:middle;margin-right:8px}
+  .scale .mini{margin:0;align-self:center}
+  .bar span{display:flex;align-items:center;white-space:nowrap}
   .verdict strong{font-size:26px;font-weight:800;font-variation-settings:"wdth" 90;color:var(--print)}
   .verdict span{font-size:15px;color:var(--print-dim)}
   .result.show .verdict{animation:fade .4s .8s both}
@@ -170,8 +178,8 @@
   .stat b{display:block;font-size:30px;font-weight:850;font-variation-settings:"wdth" 70;line-height:1}
   .stat span{font-size:12px;color:var(--ink-soft)}
   .bars{display:flex;flex-direction:column;gap:7px}
-  .bar{display:grid;grid-template-columns:104px 1fr 24px;align-items:center;gap:10px;font-size:14px}
-  .bar i{display:block;height:12px;background:var(--mat);min-width:2px;border-radius:1px}
+  .bar{display:grid;grid-template-columns:138px 1fr 24px;align-items:center;gap:10px;font-size:14px}
+  .bar > i{display:block;height:12px;background:var(--mat);min-width:2px;border-radius:1px}
   .bar em{font-style:normal;text-align:right;color:var(--ink-soft);font-variant-numeric:tabular-nums}
 
   /* small phones: keep tabs and buttons on one row */
@@ -226,7 +234,7 @@
   html[data-theme="pixel"] .sheet h2{font-variation-settings:normal;font-weight:700}
   html[data-theme="pixel"] .x{border-radius:0;border:3px solid var(--ink)}
   html[data-theme="pixel"] .stat b{font-variation-settings:normal}
-  html[data-theme="pixel"] .bar i{background:var(--mat);border-radius:0}
+  html[data-theme="pixel"] .bar > i{background:var(--mat);border-radius:0}
   html[data-theme="pixel"] .langmenu{border-radius:0;border:3px solid var(--ink);box-shadow:6px 6px 0 #0b0d0e}
   html[data-theme="pixel"] .langmenu button{border-radius:0}
   html[data-theme="pixel"] .copybox{border-radius:0}
@@ -298,6 +306,10 @@
   html[data-theme="adventure"] .result.show .swatch.white{animation-delay:1.2s}
   html[data-theme="adventure"] .result.show .swatch.kraft{animation-delay:1.3s}
   html[data-theme="adventure"] .result.show .verdict{animation-delay:1.4s}
+  html[data-theme="adventure"] .result.show .medal{animation-delay:1.4s}
+  html[data-theme="pixel"] .medal{width:44px;image-rendering:pixelated;filter:drop-shadow(3px 3px 0 #101314)}
+  html[data-theme="pixel"] .result.show .medal{animation-name:medal-px;animation-timing-function:steps(6)}
+  @keyframes medal-px{0%{opacity:0;transform:translateY(-24px)}50%{opacity:1;transform:translateY(3px)}75%{transform:translateY(-3px)}100%{transform:none}}
   html[data-theme="adventure"] .result.show .actions,html[data-theme="adventure"] .result.show .countdown{animation-delay:1.55s}
   html[data-theme="adventure"] .result.show .tapnext{animation-delay:1.7s}
   html[data-theme="adventure"] .verdict strong{font-family:var(--display);font-weight:400;font-variation-settings:normal;font-size:25px;letter-spacing:.01em}
@@ -315,7 +327,7 @@
   html[data-theme="adventure"] .scale{font-size:14px;line-height:28px;gap:0 12px}
   html[data-theme="adventure"] .stats{border-top:2px solid var(--ink)}
   html[data-theme="adventure"] .stat b{font-family:var(--display);font-weight:400;font-variation-settings:normal;font-size:27px}
-  html[data-theme="adventure"] .bar i{background:repeating-linear-gradient(90deg,var(--route) 0 7px,rgba(163,36,27,.55) 7px 9px);border-radius:0}
+  html[data-theme="adventure"] .bar > i{background:repeating-linear-gradient(90deg,var(--route) 0 7px,rgba(163,36,27,.55) 7px 9px);border-radius:0}
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
   }
@@ -388,7 +400,7 @@
       <div class="swatch white"><span data-i18n="pieceWhite"></span><b id="pa">–</b></div>
       <div class="swatch kraft"><span data-i18n="pieceKraft"></span><b id="pb">–</b></div>
     </div>
-    <div class="verdict"><strong id="verdict"></strong><span id="gap"></span></div>
+    <div class="verdict"><i class="medal" id="medal" hidden></i><strong id="verdict"></strong><span id="gap"></span></div>
     <div class="actions" id="actions"></div>
     <textarea class="copybox" id="copybox" rows="3" readonly></textarea>
     <div class="countdown" id="countdown"></div>
@@ -458,11 +470,11 @@ function shuffled(arr, seed){ const r = mulberry32(seed), a = arr.slice(); for(l
 const ORDER = shuffled(POOL, 20261106);
 function todayIndex(){ const d = new Date(); return Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - START) / 86400000); }
 function tier(gap){
-  if(gap <= 0.25) return {e:"🎯", k:"perfect"};
-  if(gap <= 1) return {e:"🟩", k:"excellent"};
-  if(gap <= 2.5) return {e:"🟨", k:"good"};
-  if(gap <= 5) return {e:"🟧", k:"ok"};
-  return {e:"🟥", k:"missed"};
+  if(gap <= 0.25) return {e:"🏆", k:"perfect"};
+  if(gap <= 1) return {e:"🥇", k:"excellent"};
+  if(gap <= 2.5) return {e:"🥈", k:"good"};
+  if(gap <= 5) return {e:"🥉", k:"ok"};
+  return {e:"", k:"missed"};
 }
 
 /* ---------- country name → ISO code ---------- */
@@ -1874,6 +1886,16 @@ const SFX = {
       }
     }catch(e){}
   },
+  // the medal landing on the table: two small metal clicks (none for a miss)
+  clink(k, delay){
+    if(this.muted || k === "missed") return;
+    const ac = this.ready(); if(!ac) return;
+    try{
+      const t = ac.currentTime + delay, f = k === "ok" ? 1900 : k === "good" ? 2500 : 2900, metal = {partials: [[1, 1], [2.76, .5], [5.4, .25]], ring: .4, attack: .002};
+      this.tone(t, f, .32, {...metal, gain: .07}); this.tone(t + .09, f * 1.06, .5, {...metal, gain: .05});
+      this.noise(t, .02, .15, .002, [this.filter("highpass", 5000)]);
+    }catch(e){}
+  },
   setMuted(m){
     this.muted = m; store.set("muted", m);
     labelSound();
@@ -2659,12 +2681,64 @@ function commitCut(A, B, r){
   if(S.mode === "daily"){
     const rec = dailyRecords(); rec[todayIndex()] = {a2: S.country.a2, pos: r.pos, gap, line: [A, B]}; store.set("daily", rec);
   }
-  SFX.cut(); SFX.verdict(tier(gap).k, ADV ? 1.3 : undefined);
+  SFX.cut(); SFX.verdict(tier(gap).k, ADV ? 1.3 : undefined); SFX.clink(tier(gap).k, ADV ? 1.62 : 1.1);
   if(PIXEL) setTimeout(() => crowdReact(tier(gap).k), 800);
   if(ADV) play([{key: "blade", delay: 0, dur: 760}, {key: "split", delay: 790, dur: 640}, {key: "label", delay: 1180, dur: 380}]); // the plane crosses the map, then the map tears
   else play([{key: "blade", delay: 0, dur: 280}, {key: "split", delay: 300, dur: 620}, {key: "label", delay: 700, dur: 360}]);
   showResult();
 }
+
+
+/* ---------- medals: trophy, gold, silver, bronze (a miss gets none) ---------- */
+const METAL = {perfect: ["#f3d36b", "#d9a92e", "#8f6a12"], excellent: ["#f3d36b", "#d9a92e", "#8f6a12"],
+  good: ["#f1f3f5", "#b9bec4", "#6f767d"], ok: ["#eeb27a", "#c07a3c", "#764419"]};
+let medalUid = 0;
+// a 5-point star centred on (cx, cy)
+function starPath(cx, cy, R, r){
+  let d = "";
+  for(let i = 0; i < 10; i++){ const a = -Math.PI / 2 + i * Math.PI / 5, q = i % 2 ? r : R; d += (i ? "L" : "M") + (cx + Math.cos(a) * q).toFixed(2) + " " + (cy + Math.sin(a) * q).toFixed(2); }
+  return d + "Z";
+}
+const TROPHY = "M11 7h18v6c0 7-4 12-9 12s-9-5-9-12zM11 9H6.5c0 6 2.5 9 6 9.5M29 9h4.5c0 6-2.5 9-6 9.5M17.5 25h5l1 7h-7zM13 32h14v5H13zM10.5 37h19v5h-19z";
+// pixel version: the same shapes sampled on a coarse grid
+function pixelMedal(k, ribbon){
+  const [hi, mid, lo] = METAL[k], N = [20, 26], cell = 2, out = [];
+  const put = (x, y, c) => out.push(`<rect x="${x * cell}" y="${y * cell}" width="${cell}" height="${cell}" fill="${c}"/>`);
+  if(k === "perfect"){
+    const rows = ["....KKKKKKKKKK....", "...KHHHHMMMMMMK...", ".KKKHHMMMMMMMMKKK.", "K..KHMMMMMMMMLK..K", "K..KHMMMMMMMMLK..K", ".K.KMMMMMMMMMLK.K.", "..KKMMMMMMMMLLKK..", "....KMMMMMMLLK....", ".....KMMMMLLK.....", "......KKMLKK......", ".......KMLK.......", ".......KMLK.......", "......KMMLLK......", ".....KKKKKKKK.....", ".....KHMMMMLK.....", "....KKKKKKKKKK....", "....KMMMMMMLLK....", "....KKKKKKKKKK...."];
+    rows.forEach((r, y) => [...r].forEach((ch, x) => { if(ch !== ".") put(x + 1, y + 4, ch === "K" ? "#1a1816" : ch === "H" ? hi : ch === "M" ? mid : lo); }));
+  } else {
+    for(let y = 0; y < N[1]; y++) for(let x = 0; x < N[0]; x++){
+      const X = x + .5, Y = y + .5;
+      const strap = (X > 3 + Y * .28 && X < 8 + Y * .28 && Y < 13) || (X < 17 - Y * .28 && X > 12 - Y * .28 && Y < 13);
+      const d = Math.hypot(X - 10, Y - 17.5);
+      if(d < 7.6){ const star = Math.abs(X - 10) + Math.abs(Y - 17.5) * .9 < 3.2 || (Math.abs(Y - 16.8) < .9 && Math.abs(X - 10) < 3.6);
+        put(x, y, d > 6.6 ? "#1a1816" : star ? hi : (X + Y < 24 ? mid : lo)); }
+      else if(strap) put(x, y, (Math.floor(X - Y * .28) % 4 < 2) ? ribbon[0] : ribbon[1]);
+    }
+  }
+  return `<svg viewBox="0 0 ${N[0] * cell + 4} ${N[1] * cell + 4}" shape-rendering="crispEdges" aria-hidden="true">${out.join("")}</svg>`;
+}
+function medalSvg(k){
+  if(!METAL[k]) return "";
+  const [hi, mid, lo] = METAL[k], id = "m" + (++medalUid);
+  if(PIXEL){
+    const pal = S.country ? palette(S.country.a2) : null, cols = pal ? pal.distinct : ["#2c4a4b", "#ece4cf"];
+    return pixelMedal(k, [cols[0], cols[1] || "#ece4cf"]);
+  }
+  const adv = ADV, rib = adv ? ["#a3241b", "#e7d6ae", "#6f1610"] : ["#1f5c45", "#ece4ba", "#123a2b"];
+  const fill = adv ? `url(#${id})` : mid;
+  const grad = adv ? `<defs><radialGradient id="${id}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${hi}"/><stop offset=".55" stop-color="${mid}"/><stop offset="1" stop-color="${lo}"/></radialGradient></defs>` : "";
+  if(k === "perfect") return `<svg viewBox="0 0 40 46" aria-hidden="true">${grad}<path d="${TROPHY}" fill="${fill}" stroke="${lo}" stroke-width="1.6" stroke-linejoin="round"/>` +
+    `<path d="${starPath(20, 14.5, 4.6, 2)}" fill="${hi}"/>${adv ? `<path d="M13 10q1 7 5 10" fill="none" stroke="${hi}" stroke-width="1.2" opacity=".7"/>` : ""}</svg>`;
+  const ribbon = `<path d="M7 0h10l6 24h-10z" fill="${rib[0]}"/><path d="M33 0H23l-6 24h10z" fill="${rib[0]}"/>` +
+    `<path d="M10.5 0h3l6 24h-3zM29.5 0h-3l-6 24h3z" fill="${rib[1]}" opacity=".85"/><path d="M13 24h14" stroke="${rib[2]}" stroke-width="1.5"/>`;
+  const disc = `<circle cx="20" cy="34" r="12" fill="${fill}" stroke="${lo}" stroke-width="1.6"/>` +
+    `<circle cx="20" cy="34" r="9" fill="none" stroke="${adv ? lo : hi}" stroke-width="${adv ? .8 : 1.1}"${adv ? ' stroke-dasharray="1 1.4"' : ""}/>` +
+    `<path d="${starPath(20, 34.4, 5.4, 2.3)}" fill="${adv ? lo : hi}"${adv ? ' opacity=".75"' : ""}/>`;
+  return `<svg viewBox="0 0 40 47" aria-hidden="true">${grad}${ribbon}${disc}</svg>`;
+}
+const TIER_EMOJI = {perfect: "🏆", excellent: "🥇", good: "🥈", ok: "🥉", missed: ""};
 
 /* ---------- UI ---------- */
 function setCountry(c, animate = true){
@@ -2679,7 +2753,8 @@ function fillResult(){
   const c = S.cut; if(!c) return;
   const a = Math.round(c.pos * 10) / 10, b = Math.round((100 - a) * 10) / 10, tr = tier(c.gap);
   $("pa").textContent = pct(a); $("pb").textContent = pct(b);
-  $("verdict").textContent = tr.e + " " + L(tr.k);
+  $("verdict").textContent = L(tr.k);
+  const md = $("medal"); md.innerHTML = medalSvg(tr.k); md.hidden = !md.innerHTML; md.title = L(tr.k);
   $("gap").textContent = c.gap < 0.05 ? L("exact") : L("gap", {n: fmt(c.gap)}, c.gap, 1);
   const act = $("actions"); act.innerHTML = "";
   if(S.mode === "daily"){
@@ -2704,7 +2779,7 @@ function button(label, cls, fn){ const b = document.createElement("button"); b.c
 
 function shareDaily(){
   const c = S.cut, a = Math.round(c.pos * 10) / 10, b = Math.round((100 - a) * 10) / 10, tr = tier(c.gap);
-  const text = L("shareTitle", {name: L("name"), n: todayIndex() + 1}) + "\n" + tr.e + " " + fmt(Math.min(a, b)) + " / " + fmt(Math.max(a, b)) + "\n" + L("shareGap", {n: fmt(c.gap)});
+  const text = L("shareTitle", {name: L("name"), n: todayIndex() + 1}) + "\n" + (TIER_EMOJI[tr.k] ? TIER_EMOJI[tr.k] + " " : "") + fmt(Math.min(a, b)) + " / " + fmt(Math.max(a, b)) + "\n" + L("shareGap", {n: fmt(c.gap)});
   const fallback = () => { const box = $("copybox"); box.value = text; box.style.display = "block"; box.focus(); box.select(); toast(L("copyBelow")); };
   try{ navigator.clipboard.writeText(text).then(() => toast(L("copied")), fallback); }catch(e){ fallback(); }
 }
@@ -2762,9 +2837,10 @@ function renderStats(){
   const avg = gaps.length ? gaps.reduce((a, b) => a + b, 0) / gaps.length : null, best = gaps.length ? Math.min(...gaps) : null;
   $("statsGrid").innerHTML = [[days.length, L("played")], [avg == null ? "–" : fmt(avg), L("avg")], [best == null ? "–" : fmt(best), L("best")], [streak, bestRun > streak ? L("streakRec", {n: bestRun}) : L("streak")]]
     .map(([v, l]) => "<div class='stat'><b>" + v + "</b><span>" + l + "</span></div>").join("");
-  const tiers = [["🎯", "perfect", g => g <= .25], ["🟩", "excellent", g => g > .25 && g <= 1], ["🟨", "good", g => g > 1 && g <= 2.5], ["🟧", "ok", g => g > 2.5 && g <= 5], ["🟥", "missed", g => g > 5]];
-  const counts = tiers.map(([, , f]) => gaps.filter(f).length), max = Math.max(1, ...counts);
-  $("bars").innerHTML = tiers.map(([e, k], i) => "<div class='bar'><span>" + e + " " + L(k) + "</span><i style='width:" + (counts[i] / max * 100) + "%'></i><em>" + counts[i] + "</em></div>").join("");
+  const tiers = [["perfect", g => g <= .25], ["excellent", g => g > .25 && g <= 1], ["good", g => g > 1 && g <= 2.5], ["ok", g => g > 2.5 && g <= 5], ["missed", g => g > 5]];
+  const counts = tiers.map(([, f]) => gaps.filter(f).length), max = Math.max(1, ...counts);
+  // the medal cabinet: one row per medal, the misses last and without one
+  $("bars").innerHTML = tiers.map(([k], i) => "<div class='bar'><span><i class='mini'>" + medalSvg(k) + "</i>" + L(k) + "</span><i style='width:" + (counts[i] / max * 100) + "%'></i><em>" + counts[i] + "</em></div>").join("");
 }
 
 /* ---------- language ---------- */
@@ -2784,8 +2860,8 @@ function applyLanguage(code, user = false){
   document.querySelectorAll("[data-i18n-title]").forEach(el => el.title = L(el.dataset.i18nTitle));
   if(S.loadFailed){ const o = $("overlayText"); if(o) o.innerHTML = L("loadError"); }
   // grading scale, with numbers written the local way
-  const steps = [["🎯", "scaleFirst", .25, 2], ["🟩", "scaleLess", 1, 0], ["🟨", "scaleLess", 2.5, 1], ["🟧", "scaleLess", 5, 0]];
-  $("scale").innerHTML = steps.map(([e, k, n, d]) => "<span>" + e + "</span><span>" + L(k, {n: fmt(n, d)}, n, d) + "</span>").join("") + "<span>🟥</span><span>" + L("scaleMore") + "</span>";
+  const steps = [["perfect", "scaleFirst", .25, 2], ["excellent", "scaleLess", 1, 0], ["good", "scaleLess", 2.5, 1], ["ok", "scaleLess", 5, 0]];
+  $("scale").innerHTML = steps.map(([m, k, n, d]) => "<i class='mini'>" + medalSvg(m) + "</i><span>" + L(k, {n: fmt(n, d)}, n, d) + "</span>").join("") + "<i class='mini'></i><span>" + L("scaleMore") + "</span>";
   $("langFlag").innerHTML = flagSvg(info[1], 20);
   labelSound();
   if(S.country) $("cname").textContent = regionName(S.country.a2, S.country.name);

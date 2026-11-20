@@ -2305,9 +2305,11 @@ function sampleColour(b, lx, ly){
   }
   return b.paper || "#e9dcc0";
 }
+const SHARD_LIFE = 2.5, SHARD_FADE = .6; // seconds: about 2 s in full view, then a quick fade
 function holdBody(b, e){
   b.held = e.pointerId; b.off = [e.clientX - b.x, e.clientY - b.y]; b.vx = b.vy = b.va = 0; b.alpha = 1; b.rest = 0; b.sleep = false;
   b.samples = [[performance.now(), e.clientX, e.clientY]]; b.el.classList.add("held");
+  if(b.gen > 0) b.born = performance.now(); // a broken bit picked up again gets a fresh countdown
 }
 // grab a piece that is already flying (or lying at the bottom); clicks on its transparent corners go through
 function grabBody(b, e){
@@ -2335,7 +2337,7 @@ function trimBodies(){
   }
 }
 function placeBody(b){
-  b.el.style.transform = `translate(${(b.x + b.bx).toFixed(1)}px,${(b.y + b.by).toFixed(1)}px) rotate(${b.ang.toFixed(3)}rad)`;
+  b.el.style.transform = `translate(${(b.x + b.bx).toFixed(1)}px,${(b.y + b.by).toFixed(1)}px) rotate(${b.ang.toFixed(3)}rad)` + (b.alpha < 1 && b.gen > 0 ? ` scale(${(.7 + .3 * b.alpha).toFixed(3)})` : "");
   b.el.style.opacity = b.alpha < 1 ? b.alpha.toFixed(2) : "";
 }
 window.addEventListener("pointermove", e => {
@@ -2350,7 +2352,7 @@ window.addEventListener("pointermove", e => {
 });
 function letGo(e){
   for(const b of FL.bodies) if(b.held === e.pointerId){
-    b.held = null; b.el.classList.remove("held"); b.out = !overStage(b);
+    b.held = null; b.el.classList.remove("held"); b.out = !overStage(b); if(b.gen > 0) b.born = performance.now();
     const s = b.samples, a = s[0], z = s[s.length - 1], dt = Math.max(16, z[0] - a[0]) / 1000;
     let vx = (z[1] - a[1]) / dt, vy = (z[2] - a[2]) / dt;
     if(performance.now() - z[0] > 90){ vx = 0; vy = 0; } // held still before letting go: it just drops
@@ -2611,7 +2613,10 @@ function stepFling(now){
     // lying still on the bottom edge or on other pieces: it settles, and stops jittering in the pile
     if(!b.sleep && b.rest > .35 && (b.floor || b.touch)){ b.sleep = true; b.vx = b.vy = b.va = 0; }
     b.touch = false;
-    if(b.rest > 6){ b.alpha -= frame * 1.2; if(b.alpha <= 0){ dropBody(b); continue; } }
+    if(b.gen > 0){ // broken bits: 2.5 s from the break (or from the last throw), the last 0.6 s fading and shrinking away
+      const age = (now - b.born) / 1000;
+      if(age > SHARD_LIFE - SHARD_FADE){ b.alpha = Math.max(0, (SHARD_LIFE - age) / SHARD_FADE); if(b.alpha <= 0){ dropBody(b); continue; } }
+    } else if(b.rest > 6){ b.alpha -= frame * 1.2; if(b.alpha <= 0){ dropBody(b); continue; } }
     if(b.y - b.R > H + 400) { dropBody(b); continue; }
     placeBody(b);
   }

@@ -69,6 +69,10 @@ Open `index.html` in a recent browser. An internet connection is needed to load 
 
 The repository is served by GitHub Pages from the `main` branch, root folder. To update the game, replace `index.html`.
 
+## Made with AI
+
+This game was vibe coded: I described what I wanted, played each version and asked for changes, and an AI assistant ([Claude](https://claude.ai), by Anthropic) wrote the code, the visuals, the sounds and the translations. The ideas, the choices and the testing are mine; the code is the AI's.
+
 ## Credits
 
 - Country outlines: [amCharts geodata](https://github.com/amcharts/amcharts5-geodata) (freeware licence with attribution), [Natural Earth](https://www.naturalearthdata.com/) via [world-atlas](https://github.com/topojson/world-atlas), [Apache ECharts](https://echarts.apache.org/).

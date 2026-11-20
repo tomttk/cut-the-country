@@ -140,6 +140,12 @@
   .tapnext{margin:10px 0 0;font-size:14px;color:var(--print-dim)}
   .result.show .tapnext{animation:fade .4s 1.1s both}
   canvas.locked.next{cursor:pointer}
+  .tapnext+.tapnext{margin-top:2px}
+  /* pieces thrown off the map fly over the whole page */
+  canvas.flung{position:fixed;left:0;top:0;z-index:40;transform-origin:50% 50%;touch-action:none;cursor:grab;will-change:transform}
+  canvas.flung.held{cursor:grabbing}
+  canvas.chips{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:41;pointer-events:none}
+  html[data-theme="pixel"] canvas.flung{image-rendering:pixelated}
   .countdown b{color:var(--print);font-variant-numeric:tabular-nums;font-weight:700}
   .copybox{width:100%;margin-top:12px;font:14px Archivo,sans-serif;border-radius:3px;border:0;background:var(--paper);color:var(--ink);padding:10px;display:none}
 
@@ -387,6 +393,7 @@
     <textarea class="copybox" id="copybox" rows="3" readonly></textarea>
     <div class="countdown" id="countdown"></div>
     <p class="tapnext" data-i18n="tapNext"></p>
+    <p class="tapnext" data-i18n="flingHint"></p>
   </section>
 
   <footer id="footer"></footer>
@@ -672,7 +679,7 @@ en: {
   copied: "Result copied.", copyBelow: "Copy the text below.",
   perfect: "Perfect", excellent: "Excellent", good: "Well done", ok: "Not bad", missed: "Missed",
   exact: "Right down the middle.", gap: {one: "{n} point from 50 / 50", other: "{n} points from 50 / 50"},
-  copy: "Copy result", practice: "Practice", recut: "Cut this country again", next: "Next country", tapNext: "Tap or click the map for another country.",
+  copy: "Copy result", practice: "Practice", recut: "Cut this country again", next: "Next country", tapNext: "Tap or click the map for another country.", flingHint: "Drag a piece to throw it across the screen.",
   countdown: "Next country in <b>{t}</b>", badgeDaily: "No. {n}", badgeRandom: "random",
   shareTitle: "{name} #{n}", shareGap: "Gap: {n} pt",
   played: "days played", avg: "average gap", best: "best gap", streak: "days in a row", streakRec: "streak (best {n})",
@@ -701,7 +708,7 @@ fr: {
   copied: "Résultat copié.", copyBelow: "Copie le texte ci-dessous.",
   perfect: "Parfait", excellent: "Excellent", good: "Bien joué", ok: "Pas mal", missed: "Raté",
   exact: "Pile au milieu.", gap: {one: "À {n} point du 50 / 50", other: "À {n} points du 50 / 50"},
-  copy: "Copier le résultat", practice: "S'entraîner", recut: "Recouper ce pays", next: "Pays suivant", tapNext: "Touche ou clique la carte pour un autre pays.",
+  copy: "Copier le résultat", practice: "S'entraîner", recut: "Recouper ce pays", next: "Pays suivant", tapNext: "Touche ou clique la carte pour un autre pays.", flingHint: "Fais glisser une pièce pour la jeter à travers l'écran.",
   countdown: "Prochain pays dans <b>{t}</b>", badgeDaily: "n° {n}", badgeRandom: "au hasard",
   shareTitle: "{name} n°{n}", shareGap: "Écart : {n} pt",
   played: "jours joués", avg: "écart moyen", best: "meilleur écart", streak: "jours de suite", streakRec: "série (record {n})",
@@ -730,7 +737,7 @@ es: {
   copied: "Resultado copiado.", copyBelow: "Copia el texto de abajo.",
   perfect: "Perfecto", excellent: "Excelente", good: "Bien hecho", ok: "No está mal", missed: "Fallado",
   exact: "Justo en el medio.", gap: {one: "A {n} punto del 50 / 50", other: "A {n} puntos del 50 / 50"},
-  copy: "Copiar el resultado", practice: "Practicar", recut: "Volver a cortar este país", next: "Siguiente país", tapNext: "Toca o haz clic en el mapa para otro país.",
+  copy: "Copiar el resultado", practice: "Practicar", recut: "Volver a cortar este país", next: "Siguiente país", tapNext: "Toca o haz clic en el mapa para otro país.", flingHint: "Arrastra una pieza para lanzarla por la pantalla.",
   countdown: "Próximo país en <b>{t}</b>", badgeDaily: "n.º {n}", badgeRandom: "al azar",
   shareTitle: "{name} n.º {n}", shareGap: "Diferencia: {n} pt",
   played: "días jugados", avg: "diferencia media", best: "mejor diferencia", streak: "días seguidos", streakRec: "racha (récord {n})",
@@ -759,7 +766,7 @@ de: {
   copied: "Ergebnis kopiert.", copyBelow: "Kopiere den Text unten.",
   perfect: "Perfekt", excellent: "Exzellent", good: "Gut gemacht", ok: "Nicht schlecht", missed: "Daneben",
   exact: "Genau in der Mitte.", gap: {one: "{n} Punkt von 50 / 50 entfernt", other: "{n} Punkte von 50 / 50 entfernt"},
-  copy: "Ergebnis kopieren", practice: "Trainieren", recut: "Dieses Land neu schneiden", next: "Nächstes Land", tapNext: "Tippe oder klicke auf die Karte für ein anderes Land.",
+  copy: "Ergebnis kopieren", practice: "Trainieren", recut: "Dieses Land neu schneiden", next: "Nächstes Land", tapNext: "Tippe oder klicke auf die Karte für ein anderes Land.", flingHint: "Zieh ein Teil, um es über den Bildschirm zu werfen.",
   countdown: "Nächstes Land in <b>{t}</b>", badgeDaily: "Nr. {n}", badgeRandom: "zufällig",
   shareTitle: "{name} Nr. {n}", shareGap: "Abstand: {n} Pkt.",
   played: "gespielte Tage", avg: "mittlerer Abstand", best: "bester Abstand", streak: "Tage in Folge", streakRec: "Serie (Rekord {n})",
@@ -788,7 +795,7 @@ it: {
   copied: "Risultato copiato.", copyBelow: "Copia il testo qui sotto.",
   perfect: "Perfetto", excellent: "Eccellente", good: "Ben fatto", ok: "Niente male", missed: "Mancato",
   exact: "Esattamente a metà.", gap: {one: "A {n} punto dal 50 / 50", other: "A {n} punti dal 50 / 50"},
-  copy: "Copia il risultato", practice: "Allenati", recut: "Ritaglia questo paese", next: "Paese successivo", tapNext: "Tocca o clicca la mappa per un altro paese.",
+  copy: "Copia il risultato", practice: "Allenati", recut: "Ritaglia questo paese", next: "Paese successivo", tapNext: "Tocca o clicca la mappa per un altro paese.", flingHint: "Trascina un pezzo per lanciarlo attraverso lo schermo.",
   countdown: "Prossimo paese tra <b>{t}</b>", badgeDaily: "n. {n}", badgeRandom: "a caso",
   shareTitle: "{name} n. {n}", shareGap: "Scarto: {n} pt",
   played: "giorni giocati", avg: "scarto medio", best: "miglior scarto", streak: "giorni di fila", streakRec: "serie (record {n})",
@@ -817,7 +824,7 @@ pt: {
   copied: "Resultado copiado.", copyBelow: "Copie o texto abaixo.",
   perfect: "Perfeito", excellent: "Excelente", good: "Muito bem", ok: "Nada mal", missed: "Errou",
   exact: "Bem no meio.", gap: {one: "A {n} ponto do 50 / 50", other: "A {n} pontos do 50 / 50"},
-  copy: "Copiar o resultado", practice: "Treinar", recut: "Cortar este país de novo", next: "Próximo país", tapNext: "Toque ou clique no mapa para outro país.",
+  copy: "Copiar o resultado", practice: "Treinar", recut: "Cortar este país de novo", next: "Próximo país", tapNext: "Toque ou clique no mapa para outro país.", flingHint: "Arraste uma peça para arremessá-la pela tela.",
   countdown: "Próximo país em <b>{t}</b>", badgeDaily: "nº {n}", badgeRandom: "aleatório",
   shareTitle: "{name} nº {n}", shareGap: "Diferença: {n} pt",
   played: "dias jogados", avg: "diferença média", best: "melhor diferença", streak: "dias seguidos", streakRec: "sequência (recorde {n})",
@@ -846,7 +853,7 @@ nl: {
   copied: "Resultaat gekopieerd.", copyBelow: "Kopieer de tekst hieronder.",
   perfect: "Perfect", excellent: "Uitstekend", good: "Goed gedaan", ok: "Niet slecht", missed: "Mis",
   exact: "Precies in het midden.", gap: {one: "{n} punt van 50 / 50", other: "{n} punten van 50 / 50"},
-  copy: "Resultaat kopiëren", practice: "Oefenen", recut: "Dit land opnieuw snijden", next: "Volgend land", tapNext: "Tik of klik op de kaart voor een ander land.",
+  copy: "Resultaat kopiëren", practice: "Oefenen", recut: "Dit land opnieuw snijden", next: "Volgend land", tapNext: "Tik of klik op de kaart voor een ander land.", flingHint: "Sleep een stuk om het over het scherm te gooien.",
   countdown: "Volgend land over <b>{t}</b>", badgeDaily: "nr. {n}", badgeRandom: "willekeurig",
   shareTitle: "{name} nr. {n}", shareGap: "Verschil: {n} pt",
   played: "dagen gespeeld", avg: "gemiddeld verschil", best: "beste verschil", streak: "dagen op rij", streakRec: "reeks (record {n})",
@@ -875,7 +882,7 @@ pl: {
   copied: "Wynik skopiowany.", copyBelow: "Skopiuj tekst poniżej.",
   perfect: "Idealnie", excellent: "Doskonale", good: "Dobra robota", ok: "Nieźle", missed: "Pudło",
   exact: "Dokładnie na środku.", gap: {one: "{n} punkt od 50 / 50", few: "{n} punkty od 50 / 50", many: "{n} punktów od 50 / 50", other: "{n} punktu od 50 / 50"},
-  copy: "Kopiuj wynik", practice: "Trenuj", recut: "Przetnij ten kraj ponownie", next: "Następny kraj", tapNext: "Dotknij lub kliknij mapę, aby zagrać innym krajem.",
+  copy: "Kopiuj wynik", practice: "Trenuj", recut: "Przetnij ten kraj ponownie", next: "Następny kraj", tapNext: "Dotknij lub kliknij mapę, aby zagrać innym krajem.", flingHint: "Przeciągnij kawałek, aby rzucić nim przez ekran.",
   countdown: "Następny kraj za <b>{t}</b>", badgeDaily: "nr {n}", badgeRandom: "losowy",
   shareTitle: "{name} nr {n}", shareGap: "Różnica: {n} pkt",
   played: "rozegrane dni", avg: "średnia różnica", best: "najlepsza różnica", streak: "dni z rzędu", streakRec: "seria (rekord {n})",
@@ -903,7 +910,7 @@ tr: {
   copied: "Sonuç kopyalandı.", copyBelow: "Aşağıdaki metni kopyala.",
   perfect: "Mükemmel", excellent: "Harika", good: "Aferin", ok: "Fena değil", missed: "Iska",
   exact: "Tam ortadan.", gap: "50 / 50'den {n} puan uzakta",
-  copy: "Sonucu kopyala", practice: "Antrenman yap", recut: "Bu ülkeyi yeniden kes", next: "Sonraki ülke", tapNext: "Başka bir ülke için haritaya dokun ya da tıkla.",
+  copy: "Sonucu kopyala", practice: "Antrenman yap", recut: "Bu ülkeyi yeniden kes", next: "Sonraki ülke", tapNext: "Başka bir ülke için haritaya dokun ya da tıkla.", flingHint: "Bir parçayı sürükleyip ekranın öbür ucuna fırlat.",
   countdown: "Sonraki ülkeye <b>{t}</b>", badgeDaily: "No. {n}", badgeRandom: "rastgele",
   shareTitle: "{name} #{n}", shareGap: "Fark: {n} puan",
   played: "oynanan gün", avg: "ortalama fark", best: "en iyi fark", streak: "art arda gün", streakRec: "seri (rekor {n})",
@@ -931,7 +938,7 @@ ru: {
   copied: "Результат скопирован.", copyBelow: "Скопируй текст ниже.",
   perfect: "Идеально", excellent: "Отлично", good: "Хорошо", ok: "Неплохо", missed: "Мимо",
   exact: "Ровно посередине.", gap: "{n} п. п. от 50 / 50",
-  copy: "Скопировать результат", practice: "Тренироваться", recut: "Разрезать заново", next: "Следующая страна", tapNext: "Коснись карты или нажми на неё, чтобы сыграть другой страной.",
+  copy: "Скопировать результат", practice: "Тренироваться", recut: "Разрезать заново", next: "Следующая страна", tapNext: "Коснись карты или нажми на неё, чтобы сыграть другой страной.", flingHint: "Потяни кусок, чтобы швырнуть его по экрану.",
   countdown: "Следующая страна через <b>{t}</b>", badgeDaily: "№ {n}", badgeRandom: "случайная",
   shareTitle: "{name} № {n}", shareGap: "Отклонение: {n} п. п.",
   played: "дней сыграно", avg: "среднее отклонение", best: "лучшее отклонение", streak: "дней подряд", streakRec: "серия (рекорд {n})",
@@ -959,7 +966,7 @@ ja: {
   copied: "結果をコピーしました。", copyBelow: "下のテキストをコピーしてください。",
   perfect: "パーフェクト", excellent: "エクセレント", good: "お見事", ok: "まあまあ", missed: "ミス",
   exact: "ど真ん中。", gap: "50 / 50との差 {n}ポイント",
-  copy: "結果をコピー", practice: "練習する", recut: "この国をもう一度切る", next: "次の国", tapNext: "地図をタップまたはクリックすると、別の国で遊べます。",
+  copy: "結果をコピー", practice: "練習する", recut: "この国をもう一度切る", next: "次の国", tapNext: "地図をタップまたはクリックすると、別の国で遊べます。", flingHint: "ピースをドラッグすると、画面の向こうへ投げられます。",
   countdown: "次の国まで <b>{t}</b>", badgeDaily: "No.{n}", badgeRandom: "ランダム",
   shareTitle: "{name} No.{n}", shareGap: "差：{n}pt",
   played: "プレイ日数", avg: "平均の差", best: "最小の差", streak: "連続日数", streakRec: "連続（最高 {n}）",
@@ -987,7 +994,7 @@ ko: {
   copied: "결과를 복사했어요.", copyBelow: "아래 텍스트를 복사하세요.",
   perfect: "완벽해요", excellent: "훌륭해요", good: "잘했어요", ok: "나쁘지 않아요", missed: "빗나갔어요",
   exact: "정확히 한가운데.", gap: "50 / 50과 {n}점 차이",
-  copy: "결과 복사", practice: "연습하기", recut: "이 나라 다시 자르기", next: "다음 나라", tapNext: "지도를 탭하거나 클릭하면 다른 나라로 넘어가요.",
+  copy: "결과 복사", practice: "연습하기", recut: "이 나라 다시 자르기", next: "다음 나라", tapNext: "지도를 탭하거나 클릭하면 다른 나라로 넘어가요.", flingHint: "조각을 끌어서 화면 너머로 던져 보세요.",
   countdown: "다음 나라까지 <b>{t}</b>", badgeDaily: "제{n}회", badgeRandom: "무작위",
   shareTitle: "{name} 제{n}회", shareGap: "차이: {n}점",
   played: "플레이한 날", avg: "평균 차이", best: "최소 차이", streak: "연속 일수", streakRec: "연속 (최고 {n})",
@@ -1015,7 +1022,7 @@ zh: {
   copied: "结果已复制。", copyBelow: "请复制下面的文字。",
   perfect: "完美", excellent: "优秀", good: "干得好", ok: "还不错", missed: "失手了",
   exact: "正好在中间。", gap: "距 50 / 50 相差 {n} 个百分点",
-  copy: "复制结果", practice: "去练习", recut: "重新切这个国家", next: "下一个国家", tapNext: "点击地图，换一个国家。",
+  copy: "复制结果", practice: "去练习", recut: "重新切这个国家", next: "下一个国家", tapNext: "点击地图，换一个国家。", flingHint: "拖动一块碎片，把它扔出去。",
   countdown: "距下一个国家还有 <b>{t}</b>", badgeDaily: "第 {n} 期", badgeRandom: "随机",
   shareTitle: "{name} 第 {n} 期", shareGap: "差距：{n} 个百分点",
   played: "已玩天数", avg: "平均差距", best: "最小差距", streak: "连续天数", streakRec: "连续（最高 {n}）",
@@ -1332,24 +1339,25 @@ function drawPixel(){
     const gap = Math.round(4 * easeBack(fx.split));
     const ux = cut.B[0] - cut.A[0], uy = cut.B[1] - cut.A[1], L = Math.hypot(ux, uy), nx = -uy / L, ny = ux / L;
     const seg = lineInBox(cut.A, cut.B);
-    if(seg) pixelLine(g, seg[0][0] * s, seg[0][1] * s, seg[1][0] * s, seg[1][1] * s, "rgba(6,9,10,.55)");
+    if(seg && !S.only) pixelLine(g, seg[0][0] * s, seg[0][1] * s, seg[1][0] * s, seg[1][1] * s, "rgba(6,9,10,.55)");
     for(const [sign, fill, shade] of [[1, RC.parch, RC.parchShade], [-1, pal.piece, pal.pieceShade]]){
+      if(S.gone[sign] || (S.only && S.only !== sign)) continue;
       const sp = pixelSprite(c, fill, shade, sign, cut), ox = Math.round(nx * gap * sign), oy = Math.round(ny * gap * sign);
       g.drawImage(sp.shadow, ox + 2, oy + 3); g.drawImage(sp.img, ox, oy);
     }
     labels = {nx, ny, gap};
     g.globalAlpha = 1;
-    drawCrowd(g, pal);
+    if(!S.only) drawCrowd(g, pal);
   }
   g.globalAlpha = 1;
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(PX.c, 0, 0, cv.width, cv.height);
   // measurements: large light figures on dark tags, edged with the colour of their piece
-  if(labels && fx.label > 0){
+  if(labels && fx.label > 0 && !S.only){
     const z = cssSize / V, size = Math.round(Math.max(18, Math.min(26, cssSize * .045)));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     for(const [sign, share, ce, edge] of [[1, cut.pos, cut.cA, RC.parch], [-1, cut.neg, cut.cB, pal.piece]]){
-      if(!ce) continue;
+      if(!ce || S.gone[sign]) continue;
       const off = labels.gap * V / n;
       let x = (ce[0] + labels.nx * off * sign) * z, y = (ce[1] + labels.ny * off * sign) * z;
       const txt = pct(share); ctx.font = `800 ${size}px Archivo, 'Helvetica Neue', Arial, sans-serif`; // plain figures: pixel 8s and 6s are hard to read
@@ -1579,7 +1587,7 @@ function drawAdventure(){
   const d = easeOut(fx.drop), lift = 1 - d;
   ctx.globalAlpha = Math.min(1, fx.drop * 2.2);
   ctx.translate(V / 2, V / 2); ctx.scale(1 + .03 * lift, 1 + .03 * lift); ctx.translate(-V / 2, -V / 2);
-  ctx.drawImage(Ly.chart, 0, 0, V, V);
+  if(!S.only) ctx.drawImage(Ly.chart, 0, 0, V, V);
 
   const cut = S.cut;
   if(!cut || fx.split === 0){
@@ -1610,10 +1618,10 @@ function drawAdventure(){
   const s = easeBack(fx.split), gap = 16 * s;
   const ux = cut.B[0] - cut.A[0], uy = cut.B[1] - cut.A[1], L = Math.hypot(ux, uy), nx = -uy / L, ny = ux / L;
   const seg = lineInBox(cut.A, cut.B);
-  if(seg){ routeDash(z); ctx.globalAlpha = .8; ctx.beginPath(); ctx.moveTo(seg[0][0], seg[0][1]); ctx.lineTo(seg[1][0], seg[1][1]); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+  if(seg && !S.only){ routeDash(z); ctx.globalAlpha = .8; ctx.beginPath(); ctx.moveTo(seg[0][0], seg[0][1]); ctx.lineTo(seg[1][0], seg[1][1]); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
   const tear = seg ? tearLine(cut, seg) : null;
   for(const [sign, layer, ce, turn] of [[1, Ly.a, cut.cA, -1], [-1, Ly.b, cut.cB, 1]]){
-    if(!ce) continue;
+    if(!ce || S.gone[sign] || (S.only && S.only !== sign)) continue;
     ctx.save();
     ctx.translate(nx * gap * sign, ny * gap * sign);
     ctx.translate(ce[0], ce[1]); ctx.rotate(turn * .028 * s); ctx.translate(-ce[0], -ce[1]);
@@ -1627,10 +1635,10 @@ function drawAdventure(){
     }
     ctx.restore();
   }
-  const lt = fx.label; if(lt <= 0) return;
+  const lt = fx.label; if(lt <= 0 || S.only) return;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   for(const [sign, share, ce] of [[1, cut.pos, cut.cA], [-1, cut.neg, cut.cB]]){
-    if(!ce) continue;
+    if(!ce || S.gone[sign]) continue;
     let x = (ce[0] + nx * gap * sign) * z + 8, y = (ce[1] + ny * gap * sign) * z;
     x = Math.min(Math.max(x, 70), cssSize - 60); y = Math.min(Math.max(y, 34), cssSize - 26);
     luggageTag(x, y, pct(share), sign * -.06, clamp01(lt * 2), easeBack(lt) * .25 + .75);
@@ -1726,7 +1734,7 @@ if(ADV) setupAdventure();
 
 /* ---------- state ---------- */
 const S = {world: null, source: null, mode: "daily", country: null, cut: null, pending: null, press: null, grabs: new Map(), practiceA2: null,
-  fx: {drop: 1, blade: 1, split: 1, label: 1}, raf: 0};
+  fx: {drop: 1, blade: 1, split: 1, label: 1}, raf: 0, gone: {}, only: 0};
 const RM = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const cv = $("cv"), ctx = cv.getContext("2d");
 let cssSize = 0, dpr = 1;
@@ -1992,7 +2000,7 @@ function draw(){
   const s = easeBack(fx.split), gap = 15 * s;
   const ux = cut.B[0] - cut.A[0], uy = cut.B[1] - cut.A[1], L = Math.hypot(ux, uy), nx = -uy / L, ny = ux / L;
   const seg = lineInBox(cut.A, cut.B);
-  if(seg){ // the score left in the mat
+  if(seg && !S.only){ // the score left in the mat
     ctx.globalAlpha = .5; ctx.lineWidth = 1.6 / z; ctx.strokeStyle = "rgba(6,26,18,.7)";
     ctx.beginPath(); ctx.moveTo(seg[0][0], seg[0][1]); ctx.lineTo(seg[1][0], seg[1][1]); ctx.stroke();
     ctx.lineWidth = .8 / z; ctx.strokeStyle = COL.print; ctx.globalAlpha = .35;
@@ -2001,7 +2009,7 @@ function draw(){
   }
   const pieces = [[1, COL.paper, cut.cA, -1], [-1, COL.kraft, cut.cB, 1]];
   for(const [sign, fill, ce, turn] of pieces){
-    if(!ce) continue;
+    if(!ce || S.gone[sign] || (S.only && S.only !== sign)) continue;
     ctx.save();
     ctx.translate(nx * gap * sign, ny * gap * sign);
     ctx.translate(ce[0], ce[1]); ctx.rotate(turn * .022 * s); ctx.translate(-ce[0], -ce[1]);
@@ -2010,10 +2018,10 @@ function draw(){
     ctx.restore();
   }
   // measurements, stamped on each piece
-  const lt = fx.label; if(lt <= 0) return;
+  const lt = fx.label; if(lt <= 0 || S.only) return;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   for(const [sign, share, ce] of [[1, cut.pos, cut.cA], [-1, cut.neg, cut.cB]]){
-    if(!ce) continue;
+    if(!ce || S.gone[sign]) continue;
     let x = (ce[0] + nx * gap * sign) * z, y = (ce[1] + ny * gap * sign) * z;
     const txt = pct(share); ctx.font = "800 17px Archivo, 'Helvetica Neue', sans-serif";
     const w = ctx.measureText(txt).width + 20, h = 28;
@@ -2095,8 +2103,13 @@ cv.addEventListener("pointerdown", e => {
   const touch = e.pointerType !== "mouse";
   if((e.pointerType === "mouse" && e.button !== 0) || !S.country) return;
   if(S.cut){
-    // after a cut, a plain click or tap on the map moves on to another country in Practice
-    if(!S.press && performance.now() - (S.cutAt || 0) > 1000) S.press = {x: e.clientX, y: e.clientY, id: e.pointerId, kind: "next"};
+    // after a cut: drag a piece to throw it; a plain click or tap on the map moves on to another country in Practice
+    if(S.press) return;
+    const late = performance.now() - (S.cutAt || 0) > 1000, sign = S.fx.label >= 1 ? pieceAt(toVirtual(e)) : 0;
+    if(sign){
+      e.preventDefault(); try{ cv.setPointerCapture(e.pointerId); }catch(err){}
+      S.press = {x: e.clientX, y: e.clientY, id: e.pointerId, kind: "piece", sign, next: late};
+    } else if(late) S.press = {x: e.clientX, y: e.clientY, id: e.pointerId, kind: "next"};
     return;
   }
   const pd = S.pending;
@@ -2112,6 +2125,7 @@ cv.addEventListener("pointerdown", e => {
   draw();
 });
 cv.addEventListener("pointermove", e => {
+  if(S.cut){ pieceHover(e); return; }
   const pd = S.pending; if(!pd) return;
   if(moveGrab(e)) return;
   if(S.press){
@@ -2123,7 +2137,7 @@ cv.addEventListener("pointermove", e => {
 cv.addEventListener("pointerup", e => {
   if(releaseGrab(e)) return;
   const pr = S.press; if(!pr || e.pointerId !== pr.id) return; S.press = null;
-  if(pr.kind === "next"){
+  if(pr.kind === "next" || (pr.kind === "piece" && pr.next)){
     if(S.cut && Math.hypot(e.clientX - pr.x, e.clientY - pr.y) <= 14){ SFX.tick(false); if(S.mode === "daily") switchMode("practice"); else nextPractice(); }
     return;
   }
@@ -2148,6 +2162,484 @@ cv.addEventListener("contextmenu", e => {
 });
 $("eraseBtn").onclick = () => cancelCut();
 $("cutBtn").onclick = () => { const pd = S.pending; if(pd && pd.B) tryCommit(pd.A, pd.B, true); };
+/* ---------- throwing the pieces: once cut, a piece can be dragged off the map and flung across the page ---------- */
+const FL = {bodies: [], raf: 0, last: 0};
+// gap between the two pieces once they have stepped apart, in virtual units, for each theme
+const pieceGap = () => PIXEL ? 4 * V / PX.N : ADV ? 16 : 15;
+function inCountry(c, P){
+  let inside = false;
+  for(const poly of c.polys) for(const r of poly) for(let i = 0, j = r.length - 1; i < r.length; j = i++){
+    const a = r[i], b = r[j];
+    if((a[1] > P[1]) !== (b[1] > P[1]) && P[0] < (b[0] - a[0]) * (P[1] - a[1]) / (b[1] - a[1]) + a[0]) inside = !inside;
+  }
+  return inside;
+}
+// which piece is under this point of the map (1, -1 or 0)
+function pieceAt(P){
+  const cut = S.cut; if(!cut || !S.country) return 0;
+  const ux = cut.B[0] - cut.A[0], uy = cut.B[1] - cut.A[1], L = Math.hypot(ux, uy), nx = -uy / L, ny = ux / L, g = pieceGap();
+  for(const sign of [1, -1]){
+    if(S.gone[sign]) continue;
+    const Q = [P[0] - nx * g * sign, P[1] - ny * g * sign];
+    if(sign * (ux * (Q[1] - cut.A[1]) - uy * (Q[0] - cut.A[0])) >= 0 && inCountry(S.country, Q)) return sign;
+  }
+  return 0;
+}
+function pieceHover(e){
+  const pr = S.press;
+  if(pr && pr.kind === "piece" && e.pointerId === pr.id){
+    if(Math.hypot(e.clientX - pr.x, e.clientY - pr.y) > 8){ S.press = null; detachPiece(pr.sign, e); }
+    return;
+  }
+  if(e.pointerType === "mouse" && !pr) cv.style.cursor = S.fx.label >= 1 && pieceAt(toVirtual(e)) ? "grab" : "";
+}
+// A thrown piece is a rigid body: its real outline (simplified) collides with the window edges and with the other
+// pieces, and a hard enough knock cracks it in two along a ragged line. Coordinates are page pixels; each body
+// keeps its outline relative to its centre of mass.
+const FLMAX = 36; // most pieces on screen at once
+function rdp(pts, eps){
+  if(pts.length < 4) return pts;
+  const keep = new Uint8Array(pts.length); keep[0] = keep[pts.length - 1] = 1;
+  const st = [[0, pts.length - 1]];
+  while(st.length){
+    const [a, b] = st.pop(), A = pts[a], B = pts[b], dx = B[0] - A[0], dy = B[1] - A[1], L = Math.hypot(dx, dy) || 1;
+    let m = -1, md = eps;
+    for(let i = a + 1; i < b; i++){ const d = Math.abs(dy * (pts[i][0] - A[0]) - dx * (pts[i][1] - A[1])) / L; if(d > md){ md = d; m = i; } }
+    if(m > 0){ keep[m] = 1; st.push([a, m], [m, b]); }
+  }
+  return pts.filter((_, i) => keep[i]);
+}
+// simplify the outline for collisions, with a budget of vertices for the whole body
+function simplifyRings(rings){
+  rings = rings.filter(r => r.length >= 3 && Math.abs(ringArea(r)) > 6);
+  let eps = 1.2, out = rings;
+  for(let k = 0; k < 8; k++){
+    out = rings.map(r => { // a closed ring: simplify the two halves on either side of the point farthest from the start
+      let m = 1, md = -1; r.forEach((p, i) => { const d = (p[0] - r[0][0]) ** 2 + (p[1] - r[0][1]) ** 2; if(d > md){ md = d; m = i; } });
+      const h1 = rdp(r.slice(0, m + 1), eps), h2 = rdp(r.slice(m).concat([r[0]]), eps);
+      return h1.concat(h2.slice(1, -1));
+    }).filter(r => r.length >= 3 && Math.abs(ringArea(r)) > 6);
+    if(out.reduce((n, r) => n + r.length, 0) <= 64) break;
+    eps *= 1.6;
+  }
+  return out;
+}
+// mass, centre and rotational inertia of a set of outer rings (holes are ignored)
+function massProps(rings){
+  let M = 0, cx = 0, cy = 0, I = 0;
+  for(const r of rings){
+    let a = 0, x = 0, y = 0, ii = 0;
+    for(let i = 0, n = r.length; i < n; i++){
+      const p = r[i], q = r[(i + 1) % n], c = p[0] * q[1] - q[0] * p[1];
+      a += c; x += (p[0] + q[0]) * c; y += (p[1] + q[1]) * c;
+      ii += c * (p[0] * p[0] + p[0] * q[0] + q[0] * q[0] + p[1] * p[1] + p[1] * q[1] + q[1] * q[1]);
+    }
+    a /= 2; if(Math.abs(a) < 1e-6) continue;
+    const s = Math.sign(a);
+    M += a * s; cx += x / 6 * s; cy += y / 6 * s; I += ii / 12 * s;
+  }
+  if(M <= 0) return null;
+  cx /= M; cy /= M;
+  return {M, cx, cy, I: Math.max(1, I - M * (cx * cx + cy * cy))};
+}
+// make a body from a canvas and outline rings given relative to the canvas's top-left corner (page pixels)
+function makeBody(el, w, h, rings, x0, y0, ang){
+  const mp = massProps(rings); if(!mp) return null;
+  const poly = simplifyRings(rings).map(r => r.map(([x, y]) => [x - mp.cx, y - mp.cy]));
+  if(!poly.length) return null;
+  const R = Math.max(...poly.flat().map(([x, y]) => Math.hypot(x, y)));
+  el.className = "flung"; el.setAttribute("aria-hidden", "true");
+  el.style.width = w + "px"; el.style.height = h + "px"; el.style.transformOrigin = `${mp.cx}px ${mp.cy}px`;
+  const g = el.getContext("2d");
+  const b = {el, w, h, sw: el.width, sh: el.height, data: g.getImageData(0, 0, el.width, el.height).data,
+    bx: -mp.cx, by: -mp.cy, poly, R, area: mp.M, invM: 1 / mp.M, invI: 1 / mp.I,
+    x: x0 + Math.cos(ang) * mp.cx - Math.sin(ang) * mp.cy, y: y0 + Math.sin(ang) * mp.cx + Math.cos(ang) * mp.cy, ang,
+    vx: 0, vy: 0, va: 0, alpha: 1, rest: 0, held: null, off: [0, 0], samples: [], born: performance.now(), gen: 0};
+  el.addEventListener("pointerdown", ev => grabBody(b, ev));
+  return b;
+}
+// render one piece alone, copy it out of the map and hand it to the pointer
+function detachPiece(sign, e){
+  const cut = S.cut, c = S.country, g = pieceGap(), m = 46;
+  const ux = cut.B[0] - cut.A[0], uy = cut.B[1] - cut.A[1], L = Math.hypot(ux, uy), nx = -uy / L, ny = ux / L;
+  const ringsV = [];
+  let bb = [Infinity, Infinity, -Infinity, -Infinity];
+  for(const poly of c.polys){
+    const r = clipRing(poly[0], cut.A, cut.B, sign).map(([x, y]) => [x + nx * g * sign, y + ny * g * sign]);
+    if(r.length < 3) continue; ringsV.push(r);
+    for(const [X, Y] of r) bb = [Math.min(bb[0], X), Math.min(bb[1], Y), Math.max(bb[2], X), Math.max(bb[3], Y)];
+  }
+  if(!isFinite(bb[0])) return;
+  bb = [Math.max(0, bb[0] - m), Math.max(0, bb[1] - m), Math.min(V, bb[2] + m), Math.min(V, bb[3] + m)];
+  const k = cv.width / V, sx = Math.floor(bb[0] * k), sy = Math.floor(bb[1] * k), sw = Math.ceil((bb[2] - bb[0]) * k), sh = Math.ceil((bb[3] - bb[1]) * k);
+  if(sw < 2 || sh < 2) return;
+  cancelAnimationFrame(S.raf); S.fx = {drop: 1, blade: 1, split: 1, label: 1};
+  S.only = sign; draw();
+  const el = document.createElement("canvas"); el.width = sw; el.height = sh;
+  el.getContext("2d").drawImage(cv, sx, sy, sw, sh, 0, 0, sw, sh);
+  S.only = 0; S.gone[sign] = true; draw(); cv.style.cursor = "";
+  const r = cv.getBoundingClientRect(), css = r.width / V, w = sw / k * css, h = sh / k * css, left = r.left + sx / k * css, top = r.top + sy / k * css;
+  const rings = ringsV.map(rg => rg.map(([x, y]) => [x * css - sx / k * css, y * css - sy / k * css]));
+  const b = makeBody(el, w, h, rings, left, top, 0); if(!b) return;
+  b.paper = sampleColour(b, 0, 0);
+  document.body.appendChild(el);
+  FL.bodies.push(b); trimBodies();
+  holdBody(b, e);
+  try{ cv.releasePointerCapture(e.pointerId); }catch(err){}
+  try{ el.setPointerCapture(e.pointerId); }catch(err){}
+  placeBody(b); runFling();
+}
+// the map square: a piece that has left it cannot come back in, and nothing breaks over it
+function bodyBox(b){ let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for(const [x, y] of worldVerts(b)){ if(x < x0) x0 = x; if(x > x1) x1 = x; if(y < y0) y0 = y; if(y > y1) y1 = y; } return [x0, y0, x1, y1]; }
+function overStage(b, R = $("stage").getBoundingClientRect()){ const q = bodyBox(b); return q[2] > R.left && q[0] < R.right && q[3] > R.top && q[1] < R.bottom; }
+function toLocal(b, X, Y){ const dx = X - b.x, dy = Y - b.y, c = Math.cos(b.ang), s = Math.sin(b.ang); return [dx * c + dy * s, -dx * s + dy * c]; }
+function toWorld(b, lx, ly){ const c = Math.cos(b.ang), s = Math.sin(b.ang); return [b.x + lx * c - ly * s, b.y + lx * s + ly * c]; }
+function alphaAt(b, lx, ly){
+  const px = Math.floor((lx - b.bx) / b.w * b.sw), py = Math.floor((ly - b.by) / b.h * b.sh);
+  return px < 0 || py < 0 || px >= b.sw || py >= b.sh ? 0 : b.data[(py * b.sw + px) * 4 + 3];
+}
+function sampleColour(b, lx, ly){
+  for(let i = 0; i < 12; i++){
+    const px = Math.floor((lx * (1 - i / 12) - b.bx) / b.w * b.sw), py = Math.floor((ly * (1 - i / 12) - b.by) / b.h * b.sh);
+    if(px >= 0 && py >= 0 && px < b.sw && py < b.sh){ const o = (py * b.sw + px) * 4; if(b.data[o + 3] > 200) return `rgb(${b.data[o]},${b.data[o + 1]},${b.data[o + 2]})`; }
+  }
+  return b.paper || "#e9dcc0";
+}
+function holdBody(b, e){
+  b.held = e.pointerId; b.off = [e.clientX - b.x, e.clientY - b.y]; b.vx = b.vy = b.va = 0; b.alpha = 1; b.rest = 0; b.sleep = false;
+  b.samples = [[performance.now(), e.clientX, e.clientY]]; b.el.classList.add("held");
+}
+// grab a piece that is already flying (or lying at the bottom); clicks on its transparent corners go through
+function grabBody(b, e){
+  if(e.pointerType === "mouse" && e.button !== 0) return;
+  const [lx, ly] = toLocal(b, e.clientX, e.clientY);
+  if(alphaAt(b, lx, ly) < 30){
+    b.el.style.pointerEvents = "none"; const under = document.elementFromPoint(e.clientX, e.clientY); b.el.style.pointerEvents = "";
+    if(under && under.classList && under.classList.contains("flung")){ under.dispatchEvent(new PointerEvent("pointerdown", e)); return; }
+    if(under && under !== b.el && under.click && under !== cv) under.click();
+    return;
+  }
+  e.preventDefault(); e.stopPropagation();
+  try{ b.el.setPointerCapture(e.pointerId); }catch(err){}
+  holdBody(b, e); runFling();
+}
+function dropBody(b){
+  b.el.remove(); const i = FL.bodies.indexOf(b); if(i >= 0) FL.bodies.splice(i, 1);
+  for(const o of FL.bodies) if(o.sleep){ o.sleep = false; o.rest = 0; } // what lay on it falls again
+  runFling();
+}
+function trimBodies(){
+  while(FL.bodies.length > FLMAX){ // the smallest loose crumbs go first
+    const free = FL.bodies.filter(b => b.held === null); if(!free.length) break;
+    dropBody(free.reduce((m, b) => b.area < m.area ? b : m));
+  }
+}
+function placeBody(b){
+  b.el.style.transform = `translate(${(b.x + b.bx).toFixed(1)}px,${(b.y + b.by).toFixed(1)}px) rotate(${b.ang.toFixed(3)}rad)`;
+  b.el.style.opacity = b.alpha < 1 ? b.alpha.toFixed(2) : "";
+}
+window.addEventListener("pointermove", e => {
+  for(const b of FL.bodies) if(b.held === e.pointerId){
+    b.x = e.clientX - b.off[0]; b.y = e.clientY - b.off[1];
+    const now = performance.now(); b.samples.push([now, e.clientX, e.clientY]);
+    while(b.samples.length > 2 && now - b.samples[0][0] > 110) b.samples.shift();
+    const s = b.samples, a = s[0], z = s[s.length - 1], dt = Math.max(16, z[0] - a[0]) / 1000;
+    b.vx = (z[1] - a[1]) / dt; b.vy = (z[2] - a[2]) / dt; // a held piece still hits what it touches
+    placeBody(b);
+  }
+});
+function letGo(e){
+  for(const b of FL.bodies) if(b.held === e.pointerId){
+    b.held = null; b.el.classList.remove("held"); b.out = !overStage(b);
+    const s = b.samples, a = s[0], z = s[s.length - 1], dt = Math.max(16, z[0] - a[0]) / 1000;
+    let vx = (z[1] - a[1]) / dt, vy = (z[2] - a[2]) / dt;
+    if(performance.now() - z[0] > 90){ vx = 0; vy = 0; } // held still before letting go: it just drops
+    const sp = Math.hypot(vx, vy), cap = 5200; if(sp > cap){ vx *= cap / sp; vy *= cap / sp; }
+    b.vx = vx; b.vy = vy;
+    const r = Math.max(30, b.R); // spin from where it was held: grabbed by a corner, it twirls
+    b.va = Math.max(-22, Math.min(22, (b.off[0] * vy - b.off[1] * vx) / (r * r) * .55 + (Math.random() - .5) * 2));
+    if(Math.hypot(b.vx, b.vy) > 700) flingSound("whoosh", Math.min(1, Math.hypot(b.vx, b.vy) / 3500));
+  }
+  runFling();
+}
+window.addEventListener("pointerup", letGo);
+window.addEventListener("pointercancel", letGo);
+// scrolling moves the square under the pieces: whatever it now covers is woken up and pushed off it
+window.addEventListener("scroll", () => {
+  if(!FL.bodies.length) return;
+  const R = $("stage").getBoundingClientRect(); let any = false;
+  for(const b of FL.bodies) if(b.held === null && b.out && overStage(b, R)){ b.sleep = false; b.rest = 0; any = true; }
+  if(any) runFling();
+}, {passive: true});
+function runFling(){ if(!FL.raf){ FL.last = performance.now(); FL.raf = requestAnimationFrame(stepFling); } }
+
+/* contacts */
+// apply an impulse J along n (and friction) at world point P between body a and body b (b may be null: a wall)
+function resolve(a, b, P, n, depth){
+  const fa = a.held === null && !a.sleep, fb = b && b.held === null && !b.sleep; // held and settled pieces do not give way
+  const ia = fa ? a.invM : 0, Ia = fa ? a.invI : 0, ib = fb ? b.invM : 0, Ib = fb ? b.invI : 0;
+  if(ia + ib === 0) return 0;
+  const rax = P[0] - a.x, ray = P[1] - a.y, rbx = b ? P[0] - b.x : 0, rby = b ? P[1] - b.y : 0;
+  // push apart
+  const corr = Math.max(0, depth - .4) * .7 / (ia + ib);
+  if(fa){ a.x += n[0] * corr * ia; a.y += n[1] * corr * ia; }
+  if(fb){ b.x -= n[0] * corr * ib; b.y -= n[1] * corr * ib; }
+  const va = [a.vx - a.va * ray, a.vy + a.va * rax], vb = b ? [b.vx - b.va * rby, b.vy + b.va * rbx] : [0, 0];
+  const rv = [va[0] - vb[0], va[1] - vb[1]], vn = rv[0] * n[0] + rv[1] * n[1];
+  if(vn >= 0) return 0;
+  const rna = rax * n[1] - ray * n[0], rnb = rbx * n[1] - rby * n[0];
+  const e = -vn < 160 ? 0 : b ? .3 : .38;
+  const j = -(1 + e) * vn / (ia + ib + rna * rna * Ia + rnb * rnb * Ib);
+  const apply = (body, inv, Inv, rx, ry, jx, jy) => { body.vx += jx * inv; body.vy += jy * inv; body.va += (rx * jy - ry * jx) * Inv; };
+  apply(a, ia, Ia, rax, ray, n[0] * j, n[1] * j); if(b) apply(b, ib, Ib, rbx, rby, -n[0] * j, -n[1] * j);
+  // friction along the surface
+  const t = [-n[1], n[0]], vt = rv[0] * t[0] + rv[1] * t[1], rta = rax * t[1] - ray * t[0], rtb = rbx * t[1] - rby * t[0];
+  let jt = -vt / (ia + ib + rta * rta * Ia + rtb * rtb * Ib); const mu = .45 * j; jt = Math.max(-mu, Math.min(mu, jt));
+  apply(a, ia, Ia, rax, ray, t[0] * jt, t[1] * jt); if(b) apply(b, ib, Ib, rbx, rby, -t[0] * jt, -t[1] * jt);
+  return -vn;
+}
+function worldVerts(b){
+  const c = Math.cos(b.ang), s = Math.sin(b.ang), out = [];
+  for(const r of b.poly) for(const [x, y] of r) out.push([b.x + x * c - y * s, b.y + x * s + y * c]);
+  return out;
+}
+// deepest point of `a` inside `b`, with the way out of `b` (normal pointing from b to a)
+function deepest(a, b){
+  let best = null;
+  const c = Math.cos(b.ang), s = Math.sin(b.ang);
+  for(const P of worldVerts(a)){
+    if((P[0] - b.x) ** 2 + (P[1] - b.y) ** 2 > b.R * b.R) continue;
+    const [lx, ly] = toLocal(b, P[0], P[1]);
+    for(const r of b.poly){
+      let inside = false;
+      for(let i = 0, j = r.length - 1; i < r.length; j = i++){
+        const p = r[i], q = r[j];
+        if((p[1] > ly) !== (q[1] > ly) && lx < (q[0] - p[0]) * (ly - p[1]) / (q[1] - p[1]) + p[0]) inside = !inside;
+      }
+      if(!inside) continue;
+      const sg = Math.sign(ringArea(r)) || 1;
+      let md = Infinity, mn = null;
+      for(let i = 0; i < r.length; i++){
+        const p = r[i], q = r[(i + 1) % r.length], dx = q[0] - p[0], dy = q[1] - p[1], L2 = dx * dx + dy * dy || 1;
+        const t = Math.max(0, Math.min(1, ((lx - p[0]) * dx + (ly - p[1]) * dy) / L2));
+        const d = Math.hypot(lx - p[0] - t * dx, ly - p[1] - t * dy);
+        if(d < md){ md = d; const L = Math.sqrt(L2); mn = [sg * dy / L, -sg * dx / L]; }
+      }
+      if(mn && (!best || md > best.depth)) best = {P, depth: md, n: [mn[0] * c - mn[1] * s, mn[0] * s + mn[1] * c]};
+      break;
+    }
+  }
+  return best;
+}
+
+/* breaking */
+const cracks = [];
+// split a body along a ragged line through the local point Q, with direction angle th (local frame)
+function crack(b, Q, th, kick){
+  const d = [Math.cos(th), Math.sin(th)], A = [Q[0] - d[0] * 2 * b.R, Q[1] - d[1] * 2 * b.R], B = [Q[0] + d[0] * 2 * b.R, Q[1] + d[1] * 2 * b.R];
+  const sides = [1, -1].map(sg => b.poly.map(r => clipRing(r, A, B, sg)).filter(r => r.length >= 3 && Math.abs(ringArea(r)) > 4));
+  const areas = sides.map(rs => rs.reduce((t, r) => t + Math.abs(ringArea(r)), 0));
+  if(Math.min(...areas) < 30) return null;
+  // the ragged tear, shared by both halves
+  const n = 40, pts = [], nx = -d[1], ny = d[0]; let o = 0;
+  for(let i = 0; i <= n; i++){ const t = i / n; o = .55 * o + (Math.random() * 2 - 1) * 2.2; pts.push([A[0] + (B[0] - A[0]) * t + nx * o, A[1] + (B[1] - A[1]) * t + ny * o]); }
+  const ppx = b.sw / b.w, kids = [];
+  sides.forEach((rings, i) => {
+    const sg = i ? -1 : 1, m = 10;
+    let bb = [Infinity, Infinity, -Infinity, -Infinity];
+    for(const r of rings) for(const [x, y] of r) bb = [Math.min(bb[0], x), Math.min(bb[1], y), Math.max(bb[2], x), Math.max(bb[3], y)];
+    bb = [Math.max(b.bx, bb[0] - m), Math.max(b.by, bb[1] - m), Math.min(b.bx + b.w, bb[2] + m), Math.min(b.by + b.h, bb[3] + m)];
+    const w = bb[2] - bb[0], h = bb[3] - bb[1]; if(w < 2 || h < 2) return;
+    const el = document.createElement("canvas"); el.width = Math.max(1, Math.round(w * ppx)); el.height = Math.max(1, Math.round(h * ppx));
+    const g = el.getContext("2d");
+    g.setTransform(ppx, 0, 0, ppx, -bb[0] * ppx, -bb[1] * ppx);
+    g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for(const p of pts) g.lineTo(p[0], p[1]);
+    g.lineTo(B[0] + nx * 4 * b.R * sg, B[1] + ny * 4 * b.R * sg); g.lineTo(A[0] + nx * 4 * b.R * sg, A[1] + ny * 4 * b.R * sg); g.closePath();
+    g.save(); g.clip(); g.drawImage(b.el, b.bx, b.by, b.w, b.h); g.restore();
+    // the pale core of the paper along the fresh tear
+    g.globalCompositeOperation = "source-atop"; g.strokeStyle = "rgba(255,250,236,.85)"; g.lineWidth = 2.2; g.lineJoin = "round";
+    g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for(const p of pts) g.lineTo(p[0], p[1]); g.stroke();
+    const local = rings.map(r => r.map(([x, y]) => [x - bb[0], y - bb[1]]));
+    const [wx, wy] = toWorld(b, bb[0], bb[1]);
+    const kid = makeBody(el, w, h, local, wx, wy, b.ang); if(!kid) return;
+    // keep the parent's motion at the kid's centre, plus a little push away from the crack
+    const rx = kid.x - b.x, ry = kid.y - b.y, c = Math.cos(b.ang), s = Math.sin(b.ang), push = kick * (.5 + Math.random() * .5);
+    // breaking takes some of the energy out of the blow
+    kid.vx = (b.vx - b.va * ry) * .72 + (nx * c - ny * s) * sg * push; kid.vy = (b.vy + b.va * rx) * .72 + (nx * s + ny * c) * sg * push;
+    kid.va = b.va + (Math.random() - .5) * 6; kid.gen = b.gen + 1; kid.paper = b.paper; kid.out = b.out;
+    kids.push(kid);
+  });
+  if(kids.length < 2){ kids.forEach(k => k.el.remove()); return null; }
+  const at = toWorld(b, Q[0], Q[1]);
+  chips(at[0], at[1], sampleColour(b, Q[0], Q[1]), 10 + Math.min(14, b.area / 900));
+  b.el.replaceWith(kids[0].el); kids.slice(1).forEach(k => kids[0].el.after(k.el));
+  FL.bodies.splice(FL.bodies.indexOf(b), 1, ...kids);
+  return kids;
+}
+// a hard knock at world point P with impact speed v cracks the body, sometimes twice
+// (a piece simply dropped from the map lands whole; a throw against an edge or another piece breaks it)
+function knock(b, P, n, v, base){
+  if(b.held !== null || v < base || b.area < 2200 || b.gen >= 4 || performance.now() - b.born < 260 || FL.bodies.length >= FLMAX) return;
+  const sr = FL.sr; if(!b.out || (sr && P[0] > sr.left - 6 && P[0] < sr.right + 6 && P[1] > sr.top - 6 && P[1] < sr.bottom + 6)) return; // breaks only happen off the map
+  if(Math.random() > Math.min(1, (v - base) / 1100 + .3)) return;
+  cracks.push({b, P, n, v});
+}
+function runCracks(){
+  let any = false;
+  for(const {b, P, n, v} of cracks.splice(0)){
+    if(!FL.bodies.includes(b)) continue;
+    const [lx, ly] = toLocal(b, P[0], P[1]), f = .2 + Math.random() * .45;
+    const Q = [lx * (1 - f), ly * (1 - f)];
+    const ln = toLocal(b, b.x + n[0], b.y + n[1]); // the crack runs roughly along the blow
+    const kids = crack(b, Q, Math.atan2(ln[1], ln[0]) + (Math.random() - .5) * 1.2, 60 + v * .06);
+    if(!kids) continue;
+    any = true;
+    if(v > 2600){ // a big blow shatters the larger half again
+      const big = kids.reduce((m, k) => k.area > m.area ? k : m);
+      if(big.area > 2200 && big.gen < 4 && FL.bodies.length < FLMAX) crack(big, [(Math.random() - .5) * big.R * .3, (Math.random() - .5) * big.R * .3], Math.random() * Math.PI, 90);
+    }
+  }
+  if(any){ flingSound("crack", 1); trimBodies(); }
+}
+
+/* paper crumbs flying off a crack */
+const CH = {list: [], cv: null, g: null};
+function chips(x, y, col, n){
+  if(!CH.cv){
+    CH.cv = document.createElement("canvas"); CH.cv.className = "chips"; CH.cv.setAttribute("aria-hidden", "true");
+    document.body.appendChild(CH.cv); CH.g = CH.cv.getContext("2d");
+  }
+  for(let i = 0; i < n; i++){
+    const a = Math.random() * TWO_PI, sp = 120 + Math.random() * 520;
+    CH.list.push({x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 200, a: Math.random() * 6, va: (Math.random() - .5) * 24, s: 2 + Math.random() * 4.5, col, life: .7 + Math.random() * .6});
+  }
+}
+const TWO_PI = Math.PI * 2;
+function stepChips(dt){
+  if(!CH.cv) return false;
+  const W = document.documentElement.clientWidth, H = window.innerHeight, dp = Math.min(window.devicePixelRatio || 1, 2);
+  if(CH.cv.width !== Math.round(W * dp) || CH.cv.height !== Math.round(H * dp)){ CH.cv.width = Math.round(W * dp); CH.cv.height = Math.round(H * dp); }
+  const g = CH.g; g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, CH.cv.width, CH.cv.height); g.setTransform(dp, 0, 0, dp, 0, 0);
+  CH.list = CH.list.filter(c => (c.life -= dt) > 0);
+  for(const c of CH.list){
+    c.vy += 1600 * dt; c.vx *= Math.pow(.4, dt); c.x += c.vx * dt; c.y += c.vy * dt; c.a += c.va * dt;
+    if(c.y > H - 2){ c.y = H - 2; c.vy *= -.3; c.va *= .5; }
+    g.save(); g.translate(c.x, c.y); g.rotate(c.a); g.globalAlpha = Math.min(1, c.life * 2.5);
+    g.fillStyle = c.col; g.beginPath(); g.moveTo(-c.s, -c.s * .6); g.lineTo(c.s, -c.s * .2); g.lineTo(-c.s * .2, c.s * .7); g.closePath(); g.fill();
+    g.strokeStyle = "rgba(0,0,0,.25)"; g.lineWidth = .6; g.stroke(); g.restore();
+  }
+  return CH.list.length > 0;
+}
+
+function stepFling(now){
+  const frame = Math.min(.04, (now - FL.last) / 1000), W = document.documentElement.clientWidth, H = window.innerHeight, G = 2400;
+  const SR = FL.sr = $("stage").getBoundingClientRect();
+  FL.last = now;
+  const steps = Math.max(1, Math.ceil(frame / (1 / 240))), dt = frame / steps;
+  let loud = 0;
+  for(let st = 0; st < steps; st++){
+    for(const b of FL.bodies){
+      if(b.held !== null || b.sleep) continue;
+      b.vy += G * dt; b.x += b.vx * dt; b.y += b.vy * dt; b.ang += b.va * dt;
+      b.va = Math.max(-30, Math.min(30, b.va)) * Math.pow(.7, dt);
+      b.floor = false;
+    }
+    // window edges: the deepest corner on each side
+    for(const b of FL.bodies){
+      if(b.held !== null || b.sleep) continue;
+      if(b.x - b.R > 0 && b.x + b.R < W && b.y - b.R > 0 && b.y + b.R < H) continue;
+      const vs = worldVerts(b);
+      for(const [n, pen] of [[[1, 0], P => -P[0]], [[-1, 0], P => P[0] - W], [[0, 1], P => -P[1]], [[0, -1], P => P[1] - H]]){
+        let best = null, bd = 0;
+        for(const P of vs){ const d = pen(P); if(d > bd){ bd = d; best = P; } }
+        if(!best) continue;
+        const v = resolve(b, null, best, n, bd);
+        if(n[1] === -1) b.floor = true;
+        if(v > 380){ loud = Math.max(loud, v); knock(b, best, n, v, 1550); }
+      }
+    }
+    // the map square: solid for any piece that has left it
+    for(const b of FL.bodies){
+      if(b.held !== null || b.sleep) continue;
+      const q = bodyBox(b), over = q[2] > SR.left && q[0] < SR.right && q[3] > SR.top && q[1] < SR.bottom;
+      if(!b.out){ if(!over) b.out = true; continue; }
+      if(!over) continue;
+      let best = null, bd = 0, bn = null;
+      for(const P of worldVerts(b)){
+        if(P[0] <= SR.left || P[0] >= SR.right || P[1] <= SR.top || P[1] >= SR.bottom) continue;
+        const m = Math.min(P[0] - SR.left, SR.right - P[0], P[1] - SR.top, SR.bottom - P[1]); // the shortest way out of the square
+        if(m <= bd) continue;
+        bd = m; best = P;
+        bn = m === P[0] - SR.left ? [-1, 0] : m === SR.right - P[0] ? [1, 0] : m === P[1] - SR.top ? [0, -1] : [0, 1];
+      }
+      if(!best){ b.stuck = 0; continue; }
+      // wedged between the square and another edge (a phone scrolled onto it): stop fighting and let it lie over the map
+      b.stuck = (b.stuck || 0) + dt; if(b.stuck > .6){ b.out = false; b.stuck = 0; continue; }
+      const v = resolve(b, null, best, bn, Math.min(bd, 30));
+      if(bn[1] === -1) b.floor = true;
+      if(v > 380){ loud = Math.max(loud, v); knock(b, best, bn, v, 1550); }
+    }
+    // pieces against pieces
+    const list = FL.bodies;
+    for(let i = 0; i < list.length; i++) for(let j = i + 1; j < list.length; j++){
+      const a = list[i], b = list[j];
+      const sa = a.held !== null || a.sleep, sb = b.held !== null || b.sleep;
+      if(sa && sb) continue;
+      if((a.x - b.x) ** 2 + (a.y - b.y) ** 2 > (a.R + b.R) ** 2) continue;
+      const c1 = deepest(a, b), c2 = deepest(b, a);
+      let c = null, A = a, B = b;
+      if(c1 && (!c2 || c1.depth >= c2.depth)) c = c1; else if(c2){ c = c2; A = b; B = a; }
+      if(!c) continue;
+      // a settled piece hit hard enough wakes up and takes part again
+      const hitV = Math.hypot(A.vx - B.vx, A.vy - B.vy);
+      if(hitV > 260) for(const q of [A, B]) if(q.sleep){ q.sleep = false; q.still = 0; }
+      A.touch = B.touch = true;
+      const v = resolve(A, B, c.P, c.n, Math.min(c.depth, 30));
+      if(v > 380){
+        loud = Math.max(loud, v);
+        knock(A, c.P, c.n, v, 1100); knock(B, c.P, [-c.n[0], -c.n[1]], v, 1100);
+      }
+    }
+    if(cracks.length) runCracks();
+  }
+  if(loud > 380) flingSound("thud", Math.min(1, loud / 2600));
+  for(const b of [...FL.bodies]){
+    if(b.held !== null) continue;
+    const slow = b.sleep || (Math.hypot(b.vx, b.vy) < 60 && Math.abs(b.va) < .9);
+    if(slow && b.floor){ b.vx *= .9; b.va *= .8; }
+    b.rest = slow ? b.rest + frame : 0;
+    // lying still on the bottom edge or on other pieces: it settles, and stops jittering in the pile
+    if(!b.sleep && b.rest > .35 && (b.floor || b.touch)){ b.sleep = true; b.vx = b.vy = b.va = 0; }
+    b.touch = false;
+    if(b.rest > 6){ b.alpha -= frame * 1.2; if(b.alpha <= 0){ dropBody(b); continue; } }
+    if(b.y - b.R > H + 400) { dropBody(b); continue; }
+    placeBody(b);
+  }
+  const chipsLeft = stepChips(frame);
+  FL.raf = FL.bodies.some(b => b.held === null) || chipsLeft ? requestAnimationFrame(stepFling) : 0;
+}
+function flingSound(kind, power){
+  if(SFX.muted) return;
+  const ac = SFX.ready(); if(!ac) return;
+  const now = performance.now(); FL.snd = FL.snd || {};
+  if(now - (FL.snd[kind] || 0) < 45) return; FL.snd[kind] = now;
+  try{
+    const t = ac.currentTime + .005;
+    if(kind === "whoosh"){
+      const bp = SFX.filter("bandpass", 600, 1.2); bp.frequency.setValueAtTime(500, t); bp.frequency.exponentialRampToValueAtTime(2600, t + .22);
+      SFX.noise(t, .3, .25 + .45 * power, .06, [bp]);
+    } else if(kind === "crack"){ // paper giving way: a burst of crackles
+      for(let i = 0; i < 7; i++){
+        const ti = t + i * .014 + Math.random() * .008;
+        SFX.noise(ti, .018 + Math.random() * .02, .3 + Math.random() * .35, .002, [SFX.filter("bandpass", 1500 + Math.random() * 3500, 1.2)]);
+      }
+      SFX.noise(t + .1, .09, .3, .006, [SFX.filter("bandpass", 2600, .9)]);
+    } else {
+      SFX.noise(t, .1 + .08 * power, .25 + .6 * power, .004, [SFX.filter("lowpass", 500 + 900 * power)]);
+      SFX.tone(t, 90 + 40 * Math.random(), .12, {gain: .12 + .2 * power, attack: .003, bend: .6});
+    }
+  }catch(e){}
+}
 // unlock audio on the first release or key press, as mobile browsers require
 const unlockAudio = () => { if(!SFX.muted) SFX.ready(); };
 document.addEventListener("pointerup", unlockAudio, {passive: true});
@@ -2158,7 +2650,7 @@ function withCentroids(cut){
 }
 function commitCut(A, B, r){
   const gap = Math.abs(50 - r.pos);
-  S.cut = withCentroids({A, B, pos: r.pos, neg: r.neg, gap}); S.cutAt = performance.now();
+  S.cut = withCentroids({A, B, pos: r.pos, neg: r.neg, gap}); S.cutAt = performance.now(); S.gone = {};
   if(S.mode === "daily"){
     const rec = dailyRecords(); rec[todayIndex()] = {a2: S.country.a2, pos: r.pos, gap, line: [A, B]}; store.set("daily", rec);
   }
@@ -2171,7 +2663,7 @@ function commitCut(A, B, r){
 
 /* ---------- UI ---------- */
 function setCountry(c, animate = true){
-  S.country = c; S.cut = null; S.pending = null; S.press = null; S.grabs.clear();
+  S.country = c; S.cut = null; S.pending = null; S.press = null; S.grabs.clear(); S.gone = {};
   $("cname").textContent = regionName(c.a2, c.name); { const svg = countryFlagSvg(c.a2); if(svg) $("flag").innerHTML = svg; else $("flag").textContent = flagOf(c.a2); }
   const el = $("country"); el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap");
   S.fx = {drop: 1, blade: 1, split: 1, label: 1};

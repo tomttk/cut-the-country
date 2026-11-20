@@ -34,14 +34,6 @@ Only one cut counts per day. Every player gets the same country, and a new one a
 - **Sound**, generated in the browser: a propeller plane crossing the map and paper tearing on every cut, a short tune that depends on your rating (brass and timpani for a perfect cut, a rolling boulder for a miss), and thuds, whooshes and cracks when you throw the pieces. The speaker button or the M key mutes it.
 - **Accessibility**: menus work with the keyboard, medals are told apart by shape and name as well as colour, and animations are reduced when the system asks for it.
 
-## Visual styles
-
-The game exists in three visual styles that share the same code:
-
-- **Adventure** (this repository): an antique chart taped to a leather desk, with compass roses, rhumb lines, the real meridians and parallels of the day's country, engraved water lines along the coast, a red dashed route, luggage tags for the results and a field notebook for the help.
-- **Workshop**: paper cut-outs on a green cutting mat.
-- **Pixel**: pixel art in the colours of the day's country, with small crowds waving its flag.
-
 ## Languages
 
 The game is available in 13 languages, with English as the default: English, Français, Español, Deutsch, Italiano, Português, Nederlands, Polski, Türkçe, Русский, 日本語, 한국어 and 简体中文. The flag button next to the sound button opens the list. The choice is saved in the browser, and country names, numbers and the share text follow the selected language.
@@ -52,29 +44,6 @@ Each country is drawn with a Lambert azimuthal equal-area projection centred on 
 
 Small, remote territories (overseas islands, distant archipelagos) are left out to keep the shape playable.
 
-## Technical notes
-
-- A single `index.html` file, with no dependencies and no build step. Icons are embedded in the page.
-- Drawing on `<canvas>`, sounds generated with the Web Audio API.
-- Thrown pieces are rigid bodies simulated in the page: their simplified outlines collide with the window edges, the map and each other.
-- Country outlines loaded at startup from jsDelivr, with several fallback sources: amCharts geodata, Natural Earth (world-atlas), Apache ECharts.
-- Country names in the selected language via `Intl.DisplayNames`, numbers in the local format via `Intl.NumberFormat`.
-- Statistics and preferences stored in the browser (`localStorage`), with no account and no server.
-
-## Running locally
-
-Open `index.html` in a recent browser. An internet connection is needed to load the country outlines and the fonts.
-
-## Publishing
-
-The repository is served by GitHub Pages from the `main` branch, root folder. To update the game, replace `index.html`.
-
 ## Made with AI
 
 This game was vibe coded: I described what I wanted, played each version and asked for changes, and an AI assistant ([Claude](https://claude.ai), by Anthropic) wrote the code, the visuals, the sounds and the translations. The ideas, the choices and the testing are mine; the code is the AI's.
-
-## Credits
-
-- Country outlines: [amCharts geodata](https://github.com/amcharts/amcharts5-geodata) (freeware licence with attribution), [Natural Earth](https://www.naturalearthdata.com/) via [world-atlas](https://github.com/topojson/world-atlas), [Apache ECharts](https://echarts.apache.org/).
-- Fonts, via Google Fonts: [Bevan](https://fonts.google.com/specimen/Bevan) and [Special Elite](https://fonts.google.com/specimen/Special+Elite) (Adventure), [Archivo](https://fonts.google.com/specimen/Archivo) (Workshop and Pixel figures), [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans) (Pixel).
-- Inspired by daily games such as Cutle, Worldle and Globle.

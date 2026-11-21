@@ -126,6 +126,8 @@
   .verdict{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;margin:18px 0 16px}
   .medal{display:block;width:46px;flex:none;margin:-6px -2px -6px 0;filter:drop-shadow(0 3px 3px rgba(0,0,0,.45))}
   .medal[hidden]{display:none}
+  .verdict .near{flex-basis:100%;color:var(--print)}
+  .verdict .near:empty{display:none}
   .medal svg,.mini svg{display:block;width:100%;height:auto}
   .result.show .medal{animation:medal .9s .8s cubic-bezier(.2,.9,.3,1) both;transform-origin:50% 0}
   @keyframes medal{0%{opacity:0;transform:translateY(-26px) rotate(-14deg)}35%{opacity:1;transform:translateY(2px) rotate(9deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(2deg)}100%{transform:none}}
@@ -400,7 +402,7 @@
       <div class="swatch white"><span data-i18n="pieceWhite"></span><b id="pa">–</b></div>
       <div class="swatch kraft"><span data-i18n="pieceKraft"></span><b id="pb">–</b></div>
     </div>
-    <div class="verdict"><i class="medal" id="medal" hidden></i><strong id="verdict"></strong><span id="gap"></span></div>
+    <div class="verdict"><i class="medal" id="medal" hidden></i><strong id="verdict"></strong><span id="gap"></span><span class="near" id="near"></span></div>
     <div class="actions" id="actions"></div>
     <textarea class="copybox" id="copybox" rows="3" readonly></textarea>
     <div class="countdown" id="countdown"></div>
@@ -474,7 +476,7 @@ function tier(gap){
   if(gap <= 1) return {e:"🥇", k:"excellent"};
   if(gap <= 2.5) return {e:"🥈", k:"good"};
   if(gap <= 5) return {e:"🥉", k:"ok"};
-  return {e:"", k:"missed"};
+  return {e:"🫠", k:"missed"};
 }
 
 /* ---------- country name → ISO code ---------- */
@@ -690,7 +692,7 @@ en: {
   tooClose: "Move the two points further apart.", erased: "Line cleared.", muted: "Sound off.", unmuted: "Sound on.",
   copied: "Result copied.", copyBelow: "Copy the text below.",
   perfect: "Perfect", excellent: "Excellent", good: "Well done", ok: "Not bad", missed: "Missed",
-  exact: "Right down the middle.", gap: {one: "{n} point from 50 / 50", other: "{n} points from 50 / 50"},
+  toBronze: {one: "Bronze was {n} point away", other: "Bronze was {n} points away"}, exact: "Right down the middle.", gap: {one: "{n} point from 50 / 50", other: "{n} points from 50 / 50"},
   copy: "Copy result", practice: "Practice", recut: "Cut this country again", next: "Next country", tapNext: "Tap or click the map for another country.", flingHint: "Drag a piece to throw it across the screen.",
   countdown: "Next country in <b>{t}</b>", badgeDaily: "No. {n}", badgeRandom: "random",
   shareTitle: "{name} #{n}", shareGap: "Gap: {n} pt",
@@ -719,7 +721,7 @@ fr: {
   tooClose: "Écarte un peu plus les deux points.", erased: "Ligne effacée.", muted: "Son coupé.", unmuted: "Son rétabli.",
   copied: "Résultat copié.", copyBelow: "Copie le texte ci-dessous.",
   perfect: "Parfait", excellent: "Excellent", good: "Bien joué", ok: "Pas mal", missed: "Raté",
-  exact: "Pile au milieu.", gap: {one: "À {n} point du 50 / 50", other: "À {n} points du 50 / 50"},
+  toBronze: {one: "Il manquait {n} point pour le bronze", other: "Il manquait {n} points pour le bronze"}, exact: "Pile au milieu.", gap: {one: "À {n} point du 50 / 50", other: "À {n} points du 50 / 50"},
   copy: "Copier le résultat", practice: "S'entraîner", recut: "Recouper ce pays", next: "Pays suivant", tapNext: "Touche ou clique la carte pour un autre pays.", flingHint: "Fais glisser une pièce pour la jeter à travers l'écran.",
   countdown: "Prochain pays dans <b>{t}</b>", badgeDaily: "n° {n}", badgeRandom: "au hasard",
   shareTitle: "{name} n°{n}", shareGap: "Écart : {n} pt",
@@ -748,7 +750,7 @@ es: {
   tooClose: "Separa un poco más los dos puntos.", erased: "Línea borrada.", muted: "Sonido desactivado.", unmuted: "Sonido activado.",
   copied: "Resultado copiado.", copyBelow: "Copia el texto de abajo.",
   perfect: "Perfecto", excellent: "Excelente", good: "Bien hecho", ok: "No está mal", missed: "Fallado",
-  exact: "Justo en el medio.", gap: {one: "A {n} punto del 50 / 50", other: "A {n} puntos del 50 / 50"},
+  toBronze: {one: "El bronce estaba a {n} punto", other: "El bronce estaba a {n} puntos"}, exact: "Justo en el medio.", gap: {one: "A {n} punto del 50 / 50", other: "A {n} puntos del 50 / 50"},
   copy: "Copiar el resultado", practice: "Practicar", recut: "Volver a cortar este país", next: "Siguiente país", tapNext: "Toca o haz clic en el mapa para otro país.", flingHint: "Arrastra una pieza para lanzarla por la pantalla.",
   countdown: "Próximo país en <b>{t}</b>", badgeDaily: "n.º {n}", badgeRandom: "al azar",
   shareTitle: "{name} n.º {n}", shareGap: "Diferencia: {n} pt",
@@ -777,7 +779,7 @@ de: {
   tooClose: "Zieh die beiden Punkte weiter auseinander.", erased: "Linie gelöscht.", muted: "Ton aus.", unmuted: "Ton an.",
   copied: "Ergebnis kopiert.", copyBelow: "Kopiere den Text unten.",
   perfect: "Perfekt", excellent: "Exzellent", good: "Gut gemacht", ok: "Nicht schlecht", missed: "Daneben",
-  exact: "Genau in der Mitte.", gap: {one: "{n} Punkt von 50 / 50 entfernt", other: "{n} Punkte von 50 / 50 entfernt"},
+  toBronze: {one: "Bis Bronze fehlte {n} Punkt", other: "Bis Bronze fehlten {n} Punkte"}, exact: "Genau in der Mitte.", gap: {one: "{n} Punkt von 50 / 50 entfernt", other: "{n} Punkte von 50 / 50 entfernt"},
   copy: "Ergebnis kopieren", practice: "Trainieren", recut: "Dieses Land neu schneiden", next: "Nächstes Land", tapNext: "Tippe oder klicke auf die Karte für ein anderes Land.", flingHint: "Zieh ein Teil, um es über den Bildschirm zu werfen.",
   countdown: "Nächstes Land in <b>{t}</b>", badgeDaily: "Nr. {n}", badgeRandom: "zufällig",
   shareTitle: "{name} Nr. {n}", shareGap: "Abstand: {n} Pkt.",
@@ -806,7 +808,7 @@ it: {
   tooClose: "Allontana un po' di più i due punti.", erased: "Linea cancellata.", muted: "Audio disattivato.", unmuted: "Audio attivato.",
   copied: "Risultato copiato.", copyBelow: "Copia il testo qui sotto.",
   perfect: "Perfetto", excellent: "Eccellente", good: "Ben fatto", ok: "Niente male", missed: "Mancato",
-  exact: "Esattamente a metà.", gap: {one: "A {n} punto dal 50 / 50", other: "A {n} punti dal 50 / 50"},
+  toBronze: {one: "Il bronzo era a {n} punto", other: "Il bronzo era a {n} punti"}, exact: "Esattamente a metà.", gap: {one: "A {n} punto dal 50 / 50", other: "A {n} punti dal 50 / 50"},
   copy: "Copia il risultato", practice: "Allenati", recut: "Ritaglia questo paese", next: "Paese successivo", tapNext: "Tocca o clicca la mappa per un altro paese.", flingHint: "Trascina un pezzo per lanciarlo attraverso lo schermo.",
   countdown: "Prossimo paese tra <b>{t}</b>", badgeDaily: "n. {n}", badgeRandom: "a caso",
   shareTitle: "{name} n. {n}", shareGap: "Scarto: {n} pt",
@@ -835,7 +837,7 @@ pt: {
   tooClose: "Afaste um pouco mais os dois pontos.", erased: "Linha apagada.", muted: "Som desativado.", unmuted: "Som ativado.",
   copied: "Resultado copiado.", copyBelow: "Copie o texto abaixo.",
   perfect: "Perfeito", excellent: "Excelente", good: "Muito bem", ok: "Nada mal", missed: "Errou",
-  exact: "Bem no meio.", gap: {one: "A {n} ponto do 50 / 50", other: "A {n} pontos do 50 / 50"},
+  toBronze: {one: "O bronze estava a {n} ponto", other: "O bronze estava a {n} pontos"}, exact: "Bem no meio.", gap: {one: "A {n} ponto do 50 / 50", other: "A {n} pontos do 50 / 50"},
   copy: "Copiar o resultado", practice: "Treinar", recut: "Cortar este país de novo", next: "Próximo país", tapNext: "Toque ou clique no mapa para outro país.", flingHint: "Arraste uma peça para arremessá-la pela tela.",
   countdown: "Próximo país em <b>{t}</b>", badgeDaily: "nº {n}", badgeRandom: "aleatório",
   shareTitle: "{name} nº {n}", shareGap: "Diferença: {n} pt",
@@ -864,7 +866,7 @@ nl: {
   tooClose: "Zet de twee punten verder uit elkaar.", erased: "Lijn gewist.", muted: "Geluid uit.", unmuted: "Geluid aan.",
   copied: "Resultaat gekopieerd.", copyBelow: "Kopieer de tekst hieronder.",
   perfect: "Perfect", excellent: "Uitstekend", good: "Goed gedaan", ok: "Niet slecht", missed: "Mis",
-  exact: "Precies in het midden.", gap: {one: "{n} punt van 50 / 50", other: "{n} punten van 50 / 50"},
+  toBronze: {one: "Brons lag {n} punt verder", other: "Brons lag {n} punten verder"}, exact: "Precies in het midden.", gap: {one: "{n} punt van 50 / 50", other: "{n} punten van 50 / 50"},
   copy: "Resultaat kopiëren", practice: "Oefenen", recut: "Dit land opnieuw snijden", next: "Volgend land", tapNext: "Tik of klik op de kaart voor een ander land.", flingHint: "Sleep een stuk om het over het scherm te gooien.",
   countdown: "Volgend land over <b>{t}</b>", badgeDaily: "nr. {n}", badgeRandom: "willekeurig",
   shareTitle: "{name} nr. {n}", shareGap: "Verschil: {n} pt",
@@ -893,7 +895,7 @@ pl: {
   tooClose: "Odsuń punkty dalej od siebie.", erased: "Linia usunięta.", muted: "Dźwięk wyłączony.", unmuted: "Dźwięk włączony.",
   copied: "Wynik skopiowany.", copyBelow: "Skopiuj tekst poniżej.",
   perfect: "Idealnie", excellent: "Doskonale", good: "Dobra robota", ok: "Nieźle", missed: "Pudło",
-  exact: "Dokładnie na środku.", gap: {one: "{n} punkt od 50 / 50", few: "{n} punkty od 50 / 50", many: "{n} punktów od 50 / 50", other: "{n} punktu od 50 / 50"},
+  toBronze: {one: "Do brązu zabrakło {n} punktu", few: "Do brązu zabrakło {n} punktów", many: "Do brązu zabrakło {n} punktów", other: "Do brązu zabrakło {n} punktu"}, exact: "Dokładnie na środku.", gap: {one: "{n} punkt od 50 / 50", few: "{n} punkty od 50 / 50", many: "{n} punktów od 50 / 50", other: "{n} punktu od 50 / 50"},
   copy: "Kopiuj wynik", practice: "Trenuj", recut: "Przetnij ten kraj ponownie", next: "Następny kraj", tapNext: "Dotknij lub kliknij mapę, aby zagrać innym krajem.", flingHint: "Przeciągnij kawałek, aby rzucić nim przez ekran.",
   countdown: "Następny kraj za <b>{t}</b>", badgeDaily: "nr {n}", badgeRandom: "losowy",
   shareTitle: "{name} nr {n}", shareGap: "Różnica: {n} pkt",
@@ -921,7 +923,7 @@ tr: {
   tooClose: "İki noktayı biraz daha uzaklaştır.", erased: "Çizgi silindi.", muted: "Ses kapalı.", unmuted: "Ses açık.",
   copied: "Sonuç kopyalandı.", copyBelow: "Aşağıdaki metni kopyala.",
   perfect: "Mükemmel", excellent: "Harika", good: "Aferin", ok: "Fena değil", missed: "Iska",
-  exact: "Tam ortadan.", gap: "50 / 50'den {n} puan uzakta",
+  toBronze: "Bronza {n} puan kaldı", exact: "Tam ortadan.", gap: "50 / 50'den {n} puan uzakta",
   copy: "Sonucu kopyala", practice: "Antrenman yap", recut: "Bu ülkeyi yeniden kes", next: "Sonraki ülke", tapNext: "Başka bir ülke için haritaya dokun ya da tıkla.", flingHint: "Bir parçayı sürükleyip ekranın öbür ucuna fırlat.",
   countdown: "Sonraki ülkeye <b>{t}</b>", badgeDaily: "No. {n}", badgeRandom: "rastgele",
   shareTitle: "{name} #{n}", shareGap: "Fark: {n} puan",
@@ -949,7 +951,7 @@ ru: {
   tooClose: "Раздвинь точки подальше.", erased: "Линия стёрта.", muted: "Звук выключен.", unmuted: "Звук включён.",
   copied: "Результат скопирован.", copyBelow: "Скопируй текст ниже.",
   perfect: "Идеально", excellent: "Отлично", good: "Хорошо", ok: "Неплохо", missed: "Мимо",
-  exact: "Ровно посередине.", gap: "{n} п. п. от 50 / 50",
+  toBronze: "До бронзы не хватило {n} п. п.", exact: "Ровно посередине.", gap: "{n} п. п. от 50 / 50",
   copy: "Скопировать результат", practice: "Тренироваться", recut: "Разрезать заново", next: "Следующая страна", tapNext: "Коснись карты или нажми на неё, чтобы сыграть другой страной.", flingHint: "Потяни кусок, чтобы швырнуть его по экрану.",
   countdown: "Следующая страна через <b>{t}</b>", badgeDaily: "№ {n}", badgeRandom: "случайная",
   shareTitle: "{name} № {n}", shareGap: "Отклонение: {n} п. п.",
@@ -977,7 +979,7 @@ ja: {
   tooClose: "2つの点をもう少し離してください。", erased: "線を消しました。", muted: "サウンドをオフにしました。", unmuted: "サウンドをオンにしました。",
   copied: "結果をコピーしました。", copyBelow: "下のテキストをコピーしてください。",
   perfect: "パーフェクト", excellent: "エクセレント", good: "お見事", ok: "まあまあ", missed: "ミス",
-  exact: "ど真ん中。", gap: "50 / 50との差 {n}ポイント",
+  toBronze: "銅メダルまであと {n} ポイント", exact: "ど真ん中。", gap: "50 / 50との差 {n}ポイント",
   copy: "結果をコピー", practice: "練習する", recut: "この国をもう一度切る", next: "次の国", tapNext: "地図をタップまたはクリックすると、別の国で遊べます。", flingHint: "ピースをドラッグすると、画面の向こうへ投げられます。",
   countdown: "次の国まで <b>{t}</b>", badgeDaily: "No.{n}", badgeRandom: "ランダム",
   shareTitle: "{name} No.{n}", shareGap: "差：{n}pt",
@@ -1005,7 +1007,7 @@ ko: {
   tooClose: "두 점을 조금 더 떨어뜨리세요.", erased: "선을 지웠어요.", muted: "소리를 껐어요.", unmuted: "소리를 켰어요.",
   copied: "결과를 복사했어요.", copyBelow: "아래 텍스트를 복사하세요.",
   perfect: "완벽해요", excellent: "훌륭해요", good: "잘했어요", ok: "나쁘지 않아요", missed: "빗나갔어요",
-  exact: "정확히 한가운데.", gap: "50 / 50과 {n}점 차이",
+  toBronze: "동메달까지 {n}점 부족", exact: "정확히 한가운데.", gap: "50 / 50과 {n}점 차이",
   copy: "결과 복사", practice: "연습하기", recut: "이 나라 다시 자르기", next: "다음 나라", tapNext: "지도를 탭하거나 클릭하면 다른 나라로 넘어가요.", flingHint: "조각을 끌어서 화면 너머로 던져 보세요.",
   countdown: "다음 나라까지 <b>{t}</b>", badgeDaily: "제{n}회", badgeRandom: "무작위",
   shareTitle: "{name} 제{n}회", shareGap: "차이: {n}점",
@@ -1033,7 +1035,7 @@ zh: {
   tooClose: "请把两个点拉开一些。", erased: "已清除线条。", muted: "声音已关闭。", unmuted: "声音已打开。",
   copied: "结果已复制。", copyBelow: "请复制下面的文字。",
   perfect: "完美", excellent: "优秀", good: "干得好", ok: "还不错", missed: "失手了",
-  exact: "正好在中间。", gap: "距 50 / 50 相差 {n} 个百分点",
+  toBronze: "距铜牌还差 {n} 个百分点", exact: "正好在中间。", gap: "距 50 / 50 相差 {n} 个百分点",
   copy: "复制结果", practice: "去练习", recut: "重新切这个国家", next: "下一个国家", tapNext: "点击地图，换一个国家。", flingHint: "拖动一块碎片，把它扔出去。",
   countdown: "距下一个国家还有 <b>{t}</b>", badgeDaily: "第 {n} 期", badgeRandom: "随机",
   shareTitle: "{name} 第 {n} 期", shareGap: "差距：{n} 个百分点",
@@ -1365,6 +1367,7 @@ function drawPixel(){
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(PX.c, 0, 0, cv.width, cv.height);
   // measurements: large light figures on dark tags, edged with the colour of their piece
+  if(labels && fx.label > 0) drawIdeal(fx.label);
   if(labels && fx.label > 0 && !S.only){
     const z = cssSize / V, size = Math.round(Math.max(18, Math.min(26, cssSize * .045)));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1648,6 +1651,7 @@ function drawAdventure(){
     ctx.restore();
   }
   const lt = fx.label; if(lt <= 0 || S.only) return;
+  drawIdeal(lt);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   for(const [sign, share, ce] of [[1, cut.pos, cut.cA], [-1, cut.neg, cut.cB]]){
     if(!ce || S.gone[sign]) continue;
@@ -2041,6 +2045,7 @@ function draw(){
   }
   // measurements, stamped on each piece
   const lt = fx.label; if(lt <= 0 || S.only) return;
+  drawIdeal(lt);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   for(const [sign, share, ce] of [[1, cut.pos, cut.cA], [-1, cut.neg, cut.cB]]){
     if(!ce || S.gone[sign]) continue;
@@ -2673,7 +2678,41 @@ document.addEventListener("pointerup", unlockAudio, {passive: true});
 document.addEventListener("keydown", e => { if(e.key !== "Escape") unlockAudio(); });
 
 function withCentroids(cut){
-  cut.cA = pieceCentroid(S.country, cut.A, cut.B, 1); cut.cB = pieceCentroid(S.country, cut.A, cut.B, -1); return cut;
+  cut.cA = pieceCentroid(S.country, cut.A, cut.B, 1); cut.cB = pieceCentroid(S.country, cut.A, cut.B, -1);
+  cut.ideal = cut.gap > 5 ? idealLine(S.country, cut.A, cut.B) : null;
+  return cut;
+}
+// the line parallel to the cut that splits the country 50 / 50, found by bisection along the normal
+function idealLine(c, A, B){
+  const ux = B[0] - A[0], uy = B[1] - A[1], L = Math.hypot(ux, uy) || 1, nx = -uy / L, ny = ux / L;
+  const f = t => splitCountry(c, [A[0] + nx * t, A[1] + ny * t], [B[0] + nx * t, B[1] + ny * t]).pos - 50;
+  let lo = -1.5 * V, hi = 1.5 * V, flo = f(lo);
+  if(flo * f(hi) > 0) return null;
+  for(let i = 0; i < 40; i++){ const m = (lo + hi) / 2, fm = f(m); if(fm * flo > 0){ lo = m; flo = fm; } else hi = m; }
+  const t = (lo + hi) / 2;
+  return [[A[0] + nx * t, A[1] + ny * t], [B[0] + nx * t, B[1] + ny * t]];
+}
+// drawn after a miss, over the pieces, in the style of each version
+function drawIdeal(t){
+  const c = S.cut; if(!c || !c.ideal || t <= 0 || S.only) return;
+  const seg = lineInBox(c.ideal[0], c.ideal[1]); if(!seg) return;
+  const z = cssSize / V, P = [seg[0][0] * z, seg[0][1] * z], Q = [seg[1][0] * z, seg[1][1] * z], e = easeOut(clamp01(t * 1.2));
+  const R = [P[0] + (Q[0] - P[0]) * e, P[1] + (Q[1] - P[1]) * e];
+  const col = PIXEL ? RC.gold : ADV ? "#1f4e6b" : "#fffdf2", halo = PIXEL ? "#101314" : ADV ? "rgba(239,226,194,.85)" : "rgba(10,40,28,.55)";
+  ctx.save(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = clamp01(t * 2); ctx.lineCap = PIXEL ? "butt" : "round";
+  ctx.setLineDash(PIXEL ? [6, 6] : [8, 6]);
+  for(const [w, s] of [[PIXEL ? 6 : 4.6, halo], [PIXEL ? 3 : 2.2, col]]){ ctx.lineWidth = w; ctx.strokeStyle = s; ctx.beginPath(); ctx.moveTo(P[0], P[1]); ctx.lineTo(R[0], R[1]); ctx.stroke(); }
+  ctx.setLineDash([]);
+  if(e > .3){ // a small "50 / 50" tag near where the line enters the map
+    const k = .1, x = P[0] + (Q[0] - P[0]) * k, y = P[1] + (Q[1] - P[1]) * k, txt = "50 / 50";
+    ctx.font = ADV ? `15px "Special Elite", "Courier New", monospace` : PIXEL ? `800 14px Archivo, Arial, sans-serif` : `800 13px Archivo, "Helvetica Neue", Arial, sans-serif`;
+    const w = ctx.measureText(txt).width + 14, h = 22, bx = Math.min(Math.max(x - w / 2, 4), cssSize - w - 4), by = Math.min(Math.max(y - h / 2, 4), cssSize - h - 4);
+    ctx.globalAlpha = clamp01((e - .3) * 3);
+    if(PIXEL){ ctx.fillStyle = "#101314"; ctx.fillRect(bx + 3, by + 3, w, h); }
+    ctx.fillStyle = col; if(PIXEL) ctx.fillRect(bx, by, w, h); else { roundRect(bx, by, w, h, 3); ctx.fill(); }
+    ctx.fillStyle = PIXEL ? RC.ink : ADV ? "#efe2c2" : "#174a37"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(txt, bx + w / 2, by + h / 2 + 1);
+  }
+  ctx.restore();
 }
 function commitCut(A, B, r){
   const gap = Math.abs(50 - r.pos);
@@ -2719,7 +2758,28 @@ function pixelMedal(k, ribbon){
   }
   return `<svg viewBox="0 0 ${N[0] * cell + 4} ${N[1] * cell + 4}" shape-rendering="crispEdges" aria-hidden="true">${out.join("")}</svg>`;
 }
+// no medal: a consolation in the style of each version (a plaster, a broken heart, a cracked compass)
+function consolationSvg(){
+  if(PIXEL){
+    const rows = ["..KKK...KKK..", ".KRRRK.KRRRK.", "KRHRRRKRRRRRK", "KRHRRK.KRRRRK", "KRRRK.KRRRRRK", ".KRRRK.KRRRK.", "..KRK.KRRRK..", "...KK.KRRK...", "....K.KRK....", ".......KK....", "............."];
+    const col = {K: "#1a1816", R: "#c9524a", H: "#f0a39a"}, out = [];
+    rows.forEach((r, y) => [...r].forEach((ch, x) => { if(ch !== ".") out.push(`<rect x="${x * 3}" y="${y * 3 + 8}" width="3" height="3" fill="${col[ch]}"/>`); }));
+    return `<svg viewBox="0 0 40 47" shape-rendering="crispEdges" aria-hidden="true">${out.join("")}</svg>`;
+  }
+  if(ADV){
+    const id = "c" + (++medalUid);
+    return `<svg viewBox="0 0 40 47" aria-hidden="true"><defs><radialGradient id="${id}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#e6c878"/><stop offset=".6" stop-color="#b48a3c"/><stop offset="1" stop-color="#6e4f1c"/></radialGradient></defs>` +
+      `<rect x="17" y="6" width="6" height="6" rx="2" fill="url(#${id})" stroke="#5a3f15"/><circle cx="20" cy="27" r="15.5" fill="url(#${id})" stroke="#5a3f15" stroke-width="1.4"/>` +
+      `<circle cx="20" cy="27" r="11.5" fill="#efe2c2" stroke="#5a3f15" stroke-width=".8"/><circle cx="20" cy="27" r="9.5" fill="none" stroke="#7a5427" stroke-width=".5" stroke-dasharray=".6 1.6"/>` +
+      `<path d="M20 27l-3.2-8.5 3.2 1.5 3.2-1.5z" fill="#a3241b" transform="rotate(118 20 27)"/><path d="M20 27l-3.2 8.5 3.2-1.5 3.2 1.5z" fill="#3b2a1a" transform="rotate(118 20 27)"/><circle cx="20" cy="27" r="1.4" fill="#5a3f15"/>` +
+      `<path d="M10.5 20.5l4.5 3.4-1.2 3.3 5.6 2.6-1.6 3.8 5 3.6" fill="none" stroke="#2a1c12" stroke-width=".9" stroke-linejoin="round"/><path d="M13.8 27.2l-3.6 1.4M17.2 33.6l-2.8 2.8" fill="none" stroke="#2a1c12" stroke-width=".6"/></svg>`;
+  }
+  return `<svg viewBox="0 0 40 47" aria-hidden="true"><g transform="rotate(-38 20 24)"><rect x="2" y="17" width="36" height="14" rx="7" fill="#e3b48a" stroke="#9c6a43" stroke-width="1.2"/>` +
+    `<rect x="13.5" y="18.6" width="13" height="10.8" rx="2" fill="#f4e1c6"/><g fill="#b98458">` +
+    [6, 9.5, 30.5, 34].map(x => `<circle cx="${x}" cy="21.8" r=".9"/><circle cx="${x}" cy="26.2" r=".9"/>`).join("") + `</g></g></svg>`;
+}
 function medalSvg(k){
+  if(k === "missed") return consolationSvg();
   if(!METAL[k]) return "";
   const [hi, mid, lo] = METAL[k], id = "m" + (++medalUid);
   if(PIXEL){
@@ -2738,7 +2798,7 @@ function medalSvg(k){
     `<path d="${starPath(20, 34.4, 5.4, 2.3)}" fill="${adv ? lo : hi}"${adv ? ' opacity=".75"' : ""}/>`;
   return `<svg viewBox="0 0 40 47" aria-hidden="true">${grad}${ribbon}${disc}</svg>`;
 }
-const TIER_EMOJI = {perfect: "🏆", excellent: "🥇", good: "🥈", ok: "🥉", missed: ""};
+const TIER_EMOJI = {perfect: "🏆", excellent: "🥇", good: "🥈", ok: "🥉", missed: "🫠"};
 
 /* ---------- UI ---------- */
 function setCountry(c, animate = true){
@@ -2756,6 +2816,8 @@ function fillResult(){
   $("verdict").textContent = L(tr.k);
   const md = $("medal"); md.innerHTML = medalSvg(tr.k); md.hidden = !md.innerHTML; md.title = L(tr.k);
   $("gap").textContent = c.gap < 0.05 ? L("exact") : L("gap", {n: fmt(c.gap)}, c.gap, 1);
+  const near = Math.round((c.gap - 5) * 10) / 10; // a miss: how far the bronze medal was
+  $("near").textContent = tr.k === "missed" ? L("toBronze", {n: fmt(Math.max(.1, near))}, Math.max(.1, near), 1) : "";
   const act = $("actions"); act.innerHTML = "";
   if(S.mode === "daily"){
     act.append(button(L("copy"), "", shareDaily), button(L("practice"), "line", () => switchMode("practice")));
@@ -2861,7 +2923,7 @@ function applyLanguage(code, user = false){
   if(S.loadFailed){ const o = $("overlayText"); if(o) o.innerHTML = L("loadError"); }
   // grading scale, with numbers written the local way
   const steps = [["perfect", "scaleFirst", .25, 2], ["excellent", "scaleLess", 1, 0], ["good", "scaleLess", 2.5, 1], ["ok", "scaleLess", 5, 0]];
-  $("scale").innerHTML = steps.map(([m, k, n, d]) => "<i class='mini'>" + medalSvg(m) + "</i><span>" + L(k, {n: fmt(n, d)}, n, d) + "</span>").join("") + "<i class='mini'></i><span>" + L("scaleMore") + "</span>";
+  $("scale").innerHTML = steps.map(([m, k, n, d]) => "<i class='mini'>" + medalSvg(m) + "</i><span>" + L(k, {n: fmt(n, d)}, n, d) + "</span>").join("") + "<i class='mini'>" + medalSvg("missed") + "</i><span>" + L("scaleMore") + "</span>";
   $("langFlag").innerHTML = flagSvg(info[1], 20);
   labelSound();
   if(S.country) $("cname").textContent = regionName(S.country.a2, S.country.name);

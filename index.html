@@ -38,7 +38,7 @@
     font-weight:850;font-variation-settings:"wdth" 118;letter-spacing:-.01em;color:var(--print)}
   .title .t{display:block}
   .title .t1{clip-path:polygon(0 0,100% 0,100% 30%,0 70%)}
-  .title .t2{position:absolute;inset:0;clip-path:polygon(0 70%,100% 30%,100% 100%,0 100%);animation:slice .7s .45s cubic-bezier(.2,.9,.25,1.25) both}
+  .title .t2{-webkit-user-select:none;user-select:none;position:absolute;inset:0;clip-path:polygon(0 70%,100% 30%,100% 100%,0 100%);animation:slice .7s .45s cubic-bezier(.2,.9,.25,1.25) both}
   @keyframes slice{from{transform:none}to{transform:translate(3px,4px) rotate(.5deg)}}
   .lede{margin:12px 0 0;font-size:15px;color:var(--print-dim);max-width:34ch;line-height:1.4}
   .tools{display:flex;gap:8px;margin-left:auto;padding-bottom:8px;flex:none}
@@ -671,7 +671,7 @@ const flagSvg = (code, w = 22) => `<svg class="lflag" width="${w}" height="${Mat
 // Plural forms are objects keyed by Intl.PluralRules categories (one, few, many, other).
 const I18N = {
 en: {
-  name: "Cut the Country", lede: "One straight line, two halves of equal area.",
+  name: "Cut the Country", lede: "The world in two, with a single line.",
   tabDaily: "Today's country", tabDailyShort: "Today", tabPractice: "Practice", modes: "Game mode", lang: "Language",
   soundOff: "Mute sound", soundOn: "Turn sound on", help: "How to play", stats: "Statistics",
   loading: "Loading country outlines", canvas: "Cutting area", erase: "Clear line", cutHere: "Cut here",
@@ -700,7 +700,7 @@ en: {
   loadError: "The country outlines could not be loaded.<br>Check your connection, then reload the page."
 },
 fr: {
-  name: "Coupe le pays", lede: "Un trait droit, deux moitiés de même surface.",
+  name: "Coupe le pays", lede: "Le monde en deux, d’un seul trait.",
   tabDaily: "Pays du jour", tabDailyShort: "Du jour", tabPractice: "Entraînement", modes: "Mode de jeu", lang: "Langue",
   soundOff: "Couper le son", soundOn: "Rétablir le son", help: "Règles du jeu", stats: "Statistiques",
   loading: "Chargement des contours des pays", canvas: "Zone de découpe", erase: "Effacer la ligne", cutHere: "Couper ici",
@@ -729,7 +729,7 @@ fr: {
   loadError: "Les contours des pays n'ont pas pu être chargés.<br>Vérifie ta connexion, puis recharge la page."
 },
 es: {
-  name: "Corta el país", lede: "Una línea recta, dos mitades de igual superficie.",
+  name: "Corta el país", lede: "El mundo en dos, de un solo trazo.",
   tabDaily: "País del día", tabDailyShort: "Hoy", tabPractice: "Práctica", modes: "Modo de juego", lang: "Idioma",
   soundOff: "Silenciar", soundOn: "Activar el sonido", help: "Cómo se juega", stats: "Estadísticas",
   loading: "Cargando los contornos de los países", canvas: "Zona de corte", erase: "Borrar la línea", cutHere: "Cortar aquí",
@@ -758,7 +758,7 @@ es: {
   loadError: "No se pudieron cargar los contornos de los países.<br>Comprueba tu conexión y recarga la página."
 },
 de: {
-  name: "Halbier das Land", lede: "Ein gerader Schnitt, zwei gleich große Hälften.",
+  name: "Halbier das Land", lede: "Die Welt in zwei Teilen, mit einem einzigen Strich.",
   tabDaily: "Land des Tages", tabDailyShort: "Heute", tabPractice: "Training", modes: "Spielmodus", lang: "Sprache",
   soundOff: "Ton aus", soundOn: "Ton an", help: "Spielregeln", stats: "Statistik",
   loading: "Ländergrenzen werden geladen", canvas: "Schneidefläche", erase: "Linie löschen", cutHere: "Hier schneiden",
@@ -787,7 +787,7 @@ de: {
   loadError: "Die Ländergrenzen konnten nicht geladen werden.<br>Prüfe deine Verbindung und lade die Seite neu."
 },
 it: {
-  name: "Taglia il paese", lede: "Un tratto dritto, due metà della stessa superficie.",
+  name: "Taglia il paese", lede: "Il mondo in due, con un solo tratto.",
   tabDaily: "Paese del giorno", tabDailyShort: "Oggi", tabPractice: "Allenamento", modes: "Modalità di gioco", lang: "Lingua",
   soundOff: "Disattiva l'audio", soundOn: "Attiva l'audio", help: "Come si gioca", stats: "Statistiche",
   loading: "Caricamento dei confini dei paesi", canvas: "Area di taglio", erase: "Cancella la linea", cutHere: "Taglia qui",
@@ -816,7 +816,7 @@ it: {
   loadError: "Non è stato possibile caricare i confini dei paesi.<br>Controlla la connessione, poi ricarica la pagina."
 },
 pt: {
-  name: "Corte o país", lede: "Uma linha reta, duas metades de mesma área.",
+  name: "Corte o país", lede: "O mundo em dois, com um só traço.",
   tabDaily: "País do dia", tabDailyShort: "Hoje", tabPractice: "Treino", modes: "Modo de jogo", lang: "Idioma",
   soundOff: "Desativar o som", soundOn: "Ativar o som", help: "Como jogar", stats: "Estatísticas",
   loading: "Carregando os contornos dos países", canvas: "Área de corte", erase: "Apagar a linha", cutHere: "Cortar aqui",
@@ -845,7 +845,7 @@ pt: {
   loadError: "Não foi possível carregar os contornos dos países.<br>Verifique sua conexão e recarregue a página."
 },
 nl: {
-  name: "Halveer het land", lede: "Eén rechte lijn, twee helften met dezelfde oppervlakte.",
+  name: "Halveer het land", lede: "De wereld in tweeën, met één enkele lijn.",
   tabDaily: "Land van de dag", tabDailyShort: "Vandaag", tabPractice: "Oefenen", modes: "Spelmodus", lang: "Taal",
   soundOff: "Geluid uit", soundOn: "Geluid aan", help: "Spelregels", stats: "Statistieken",
   loading: "Landgrenzen worden geladen", canvas: "Snijvlak", erase: "Lijn wissen", cutHere: "Hier snijden",
@@ -874,7 +874,7 @@ nl: {
   loadError: "De landgrenzen konden niet worden geladen.<br>Controleer je verbinding en laad de pagina opnieuw."
 },
 pl: {
-  name: "Przetnij kraj", lede: "Jedna prosta linia, dwie połowy o tej samej powierzchni.",
+  name: "Przetnij kraj", lede: "Świat na pół, jedną kreską.",
   tabDaily: "Kraj dnia", tabDailyShort: "Dziś", tabPractice: "Trening", modes: "Tryb gry", lang: "Język",
   soundOff: "Wycisz dźwięk", soundOn: "Włącz dźwięk", help: "Zasady gry", stats: "Statystyki",
   loading: "Wczytywanie konturów krajów", canvas: "Pole cięcia", erase: "Usuń linię", cutHere: "Tnij tutaj",
@@ -903,7 +903,7 @@ pl: {
   loadError: "Nie udało się wczytać konturów krajów.<br>Sprawdź połączenie i odśwież stronę."
 },
 tr: {
-  name: "Ülkeyi Kes", lede: "Tek bir düz çizgi, eşit alanlı iki yarım.",
+  name: "Ülkeyi Kes", lede: "Dünya ikiye, tek bir çizgiyle.",
   tabDaily: "Günün ülkesi", tabDailyShort: "Bugün", tabPractice: "Antrenman", modes: "Oyun modu", lang: "Dil",
   soundOff: "Sesi kapat", soundOn: "Sesi aç", help: "Nasıl oynanır", stats: "İstatistikler",
   loading: "Ülke sınırları yükleniyor", canvas: "Kesim alanı", erase: "Çizgiyi sil", cutHere: "Buradan kes",
@@ -931,7 +931,7 @@ tr: {
   loadError: "Ülke sınırları yüklenemedi.<br>Bağlantını kontrol et, sonra sayfayı yenile."
 },
 ru: {
-  name: "Разрежь страну", lede: "Одна прямая линия, две половины равной площади.",
+  name: "Разрежь страну", lede: "Мир пополам — одной чертой.",
   tabDaily: "Страна дня", tabDailyShort: "Сегодня", tabPractice: "Тренировка", modes: "Режим игры", lang: "Язык",
   soundOff: "Выключить звук", soundOn: "Включить звук", help: "Как играть", stats: "Статистика",
   loading: "Загрузка контуров стран", canvas: "Поле для разреза", erase: "Стереть линию", cutHere: "Резать здесь",
@@ -959,7 +959,7 @@ ru: {
   loadError: "Не удалось загрузить контуры стран.<br>Проверь подключение и обнови страницу."
 },
 ja: {
-  name: "国をまっぷたつ", lede: "まっすぐな線一本で、同じ面積のふたつに。",
+  name: "国をまっぷたつ", lede: "一本の線で、世界をふたつに。",
   tabDaily: "今日の国", tabDailyShort: "今日", tabPractice: "練習", modes: "ゲームモード", lang: "言語",
   soundOff: "サウンドをオフ", soundOn: "サウンドをオン", help: "遊び方", stats: "統計",
   loading: "国の輪郭を読み込み中", canvas: "カットエリア", erase: "線を消す", cutHere: "ここで切る",
@@ -987,7 +987,7 @@ ja: {
   loadError: "国の輪郭を読み込めませんでした。<br>接続を確認して、ページを再読み込みしてください。"
 },
 ko: {
-  name: "나라를 반으로", lede: "직선 하나로, 넓이가 같은 두 조각.",
+  name: "나라를 반으로", lede: "선 하나로, 세상을 둘로.",
   tabDaily: "오늘의 나라", tabDailyShort: "오늘", tabPractice: "연습", modes: "게임 모드", lang: "언어",
   soundOff: "소리 끄기", soundOn: "소리 켜기", help: "게임 방법", stats: "통계",
   loading: "나라 윤곽을 불러오는 중", canvas: "자르기 영역", erase: "선 지우기", cutHere: "여기서 자르기",
@@ -1015,7 +1015,7 @@ ko: {
   loadError: "나라 윤곽을 불러오지 못했어요.<br>연결을 확인한 뒤 페이지를 새로고침하세요."
 },
 zh: {
-  name: "对半切国家", lede: "一条直线，切出面积相等的两半。",
+  name: "对半切国家", lede: "一笔，把世界一分为二。",
   tabDaily: "今日国家", tabDailyShort: "今日", tabPractice: "练习", modes: "游戏模式", lang: "语言",
   soundOff: "关闭声音", soundOn: "打开声音", help: "玩法", stats: "统计",
   loading: "正在加载国家轮廓", canvas: "切割区域", erase: "清除线条", cutHere: "在此切开",

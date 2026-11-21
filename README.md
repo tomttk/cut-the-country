@@ -1,5 +1,7 @@
 # Cut the Country
 
+**The world in two, with a single line.**
+
 A daily browser game: every day, one country to cut into two pieces of equal area, with a single straight line.
 
 **Play:** https://yourusername.github.io/coupe-le-pays/
